@@ -35,15 +35,6 @@ object ArticleSampler {
         ),
         Article(
             author = "techcrunch.com",
-            title = "OpenAI’s board is no match for investors’ wrath",
-            content = "The board of directors removed openAI's CEO, Sam Altman, on a temporary basis. Many investors and partners — and many of its employees — were more comfortable with the idea of the board’s power than it exercising that power. But many in the tech community felt the opposite. The board considers its next move, openAI top AI researchers and executives are calling it quits.",
-            date = Date(1700355838859),
-            imageUrl = "https://techcrunch.com/wp-content/uploads/2019/07/MSFT-Nadella-OpenAI-Altman-09-official-joint-pic.jpg?resize=1200,764",
-            readMoreUrl = "https://legacy.machaao.com/_c/techcrunch/https-techcrunch-com-2023-11-18-openais-board-is-no-match-for-investors-wrath",
-            tags = listOf("openai", "ai", "startups", "venture", "techcrunch.com"),
-        ),
-        Article(
-            author = "techcrunch.com",
             title = "A timeline of Sam Altman’s firing from OpenAI — and the fallout",
             content = "Ex-Y Combinator president Sam Altman was fired as CEO of openai. The company's longtime president and co-founder, Greg Brockman, resigned. He says he received a text from Mira Murati about scheduling a call.",
             date = Date(1700338739153),
