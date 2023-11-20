@@ -1,4 +1,4 @@
-package com.pietervandewalle.androidapp.ui
+package com.pietervandewalle.androidapp.ui.navigation
 
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController

@@ -10,7 +10,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.pietervandewalle.androidapp.ui.Screens
 
 @Composable
 fun BottomNavigationBar(currentRoute: String?, goHome: () -> Unit, goSearch: () -> Unit, goProfile: () -> Unit) {
