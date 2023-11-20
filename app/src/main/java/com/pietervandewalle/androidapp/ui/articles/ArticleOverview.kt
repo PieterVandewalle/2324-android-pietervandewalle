@@ -32,13 +32,13 @@ import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 fun ArticleOverview(modifier: Modifier = Modifier, articleOverviewViewModel: ArticleOverviewViewModel = viewModel()) {
     val articleOverviewState by articleOverviewViewModel.uiState.collectAsState()
 
-    ArticleList(articles = articleOverviewState.articles)
+    ArticleList(modifier = modifier, articles = articleOverviewState.articles)
 }
 
 @Composable
 fun ArticleList(modifier: Modifier = Modifier, articles: List<Article>) {
     val lazyListState = rememberLazyListState()
-    LazyColumn(state = lazyListState) {
+    LazyColumn(state = lazyListState, modifier = modifier) {
         items(articles) { article ->
             ArticleListItem(article = article)
         }
