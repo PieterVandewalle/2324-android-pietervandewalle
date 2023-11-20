@@ -10,24 +10,25 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun BottomNavigationBar(currentRoute: String?, goHome: () -> Unit, goSearch: () -> Unit, goProfile: () -> Unit) {
     val navigationItems = listOf(
         BottomNavigationItem(
-            label = "Home",
+            label = stringResource(Screens.Home.title),
             icon = Icons.Filled.Home,
             route = Screens.Home.route,
             onClick = goHome,
         ),
         BottomNavigationItem(
-            label = "Search",
+            label = stringResource(Screens.Search.title),
             icon = Icons.Filled.Search,
             route = Screens.Search.route,
             onClick = goSearch,
         ),
         BottomNavigationItem(
-            label = "Profile",
+            label = stringResource(Screens.Profile.title),
             icon = Icons.Filled.AccountCircle,
             route = Screens.Profile.route,
             onClick = goProfile,

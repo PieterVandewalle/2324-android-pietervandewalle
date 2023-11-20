@@ -15,8 +15,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.pietervandewalle.androidapp.ui.articles.ArticleOverview
 import com.pietervandewalle.androidapp.ui.navigation.BottomNavigationBar
+import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import com.pietervandewalle.androidapp.ui.navigation.NavigationActions
 import com.pietervandewalle.androidapp.ui.navigation.Screens
+import java.nio.file.Files.find
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,9 +30,11 @@ fun AndroidApp(
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
+    val currentScreenTitle = Screens.values().find { it.route == navBackStackEntry?.destination?.route ?: Screens.Home.route }!!.title
 
     Scaffold(
         topBar = {
+            MyTopAppBar(screenTitle = currentScreenTitle)
         },
         bottomBar = {
             BottomNavigationBar(currentRoute = currentDestination?.route, goHome = navActions::navigateToHome, goSearch = navActions::navigateToSearch, goProfile = navActions::navigateToProfile)

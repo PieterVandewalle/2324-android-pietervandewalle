@@ -1,7 +1,10 @@
 package com.pietervandewalle.androidapp.ui.navigation
 
-sealed class Screens(val route: String) {
-    object Home : Screens("home_screen")
-    object Search : Screens("search_screen")
-    object Profile : Screens("profile_screen")
+import androidx.annotation.StringRes
+import com.pietervandewalle.androidapp.R
+
+enum class Screens(val route: String, @StringRes val title: Int) {
+    Home("home_screen", R.string.home_title),
+    Search("search_screen", R.string.search_title),
+    Profile("profile_screen", R.string.profile_title),
 }
