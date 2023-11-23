@@ -1,13 +1,9 @@
 package com.pietervandewalle.androidapp.model
 
-import java.util.Date
+import java.time.LocalDate
 
 data class Article(
-    val author: String,
     val title: String,
-    val content: String,
-    val date: Date,
-    val imageUrl: String,
+    val date: LocalDate,
     val readMoreUrl: String,
-    val tags: List<String>,
 )
