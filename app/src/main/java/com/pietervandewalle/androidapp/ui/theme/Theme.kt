@@ -1,10 +1,49 @@
 package com.pietervandewalle.androidapp.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+
+var successColorSchemeColor by mutableStateOf(light_success)
+var successContainerColorSchemeColor by mutableStateOf(light_successContainer)
+var warningColorSchemeColor by mutableStateOf(light_warning)
+var warningContainerColorSchemeColor by mutableStateOf(light_warningContainer)
+
+@Suppress("unused")
+var ColorScheme.success: Color
+    get() = successColorSchemeColor
+    set(value) {
+        successColorSchemeColor = value
+    }
+
+@Suppress("unused")
+var ColorScheme.successContainer: Color
+    get() = successContainerColorSchemeColor
+    set(value) {
+        successContainerColorSchemeColor = value
+    }
+
+@Suppress("unused")
+var ColorScheme.warning: Color
+    get() = warningColorSchemeColor
+    set(value) {
+        warningColorSchemeColor = value
+    }
+
+@Suppress("unused")
+var ColorScheme.warningContainer: Color
+    get() = warningContainerColorSchemeColor
+    set(value) {
+        warningContainerColorSchemeColor = value
+    }
 
 private val LightColors = lightColorScheme(
     primary = md_theme_light_primary,
@@ -79,6 +118,31 @@ fun AndroidAppTheme(
         LightColors
     } else {
         DarkColors
+    }
+
+    // Extra colors
+    colorScheme.success = if (!useDarkTheme) {
+        light_success
+    } else {
+        dark_success
+    }
+
+    colorScheme.successContainer = if (!useDarkTheme) {
+        light_successContainer
+    } else {
+        dark_successContainer
+    }
+
+    colorScheme.warning = if (!useDarkTheme) {
+        light_warning
+    } else {
+        dark_warning
+    }
+
+    colorScheme.warningContainer = if (!useDarkTheme) {
+        light_warningContainer
+    } else {
+        dark_warningContainer
     }
 
     MaterialTheme(

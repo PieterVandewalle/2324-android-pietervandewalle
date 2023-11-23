@@ -32,6 +32,8 @@ import com.pietervandewalle.androidapp.model.CarPark
 import com.pietervandewalle.androidapp.model.isAlmostFull
 import com.pietervandewalle.androidapp.model.isFull
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
+import com.pietervandewalle.androidapp.ui.theme.successContainer
+import com.pietervandewalle.androidapp.ui.theme.warningContainer
 import java.time.ZonedDateTime
 
 @Composable
@@ -132,9 +134,9 @@ fun determineStatusColor(carPark: CarPark): Color {
     }
 
     if (carPark.isAlmostFull) {
-        return Color.hsl(42f, 0.78f, 0.92f)
+        return MaterialTheme.colorScheme.warningContainer
     }
-    return Color.Green
+    return MaterialTheme.colorScheme.successContainer
 }
 
 @Preview
