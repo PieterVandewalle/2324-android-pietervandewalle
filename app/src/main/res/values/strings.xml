@@ -3,5 +3,8 @@
     <string name="home_title">Nieuws</string>
     <string name="bicycle_parking">Fietsenstallingen</string>
     <string name="car_parking">Parkeergarages</string>
+    <string name="full">Volzet</string>
+    <string name="available_space">Vrij</string>
+    <string name="almost_full">Bijna volzet</string>
 
 </resources>

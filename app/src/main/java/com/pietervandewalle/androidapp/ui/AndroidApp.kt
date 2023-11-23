@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.pietervandewalle.androidapp.ui.articles.ArticleOverview
+import com.pietervandewalle.androidapp.ui.carparks.CarParksOverview
 import com.pietervandewalle.androidapp.ui.navigation.BottomNavigationBar
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import com.pietervandewalle.androidapp.ui.navigation.NavigationActions
@@ -49,7 +50,7 @@ fun AndroidApp(
                 ArticleOverview()
             }
             composable(route = Screens.CarParking.route) {
-                Text(text = "search")
+                CarParksOverview()
             }
             composable(route = Screens.BicycleParking.route) {
                 Text(text = "profile")
