@@ -2,7 +2,6 @@ package com.pietervandewalle.androidapp.data
 
 import com.pietervandewalle.androidapp.model.Article
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 object ArticleSampler {
     private val sampleArticles = mutableListOf(
