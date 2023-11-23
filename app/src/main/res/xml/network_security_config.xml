@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">https://data.stad.gent/api/explore/v2.1/catalog/datasets/</domain>
+    </domain-config>
+</network-security-config>

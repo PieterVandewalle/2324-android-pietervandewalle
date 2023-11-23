@@ -34,10 +34,11 @@ import com.pietervandewalle.androidapp.model.isFull
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 import com.pietervandewalle.androidapp.ui.theme.successContainer
 import com.pietervandewalle.androidapp.ui.theme.warningContainer
-import java.time.ZonedDateTime
+import java.time.Instant
+import java.time.ZoneOffset
 
 @Composable
-fun CarParksOverview(modifier: Modifier = Modifier, carParksOverviewViewModel: CarParksOverviewViewModel = viewModel()) {
+fun CarParksOverview(modifier: Modifier = Modifier, carParksOverviewViewModel: CarParksOverviewViewModel = viewModel(factory = CarParksOverviewViewModel.Factory)) {
     val carParksOverviewState by carParksOverviewViewModel.uiState.collectAsState()
 
     CarParkList(modifier = modifier, carParks = carParksOverviewState.carParks)
@@ -77,10 +78,19 @@ private fun CarParkDetails(carPark: CarPark) {
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
         Text(carPark.description, style = MaterialTheme.typography.bodyMedium)
+
+        val lastUpdateMillis = carPark.lastUpdate.toInstant(ZoneOffset.UTC).toEpochMilli()
+        val currentMillis = Instant.now().toEpochMilli()
+
+        // Format elapsed time using DateUtils.getRelativeTimeSpanString
+        val elapsedTime = DateUtils.getRelativeTimeSpanString(
+            lastUpdateMillis,
+            currentMillis,
+            DateUtils.MINUTE_IN_MILLIS,
+        ).toString()
+
         Text(
-            "Laatste update: " + DateUtils.getRelativeTimeSpanString(
-                carPark.lastUpdate.atZone(ZonedDateTime.now().zone).toInstant().toEpochMilli(),
-            ),
+            "Laatste update: $elapsedTime",
             style = MaterialTheme.typography.bodySmall,
         )
     }
