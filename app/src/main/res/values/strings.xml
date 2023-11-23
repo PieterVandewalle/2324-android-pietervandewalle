@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Android App</string>
-    <string name="home_title">News</string>
-    <string name="search_title">Search</string>
-    <string name="profile_title">Profile</string>
+    <string name="home_title">Nieuws</string>
+    <string name="bicycle_parking">Fietsenstallingen</string>
+    <string name="car_parking">Parkeergarages</string>
 
 </resources>

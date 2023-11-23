@@ -1,9 +1,9 @@
 package com.pietervandewalle.androidapp.ui.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Garage
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.PedalBike
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -22,15 +22,15 @@ fun BottomNavigationBar(currentRoute: String?, goHome: () -> Unit, goSearch: () 
             onClick = goHome,
         ),
         BottomNavigationItem(
-            label = stringResource(Screens.Search.title),
-            icon = Icons.Filled.Search,
-            route = Screens.Search.route,
+            label = stringResource(Screens.CarParking.title),
+            icon = Icons.Filled.Garage,
+            route = Screens.CarParking.route,
             onClick = goSearch,
         ),
         BottomNavigationItem(
-            label = stringResource(Screens.Profile.title),
-            icon = Icons.Filled.AccountCircle,
-            route = Screens.Profile.route,
+            label = stringResource(Screens.BicycleParking.title),
+            icon = Icons.Filled.PedalBike,
+            route = Screens.BicycleParking.route,
             onClick = goProfile,
         ),
     )

@@ -22,10 +22,10 @@ class NavigationActions(private val navController: NavHostController) {
     }
 
     fun navigateToProfile() {
-        navigateToMenuItem(Screens.Profile.route)
+        navigateToMenuItem(Screens.BicycleParking.route)
     }
 
     fun navigateToSearch() {
-        navigateToMenuItem(Screens.Search.route)
+        navigateToMenuItem(Screens.CarParking.route)
     }
 }

@@ -18,7 +18,6 @@ import com.pietervandewalle.androidapp.ui.navigation.BottomNavigationBar
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import com.pietervandewalle.androidapp.ui.navigation.NavigationActions
 import com.pietervandewalle.androidapp.ui.navigation.Screens
-import java.nio.file.Files.find
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,10 +48,10 @@ fun AndroidApp(
             composable(route = Screens.Home.route) {
                 ArticleOverview()
             }
-            composable(route = Screens.Search.route) {
+            composable(route = Screens.CarParking.route) {
                 Text(text = "search")
             }
-            composable(route = Screens.Profile.route) {
+            composable(route = Screens.BicycleParking.route) {
                 Text(text = "profile")
             }
         }
