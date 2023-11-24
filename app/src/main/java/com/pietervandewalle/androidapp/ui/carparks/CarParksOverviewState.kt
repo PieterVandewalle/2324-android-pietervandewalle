@@ -8,7 +8,7 @@ data class CarParksOverviewState(
 )
 
 sealed interface CarParkApiState {
-    data class Success(val tasks: List<CarPark>) : CarParkApiState
+    data class Success(val carParks: List<CarPark>) : CarParkApiState
     object Error : CarParkApiState
     object Loading : CarParkApiState
 }

@@ -1,5 +1,7 @@
 package com.pietervandewalle.androidapp.ui
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -41,6 +43,18 @@ fun AndroidApp(
             navController = navController,
             startDestination = Screens.Home.route,
             modifier = Modifier.padding(innerPadding),
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Up,
+                    animationSpec = tween(300),
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Down,
+                    animationSpec = tween(300),
+                )
+            },
         ) {
             composable(route = Screens.Home.route) {
                 ArticleOverview()

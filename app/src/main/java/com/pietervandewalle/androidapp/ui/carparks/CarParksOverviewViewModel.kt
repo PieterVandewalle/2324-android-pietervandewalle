@@ -22,7 +22,7 @@ class CarParksOverviewViewModel(private val carParkRepository: CarParkRepository
     private val _uiState = MutableStateFlow(CarParksOverviewState(CarParkSampler.getAll()))
     val uiState: StateFlow<CarParksOverviewState> = _uiState.asStateFlow()
 
-    private val useApi = false
+    private val useApi = true
 
     var carParkApiState: CarParkApiState by mutableStateOf(CarParkApiState.Loading)
         private set
