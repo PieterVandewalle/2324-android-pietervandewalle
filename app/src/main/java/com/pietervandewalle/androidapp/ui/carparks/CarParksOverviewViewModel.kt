@@ -22,6 +22,8 @@ class CarParksOverviewViewModel(private val carParkRepository: CarParkRepository
     private val _uiState = MutableStateFlow(CarParksOverviewState(CarParkSampler.getAll()))
     val uiState: StateFlow<CarParksOverviewState> = _uiState.asStateFlow()
 
+    private val useApi = false
+
     var carParkApiState: CarParkApiState by mutableStateOf(CarParkApiState.Loading)
         private set
 
@@ -33,7 +35,11 @@ class CarParksOverviewViewModel(private val carParkRepository: CarParkRepository
         private set
 
     init {
-        getApiCarParks()
+        if (useApi) {
+            getApiCarParks()
+        } else {
+            carParkApiState = CarParkApiState.Success(CarParkSampler.getAll())
+        }
     }
 
     private fun getApiCarParks() {
@@ -72,6 +78,12 @@ class CarParksOverviewViewModel(private val carParkRepository: CarParkRepository
             } catch (e: IOException) {
                 carParkApiRefreshingState = CarParkApiState.Error
             }
+        }
+    }
+
+    fun toggleMapView() {
+        _uiState.update {
+            it.copy(isMapViewVisible = !it.isMapViewVisible)
         }
     }
 
