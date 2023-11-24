@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -43,7 +42,6 @@ fun ArticleList(modifier: Modifier = Modifier, articles: List<Article>) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArticleListItem(modifier: Modifier = Modifier, article: Article) {
     val context = LocalContext.current
@@ -56,10 +54,10 @@ fun ArticleListItem(modifier: Modifier = Modifier, article: Article) {
                 context.startActivity(showArticleInBrowserIntent) // TODO look into webview for displaying article
             },
         shadowElevation = 1.dp,
-        headlineText = {
+        headlineContent = {
             Text(article.title, style = MaterialTheme.typography.titleMedium)
         },
-        supportingText = {
+        supportingContent = {
             Column(
                 modifier = Modifier.padding(top = 10.dp),
                 verticalArrangement = Arrangement.spacedBy(5.dp),

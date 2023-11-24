@@ -3,7 +3,6 @@ package com.pietervandewalle.androidapp.ui.carparks
 import android.text.format.DateUtils
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,7 +11,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,6 +29,8 @@ import com.pietervandewalle.androidapp.data.CarParkSampler
 import com.pietervandewalle.androidapp.model.CarPark
 import com.pietervandewalle.androidapp.model.isAlmostFull
 import com.pietervandewalle.androidapp.model.isFull
+import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
+import com.pietervandewalle.androidapp.ui.common.components.PullRefreshContainer
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 import com.pietervandewalle.androidapp.ui.theme.successContainer
 import com.pietervandewalle.androidapp.ui.theme.warningContainer
@@ -41,34 +41,40 @@ import java.time.ZoneOffset
 fun CarParksOverview(modifier: Modifier = Modifier, carParksOverviewViewModel: CarParksOverviewViewModel = viewModel(factory = CarParksOverviewViewModel.Factory)) {
     val carParksOverviewState by carParksOverviewViewModel.uiState.collectAsState()
 
-    CarParkList(modifier = modifier, carParks = carParksOverviewState.carParks)
+    val carParkApiState = carParksOverviewViewModel.carParkApiState
+    val carParkApiRefreshingState = carParksOverviewViewModel.carParkApiRefreshingState
+    val isRefreshing = carParkApiRefreshingState is CarParkApiState.Loading
+
+    PullRefreshContainer(isRefreshing = isRefreshing, onRefresh = carParksOverviewViewModel::refresh, modifier = modifier) {
+        when (carParkApiState) {
+            is CarParkApiState.Loading -> LoadingIndicator()
+            is CarParkApiState.Error -> Text("Couldn't load...")
+            is CarParkApiState.Success -> CarParkList(
+                carParks = carParksOverviewState.carParks,
+            )
+        }
+    }
 }
 
 @Composable
 fun CarParkList(modifier: Modifier = Modifier, carParks: List<CarPark>) {
     val lazyListState = rememberLazyListState()
     LazyColumn(state = lazyListState, modifier = modifier) {
-        items(carParks) { article ->
-            CarParkListItem(carPark = article)
+        items(carParks) { carPark ->
+            CarParkListItem(carPark = carPark)
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CarParkListItem(modifier: Modifier = Modifier, carPark: CarPark) {
     ListItem(
         shadowElevation = 2.dp,
-        modifier = modifier.padding(5.dp).height(120.dp),
-        headlineText = { CarParkName(carPark = carPark) },
-        supportingText = { CarParkDetails(carPark = carPark) },
+        modifier = modifier.padding(5.dp),
+        headlineContent = { Text(carPark.name, style = MaterialTheme.typography.titleMedium, maxLines = 2) },
+        supportingContent = { CarParkDetails(carPark = carPark) },
         trailingContent = { CarParkStatus(cardColor = determineStatusColor(carPark), carPark = carPark) },
     )
-}
-
-@Composable
-private fun CarParkName(carPark: CarPark) {
-    Text(carPark.name, style = MaterialTheme.typography.titleMedium)
 }
 
 @Composable
@@ -99,7 +105,11 @@ private fun CarParkDetails(carPark: CarPark) {
 @Composable
 private fun CarParkStatus(cardColor: Color, carPark: CarPark) {
     Card(colors = CardDefaults.cardColors(containerColor = cardColor), shape = RoundedCornerShape(4.dp)) {
-        Column(modifier = Modifier.padding(8.dp).width(100.dp)) {
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
+                .width(107.dp),
+        ) {
             if (carPark.isOpenNow) {
                 CarParkOpenStatus(carPark = carPark)
             } else {
@@ -123,7 +133,7 @@ private fun CarParkOpenStatus(carPark: CarPark) {
 
     if (!carPark.isFull) {
         Text(
-            "${carPark.availableCapacity} plaatsen vrij",
+            "nog ${carPark.availableCapacity} plaatsen",
             style = MaterialTheme.typography.bodySmall,
         )
     }

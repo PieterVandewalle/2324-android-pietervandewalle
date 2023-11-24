@@ -25,6 +25,13 @@ class CarParksOverviewViewModel(private val carParkRepository: CarParkRepository
     var carParkApiState: CarParkApiState by mutableStateOf(CarParkApiState.Loading)
         private set
 
+    var carParkApiRefreshingState: CarParkApiState by mutableStateOf(
+        CarParkApiState.Success(
+            mutableListOf(),
+        ),
+    )
+        private set
+
     init {
         getApiCarParks()
     }
@@ -46,6 +53,26 @@ class CarParksOverviewViewModel(private val carParkRepository: CarParkRepository
             }
         }
     }
+
+    fun refresh() {
+        carParkApiRefreshingState = CarParkApiState.Loading
+        viewModelScope.launch {
+            try {
+                // use the repository
+                // val tasksRepository = ApiTasksRepository() //repo is now injected
+                val listResult = carParkRepository.getCarParks()
+                _uiState.update {
+                    it.copy(carParks = listResult)
+                }
+                carParkApiRefreshingState = CarParkApiState.Success(listResult)
+            } catch (e: IOException) {
+                // show a toast? save a log on firebase? ...
+                // set the error state
+                carParkApiRefreshingState = CarParkApiState.Error
+            }
+        }
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
