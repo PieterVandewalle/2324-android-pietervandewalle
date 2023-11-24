@@ -39,35 +39,37 @@ class CarParksOverviewViewModel(private val carParkRepository: CarParkRepository
     private fun getApiCarParks() {
         viewModelScope.launch {
             try {
-                // use the repository
-                // val tasksRepository = ApiTasksRepository() //repo is now injected
                 val listResult = carParkRepository.getCarParks()
                 _uiState.update {
                     it.copy(carParks = listResult)
                 }
                 carParkApiState = CarParkApiState.Success(listResult)
             } catch (e: IOException) {
-                // show a toast? save a log on firebase? ...
-                // set the error state
                 carParkApiState = CarParkApiState.Error
             }
         }
     }
 
     fun refresh() {
+        // Don't refresh if still in initial load
+        if (carParkApiState is CarParkApiState.Loading) {
+            return
+        }
+
         carParkApiRefreshingState = CarParkApiState.Loading
         viewModelScope.launch {
             try {
-                // use the repository
-                // val tasksRepository = ApiTasksRepository() //repo is now injected
                 val listResult = carParkRepository.getCarParks()
                 _uiState.update {
                     it.copy(carParks = listResult)
                 }
                 carParkApiRefreshingState = CarParkApiState.Success(listResult)
+
+                // if first load was error and refresh was successful, we want to display the items now
+                if (carParkApiState is CarParkApiState.Error) {
+                    carParkApiState = CarParkApiState.Success(listResult)
+                }
             } catch (e: IOException) {
-                // show a toast? save a log on firebase? ...
-                // set the error state
                 carParkApiRefreshingState = CarParkApiState.Error
             }
         }
