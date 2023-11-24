@@ -71,6 +71,8 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.navigation:navigation-compose:2.7.2")
 
+    implementation("com.fleeksoft.ksoup:ksoup:0.0.5")
+
     implementation("io.coil-kt:coil-compose:2.5.0")
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
