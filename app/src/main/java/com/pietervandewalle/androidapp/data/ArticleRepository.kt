@@ -9,6 +9,6 @@ interface ArticleRepository {
 }
 class ApiArticleRepository(private val ghentApiService: GhentApiService) : ArticleRepository {
     override suspend fun getArticles(): List<Article> {
-        return ghentApiService.getArticles().results.asDomainObjects()
+        return ghentApiService.getArticles().results.asDomainObjects().sortedByDescending { article -> article.date }
     }
 }

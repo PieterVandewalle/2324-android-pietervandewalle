@@ -24,5 +24,5 @@ fun List<ApiArticle>.asDomainObjects(): List<Article> {
             imageUrl = articleHtmlDoc.getElementsByTag("source").first()?.attr("srcset"),
         )
     }
-    return domainList.sortedByDescending { article -> article.date }
+    return domainList
 }
