@@ -193,7 +193,7 @@ private fun CarParkStatusCard(cardColor: Color, carPark: CarPark) {
     Card(colors = CardDefaults.cardColors(containerColor = cardColor), shape = RoundedCornerShape(4.dp)) {
         Column(
             modifier = Modifier
-                .padding(8.dp)
+                .padding(5.dp)
                 .width(107.dp),
         ) {
             if (carPark.isOpenNow) {
