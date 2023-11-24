@@ -28,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -219,7 +220,7 @@ private fun CarParkOpenStatusText(carPark: CarPark) {
 
     if (!carPark.isFull) {
         Text(
-            "nog ${carPark.availableCapacity} plaatsen",
+            pluralStringResource(R.plurals.numberOfParkingSpotsAvailable, carPark.availableCapacity, carPark.availableCapacity),
             style = MaterialTheme.typography.bodySmall,
         )
     }

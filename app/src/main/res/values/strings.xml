@@ -6,5 +6,8 @@
     <string name="full">Volzet</string>
     <string name="available_space">Vrij</string>
     <string name="almost_full">Bijna volzet</string>
-
+    <plurals name="numberOfParkingSpotsAvailable">
+        <item quantity="one">nog %1$d plaats</item>
+        <item quantity="other">nog %1$d plaatsen</item>
+    </plurals>
 </resources>
