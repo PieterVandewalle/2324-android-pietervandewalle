@@ -122,7 +122,7 @@ fun AndroidAppTheme(
 
     // Extra colors
     colorScheme.success = if (!useDarkTheme) {
-        light_success
+        success
     } else {
         dark_success
     }
@@ -134,7 +134,7 @@ fun AndroidAppTheme(
     }
 
     colorScheme.warning = if (!useDarkTheme) {
-        light_warning
+        warning
     } else {
         dark_warning
     }
