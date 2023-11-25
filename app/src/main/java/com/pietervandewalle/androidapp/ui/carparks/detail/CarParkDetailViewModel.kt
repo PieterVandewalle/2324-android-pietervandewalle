@@ -20,18 +20,20 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.IOException
+import java.net.URLDecoder
 
 class CarParkDetailViewModel(private val carParkRepository: CarParkRepository, private val savedStateHandle: SavedStateHandle) : ViewModel() {
     private val _uiState = MutableStateFlow(CarParkDetailState(CarParkSampler.getAll().first()))
     val uiState: StateFlow<CarParkDetailState> = _uiState.asStateFlow()
 
-    private val carParkName: String? = savedStateHandle[DestinationsArgs.CARPARK_NAME_ARG]
+    private val carParkNameEncoded: String? = savedStateHandle[DestinationsArgs.CARPARK_NAME_ARG]
 
     var carParkApiState: CarParkApiState by mutableStateOf(CarParkApiState.Loading)
         private set
 
     init {
-        getApiCarPark(carParkName ?: "")
+        val carParkNameDecoded = URLDecoder.decode(carParkNameEncoded ?: "", "UTF-8")
+        getApiCarPark(carParkNameDecoded)
     }
 
     private fun getApiCarPark(carParkName: String) {

@@ -22,4 +22,4 @@ val CarPark.isAlmostFull: Boolean
     get() = availableCapacity <= 10
 
 val CarPark.isFull: Boolean
-    get() = availableCapacity == 0
+    get() = availableCapacity <= 0

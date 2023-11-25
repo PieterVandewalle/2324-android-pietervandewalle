@@ -3,6 +3,7 @@ package com.pietervandewalle.androidapp.data
 import com.pietervandewalle.androidapp.model.Article
 import com.pietervandewalle.androidapp.network.GhentApiService
 import com.pietervandewalle.androidapp.network.asDomainObjects
+import java.io.IOException
 
 interface ArticleRepository {
     suspend fun getArticles(): List<Article>
@@ -14,6 +15,6 @@ class ApiArticleRepository(private val ghentApiService: GhentApiService) : Artic
     }
 
     override suspend fun getArticleByTitle(title: String): Article {
-        return ghentApiService.getArticles().results.asDomainObjects().first { article -> article.title == title }
+        return ghentApiService.getArticles().results.asDomainObjects().firstOrNull { article -> article.title == title } ?: throw IOException()
     }
 }

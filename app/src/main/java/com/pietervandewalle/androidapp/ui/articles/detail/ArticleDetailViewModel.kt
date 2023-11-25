@@ -20,18 +20,20 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.IOException
+import java.net.URLDecoder
 
 class ArticleDetailViewModel(private val articleRepository: ArticleRepository, private val savedStateHandle: SavedStateHandle) : ViewModel() {
     private val _uiState = MutableStateFlow(ArticleDetailState(ArticleSampler.getAll().first()))
     val uiState: StateFlow<ArticleDetailState> = _uiState.asStateFlow()
 
-    private val articleTitle: String? = savedStateHandle[DestinationsArgs.ARTICLE_TITLE_ARG]
+    private val articleTitleEncoded: String? = savedStateHandle[DestinationsArgs.ARTICLE_TITLE_ARG]
 
     var articlesApiState: ArticleApiState by mutableStateOf(ArticleApiState.Loading)
         private set
 
     init {
-        getApiArticle(articleTitle ?: "")
+        val articleTitleDecoded = URLDecoder.decode(articleTitleEncoded ?: "", "UTF-8")
+        getApiArticle(articleTitleDecoded)
     }
 
     private fun getApiArticle(articleTitle: String) {

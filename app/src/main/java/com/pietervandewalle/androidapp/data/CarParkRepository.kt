@@ -3,6 +3,7 @@ package com.pietervandewalle.androidapp.data
 import com.pietervandewalle.androidapp.model.CarPark
 import com.pietervandewalle.androidapp.network.GhentApiService
 import com.pietervandewalle.androidapp.network.asDomainObjects
+import java.io.IOException
 
 interface CarParkRepository {
     suspend fun getCarParks(): List<CarPark>
@@ -13,6 +14,6 @@ class ApiCarParkRepository(private val ghentApiService: GhentApiService) : CarPa
         return ghentApiService.getCarParks().results.asDomainObjects().sortedBy { carPark -> carPark.name.lowercase() }
     }
     override suspend fun getCarParkByName(name: String): CarPark {
-        return ghentApiService.getCarParks().results.asDomainObjects().first { carPark -> carPark.name == name }
+        return ghentApiService.getCarParks().results.asDomainObjects().firstOrNull { carPark -> carPark.name == name } ?: throw IOException()
     }
 }
