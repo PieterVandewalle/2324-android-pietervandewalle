@@ -6,9 +6,13 @@ import com.pietervandewalle.androidapp.network.asDomainObjects
 
 interface CarParkRepository {
     suspend fun getCarParks(): List<CarPark>
+    suspend fun getCarParkByName(name: String): CarPark
 }
 class ApiCarParkRepository(private val ghentApiService: GhentApiService) : CarParkRepository {
     override suspend fun getCarParks(): List<CarPark> {
         return ghentApiService.getCarParks().results.asDomainObjects().sortedBy { carPark -> carPark.name.lowercase() }
+    }
+    override suspend fun getCarParkByName(name: String): CarPark {
+        return ghentApiService.getCarParks().results.asDomainObjects().first { carPark -> carPark.name == name }
     }
 }

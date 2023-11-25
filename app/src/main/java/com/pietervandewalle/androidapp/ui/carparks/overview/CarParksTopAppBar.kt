@@ -1,4 +1,4 @@
-package com.pietervandewalle.androidapp.ui.carparks
+package com.pietervandewalle.androidapp.ui.carparks.overview
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Map

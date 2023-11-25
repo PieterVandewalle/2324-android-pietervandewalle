@@ -20,7 +20,7 @@ fun List<ApiArticle>.asDomainObjects(): List<Article> {
             title = it.titel,
             date = LocalDate.parse(it.publicatiedatum),
             readMoreUrl = it.nieuwsbericht,
-            content = articleHtmlDoc.getElementsByClass("paragraph paragraph--type--text paragraph--view-mode--full").first()?.text(),
+            content = articleHtmlDoc.getElementsByClass("paragraph paragraph--type--text paragraph--view-mode--full").map { element -> element.text() }.filter { el -> el.isNotEmpty() }.reduce { acc, next -> acc + "\n\n" + next },
             imageUrl = articleHtmlDoc.getElementsByTag("source").first()?.attr("srcset"),
         )
     }

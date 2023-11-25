@@ -1,13 +1,10 @@
-package com.pietervandewalle.androidapp.ui.articles
+package com.pietervandewalle.androidapp.ui.articles.overview
 
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -18,10 +15,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -29,18 +24,18 @@ import coil.compose.AsyncImage
 import com.pietervandewalle.androidapp.R
 import com.pietervandewalle.androidapp.data.ArticleSampler
 import com.pietervandewalle.androidapp.model.Article
+import com.pietervandewalle.androidapp.ui.articles.detail.ArticleDetail
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.common.components.PullRefreshContainer
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
-import java.time.format.DateTimeFormatter
 
 @Composable
-fun ArticleOverview(modifier: Modifier = Modifier, articleOverviewViewModel: ArticleOverviewViewModel = viewModel(factory = ArticleOverviewViewModel.Factory)) {
+fun ArticleOverview(modifier: Modifier = Modifier, articleOverviewViewModel: ArticleOverviewViewModel = viewModel(factory = ArticleOverviewViewModel.Factory), onNavigateToDetail: (articleName: String) -> Unit) {
     val articleOverviewState by articleOverviewViewModel.uiState.collectAsState()
-    val articleApiState = articleOverviewViewModel.articleApiState
-    val articleApiRefreshingState = articleOverviewViewModel.articleApiRefreshingState
-    val isRefreshing = articleApiRefreshingState is ArticleApiState.Loading
+    val articlesApiState = articleOverviewViewModel.articlesApiState
+    val articlesApiRefreshingState = articleOverviewViewModel.articleApiRefreshingState
+    val isRefreshing = articlesApiRefreshingState is ArticlesApiState.Loading
 
     Scaffold(
         topBar = {
@@ -53,57 +48,49 @@ fun ArticleOverview(modifier: Modifier = Modifier, articleOverviewViewModel: Art
             onRefresh = articleOverviewViewModel::refresh,
             modifier = modifier.padding(innerPadding),
         ) {
-            when (articleApiState) {
-                is ArticleApiState.Loading -> LoadingIndicator()
-                is ArticleApiState.Error -> Text("Couldn't load...")
-                is ArticleApiState.Success ->
-                    ArticleList(modifier = modifier, articles = articleOverviewState.articles)
+            when (articlesApiState) {
+                is ArticlesApiState.Loading -> LoadingIndicator()
+                is ArticlesApiState.Error -> Text("Couldn't load...")
+                is ArticlesApiState.Success ->
+                    ArticleList(
+                        modifier = modifier,
+                        articles = articleOverviewState.articles,
+                        onViewDetail = { onNavigateToDetail(it.title) },
+                    )
             }
         }
     }
 }
 
 @Composable
-fun ArticleList(modifier: Modifier = Modifier, articles: List<Article>) {
+fun ArticleList(modifier: Modifier = Modifier, articles: List<Article>, onViewDetail: (Article) -> Unit) {
     val lazyListState = rememberLazyListState()
     LazyColumn(state = lazyListState, modifier = modifier) {
         items(articles) { article ->
-            ArticleListItem(article = article)
+            ArticleListItem(article = article, onViewDetail = { onViewDetail(article) })
         }
     }
 }
 
 @Composable
-fun ArticleListItem(modifier: Modifier = Modifier, article: Article) {
-    val context = LocalContext.current
-    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-    val showArticleInBrowserIntent = remember { Intent(Intent.ACTION_VIEW, Uri.parse(article.readMoreUrl)) }
+fun ArticleListItem(modifier: Modifier = Modifier, article: Article, onViewDetail: () -> Unit) {
     ListItem(
         modifier = modifier
             .padding(5.dp)
             .clickable {
-                context.startActivity(
-                    showArticleInBrowserIntent,
-                ) // TODO look into webview for displaying article
+                onViewDetail()
             },
         shadowElevation = 1.dp,
         headlineContent = {
             Text(article.title, style = MaterialTheme.typography.titleMedium)
         },
-        supportingContent = {
-            Column(
-                modifier = Modifier.padding(top = 10.dp),
-                verticalArrangement = Arrangement.spacedBy(5.dp),
-            ) {
-                Text(
-                    dateFormatter.format(article.date),
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            }
-        },
-        trailingContent = {
+        leadingContent = {
             if (article.imageUrl != null) {
-                Box(modifier = Modifier.size(55.dp)) {
+                Box(
+                    modifier = Modifier
+                        .width(80.dp)
+                        .height(60.dp),
+                ) {
                     AsyncImage(
                         model = article.imageUrl,
                         contentDescription = null,
@@ -119,6 +106,14 @@ fun ArticleListItem(modifier: Modifier = Modifier, article: Article) {
 @Composable
 fun ArticleListPreview() {
     AndroidAppTheme {
-        ArticleList(articles = ArticleSampler.getAll())
+        ArticleList(articles = ArticleSampler.getAll(), onViewDetail = {})
+    }
+}
+
+@Preview
+@Composable
+fun ArticleDetailPreview() {
+    AndroidAppTheme {
+        ArticleDetail(article = ArticleSampler.getAll().first())
     }
 }

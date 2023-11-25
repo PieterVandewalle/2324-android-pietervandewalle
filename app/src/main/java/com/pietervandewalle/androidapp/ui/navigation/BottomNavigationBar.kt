@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 
 @Composable
-fun BottomNavigationBar(currentRoute: String?, goHome: () -> Unit, goSearch: () -> Unit, goProfile: () -> Unit) {
+fun BottomNavigationBar(currentRoute: String?, goHome: () -> Unit, goCarParks: () -> Unit, goProfile: () -> Unit) {
     val navigationItems = listOf(
         BottomNavigationItem(
             label = stringResource(Screens.Home.title),
@@ -25,7 +25,7 @@ fun BottomNavigationBar(currentRoute: String?, goHome: () -> Unit, goSearch: () 
             label = stringResource(Screens.CarParking.title),
             icon = Icons.Filled.Garage,
             route = Screens.CarParking.route,
-            onClick = goSearch,
+            onClick = goCarParks,
         ),
         BottomNavigationItem(
             label = stringResource(Screens.BicycleParking.title),
@@ -34,23 +34,25 @@ fun BottomNavigationBar(currentRoute: String?, goHome: () -> Unit, goSearch: () 
             onClick = goProfile,
         ),
     )
-    NavigationBar {
-        navigationItems.forEachIndexed { _, navigationItem ->
-            NavigationBarItem(
-                selected = navigationItem.route == currentRoute,
-                label = {
-                    Text(navigationItem.label)
-                },
-                icon = {
-                    Icon(
-                        navigationItem.icon,
-                        contentDescription = navigationItem.label,
-                    )
-                },
-                onClick = {
-                    navigationItem.onClick()
-                },
-            )
+    if (navigationItems.any { navItem -> navItem.route == currentRoute }) {
+        NavigationBar {
+            navigationItems.forEachIndexed { _, navigationItem ->
+                NavigationBarItem(
+                    selected = navigationItem.route == currentRoute,
+                    label = {
+                        Text(navigationItem.label)
+                    },
+                    icon = {
+                        Icon(
+                            navigationItem.icon,
+                            contentDescription = navigationItem.label,
+                        )
+                    },
+                    onClick = {
+                        navigationItem.onClick()
+                    },
+                )
+            }
         }
     }
 }

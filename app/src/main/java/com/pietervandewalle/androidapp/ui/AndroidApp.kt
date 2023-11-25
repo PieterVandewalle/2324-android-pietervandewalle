@@ -1,9 +1,6 @@
 package com.pietervandewalle.androidapp.ui
 
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,13 +12,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.pietervandewalle.androidapp.ui.articles.ArticleOverview
-import com.pietervandewalle.androidapp.ui.carparks.CarParksOverview
+import com.pietervandewalle.androidapp.ui.articles.detail.ArticleDetailView
+import com.pietervandewalle.androidapp.ui.articles.overview.ArticleOverview
+import com.pietervandewalle.androidapp.ui.carparks.detail.CarParkDetailView
+import com.pietervandewalle.androidapp.ui.carparks.overview.CarParksOverview
 import com.pietervandewalle.androidapp.ui.navigation.BottomNavigationBar
 import com.pietervandewalle.androidapp.ui.navigation.NavigationActions
 import com.pietervandewalle.androidapp.ui.navigation.Screens
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AndroidApp(
     navController: NavHostController = rememberNavController(),
@@ -31,11 +29,9 @@ fun AndroidApp(
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    val currentScreenTitle = Screens.values().find { it.route == navBackStackEntry?.destination?.route ?: Screens.Home.route }!!.title
-
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(currentRoute = currentDestination?.route, goHome = navActions::navigateToHome, goSearch = navActions::navigateToSearch, goProfile = navActions::navigateToProfile)
+            BottomNavigationBar(currentRoute = currentDestination?.route, goHome = navActions::navigateToHome, goCarParks = navActions::navigateToCarParksOverview, goProfile = navActions::navigateToProfile)
         },
     ) { innerPadding ->
 
@@ -43,27 +39,41 @@ fun AndroidApp(
             navController = navController,
             startDestination = Screens.Home.route,
             modifier = Modifier.padding(innerPadding),
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Up,
-                    animationSpec = tween(300),
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Down,
-                    animationSpec = tween(300),
-                )
-            },
+//            enterTransition = {
+//                slideIntoContainer(
+//                    AnimatedContentTransitionScope.SlideDirection.Up,
+//                    animationSpec = tween(300),
+//                )
+//            },
+//            exitTransition = {
+//                slideOutOfContainer(
+//                    AnimatedContentTransitionScope.SlideDirection.Down,
+//                    animationSpec = tween(300),
+//                )
+//            },
         ) {
-            composable(route = Screens.Home.route) {
-                ArticleOverview()
+            composable(
+                route = Screens.Home.route,
+
+            ) {
+                ArticleOverview(onNavigateToDetail = navActions::navigateToArticleDetail)
             }
             composable(route = Screens.CarParking.route) {
-                CarParksOverview()
+                CarParksOverview(
+                    onNavigateToDetail = navActions::navigateToCarParkDetail,
+                )
             }
+
+            composable(route = Screens.ArticleDetail.route) {
+                ArticleDetailView(onNavigateBack = navController::popBackStack)
+            }
+
+            composable(route = Screens.CarParkDetail.route) {
+                CarParkDetailView(onNavigateBack = navController::popBackStack)
+            }
+
             composable(route = Screens.BicycleParking.route) {
-                Text("todo")
+                Text("TODO")
             }
         }
     }

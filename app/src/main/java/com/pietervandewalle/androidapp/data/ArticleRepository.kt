@@ -6,9 +6,14 @@ import com.pietervandewalle.androidapp.network.asDomainObjects
 
 interface ArticleRepository {
     suspend fun getArticles(): List<Article>
+    suspend fun getArticleByTitle(title: String): Article
 }
 class ApiArticleRepository(private val ghentApiService: GhentApiService) : ArticleRepository {
     override suspend fun getArticles(): List<Article> {
         return ghentApiService.getArticles().results.asDomainObjects().sortedByDescending { article -> article.date }
+    }
+
+    override suspend fun getArticleByTitle(title: String): Article {
+        return ghentApiService.getArticles().results.asDomainObjects().first { article -> article.title == title }
     }
 }

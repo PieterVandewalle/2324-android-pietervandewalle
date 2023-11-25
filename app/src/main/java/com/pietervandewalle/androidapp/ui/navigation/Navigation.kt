@@ -25,7 +25,25 @@ class NavigationActions(private val navController: NavHostController) {
         navigateToMenuItem(Screens.BicycleParking.route)
     }
 
-    fun navigateToSearch() {
+    fun navigateToCarParksOverview() {
         navigateToMenuItem(Screens.CarParking.route)
+    }
+
+    fun navigateToArticleDetail(title: String) {
+        navController.navigate(
+            Screens.ArticleDetail.route.replace(
+                DestinationsArgs.ARTICLE_TITLE_ARG,
+                title,
+            ).replace("{", "").replace("}", ""),
+        )
+    }
+
+    fun navigateToCarParkDetail(carParkName: String) {
+        navController.navigate(
+            Screens.CarParkDetail.route.replace(
+                DestinationsArgs.CARPARK_NAME_ARG,
+                carParkName,
+            ).replace("{", "").replace("}", ""),
+        )
     }
 }

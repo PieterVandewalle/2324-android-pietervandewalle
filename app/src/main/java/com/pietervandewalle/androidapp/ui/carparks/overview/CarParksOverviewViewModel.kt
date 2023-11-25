@@ -1,4 +1,4 @@
-package com.pietervandewalle.androidapp.ui.carparks
+package com.pietervandewalle.androidapp.ui.carparks.overview
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,11 +24,11 @@ class CarParksOverviewViewModel(private val carParkRepository: CarParkRepository
 
     private val useApi = true
 
-    var carParkApiState: CarParkApiState by mutableStateOf(CarParkApiState.Loading)
+    var carParksApiState: CarParksApiState by mutableStateOf(CarParksApiState.Loading)
         private set
 
-    var carParkApiRefreshingState: CarParkApiState by mutableStateOf(
-        CarParkApiState.Success(
+    var carParksApiRefreshingState: CarParksApiState by mutableStateOf(
+        CarParksApiState.Success(
             mutableListOf(),
         ),
     )
@@ -38,7 +38,7 @@ class CarParksOverviewViewModel(private val carParkRepository: CarParkRepository
         if (useApi) {
             getApiCarParks()
         } else {
-            carParkApiState = CarParkApiState.Success(CarParkSampler.getAll())
+            carParksApiState = CarParksApiState.Success(CarParkSampler.getAll())
         }
     }
 
@@ -49,34 +49,34 @@ class CarParksOverviewViewModel(private val carParkRepository: CarParkRepository
                 _uiState.update {
                     it.copy(carParks = listResult)
                 }
-                carParkApiState = CarParkApiState.Success(listResult)
+                carParksApiState = CarParksApiState.Success(listResult)
             } catch (e: IOException) {
-                carParkApiState = CarParkApiState.Error
+                carParksApiState = CarParksApiState.Error
             }
         }
     }
 
     fun refresh() {
         // Don't refresh if still in initial load
-        if (carParkApiState is CarParkApiState.Loading) {
+        if (carParksApiState is CarParksApiState.Loading) {
             return
         }
 
-        carParkApiRefreshingState = CarParkApiState.Loading
+        carParksApiRefreshingState = CarParksApiState.Loading
         viewModelScope.launch {
             try {
                 val listResult = carParkRepository.getCarParks()
                 _uiState.update {
                     it.copy(carParks = listResult)
                 }
-                carParkApiRefreshingState = CarParkApiState.Success(listResult)
+                carParksApiRefreshingState = CarParksApiState.Success(listResult)
 
                 // if first load was error and refresh was successful, we want to display the items now
-                if (carParkApiState is CarParkApiState.Error) {
-                    carParkApiState = CarParkApiState.Success(listResult)
+                if (carParksApiState is CarParksApiState.Error) {
+                    carParksApiState = CarParksApiState.Success(listResult)
                 }
             } catch (e: IOException) {
-                carParkApiRefreshingState = CarParkApiState.Error
+                carParksApiRefreshingState = CarParksApiState.Error
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.pietervandewalle.androidapp.ui.articles
+package com.pietervandewalle.androidapp.ui.articles.overview
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pietervandewalle.androidapp.AndroidApplication
 import com.pietervandewalle.androidapp.data.ArticleRepository
 import com.pietervandewalle.androidapp.data.ArticleSampler
+import com.pietervandewalle.androidapp.model.Article
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,11 +25,11 @@ class ArticleOverviewViewModel(private val articleRepository: ArticleRepository)
 
     private val useApi = true
 
-    var articleApiState: ArticleApiState by mutableStateOf(ArticleApiState.Loading)
+    var articlesApiState: ArticlesApiState by mutableStateOf(ArticlesApiState.Loading)
         private set
 
-    var articleApiRefreshingState: ArticleApiState by mutableStateOf(
-        ArticleApiState.Success(
+    var articleApiRefreshingState: ArticlesApiState by mutableStateOf(
+        ArticlesApiState.Success(
             mutableListOf(),
         ),
     )
@@ -38,7 +39,7 @@ class ArticleOverviewViewModel(private val articleRepository: ArticleRepository)
         if (useApi) {
             getApiArticles()
         } else {
-            articleApiState = ArticleApiState.Success(ArticleSampler.getAll())
+            articlesApiState = ArticlesApiState.Success(ArticleSampler.getAll())
         }
     }
 
@@ -49,35 +50,47 @@ class ArticleOverviewViewModel(private val articleRepository: ArticleRepository)
                 _uiState.update {
                     it.copy(articles = listResult)
                 }
-                articleApiState = ArticleApiState.Success(listResult)
+                articlesApiState = ArticlesApiState.Success(listResult)
             } catch (e: IOException) {
-                articleApiState = ArticleApiState.Error
+                articlesApiState = ArticlesApiState.Error
             }
         }
     }
 
     fun refresh() {
         // Don't refresh if still in initial load
-        if (articleApiState is ArticleApiState.Loading) {
+        if (articlesApiState is ArticlesApiState.Loading) {
             return
         }
 
-        articleApiRefreshingState = ArticleApiState.Loading
+        articleApiRefreshingState = ArticlesApiState.Loading
         viewModelScope.launch {
             try {
                 val listResult = articleRepository.getArticles()
                 _uiState.update {
                     it.copy(articles = listResult)
                 }
-                articleApiRefreshingState = ArticleApiState.Success(listResult)
+                articleApiRefreshingState = ArticlesApiState.Success(listResult)
 
                 // if first load was error and refresh was successful, we want to display the items now
-                if (articleApiState is ArticleApiState.Error) {
-                    articleApiState = ArticleApiState.Success(listResult)
+                if (articlesApiState is ArticlesApiState.Error) {
+                    articlesApiState = ArticlesApiState.Success(listResult)
                 }
             } catch (e: IOException) {
-                articleApiRefreshingState = ArticleApiState.Error
+                articleApiRefreshingState = ArticlesApiState.Error
             }
+        }
+    }
+
+    fun showDetailView(article: Article) {
+        _uiState.update {
+            it.copy(articleInDetailView = article)
+        }
+    }
+
+    fun disableDetailView() {
+        _uiState.update {
+            it.copy(articleInDetailView = null)
         }
     }
 
