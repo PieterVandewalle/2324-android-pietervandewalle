@@ -53,7 +53,6 @@ fun ArticleOverview(modifier: Modifier = Modifier, articleOverviewViewModel: Art
                 is ArticlesApiState.Error -> Text("Couldn't load...")
                 is ArticlesApiState.Success ->
                     ArticleList(
-                        modifier = modifier,
                         articles = articleOverviewState.articles,
                         onViewDetail = { onNavigateToDetail(it.title) },
                     )

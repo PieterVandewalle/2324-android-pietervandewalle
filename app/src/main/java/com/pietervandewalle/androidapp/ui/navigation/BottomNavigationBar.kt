@@ -3,7 +3,7 @@ package com.pietervandewalle.androidapp.ui.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Garage
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.PedalBike
+import androidx.compose.material.icons.filled.School
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 
 @Composable
-fun BottomNavigationBar(currentRoute: String?, goHome: () -> Unit, goCarParks: () -> Unit, goProfile: () -> Unit) {
+fun BottomNavigationBar(currentRoute: String?, goHome: () -> Unit, goCarParks: () -> Unit, goStudyLocations: () -> Unit) {
     val navigationItems = listOf(
         BottomNavigationItem(
             label = stringResource(Screens.Home.title),
@@ -28,10 +28,10 @@ fun BottomNavigationBar(currentRoute: String?, goHome: () -> Unit, goCarParks: (
             onClick = goCarParks,
         ),
         BottomNavigationItem(
-            label = stringResource(Screens.BicycleParking.title),
-            icon = Icons.Filled.PedalBike,
-            route = Screens.BicycleParking.route,
-            onClick = goProfile,
+            label = stringResource(Screens.StudyLocations.title),
+            icon = Icons.Filled.School,
+            route = Screens.StudyLocations.route,
+            onClick = goStudyLocations,
         ),
     )
     if (navigationItems.any { navItem -> navItem.route == currentRoute }) {

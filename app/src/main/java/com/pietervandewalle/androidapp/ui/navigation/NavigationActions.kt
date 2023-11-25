@@ -22,8 +22,8 @@ class NavigationActions(private val navController: NavHostController) {
         navigateToMenuItem(Screens.Home.route)
     }
 
-    fun navigateToProfile() {
-        navigateToMenuItem(Screens.BicycleParking.route)
+    fun navigateToStudyLocations() {
+        navigateToMenuItem(Screens.StudyLocations.route)
     }
 
     fun navigateToCarParksOverview() {

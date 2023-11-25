@@ -2,7 +2,6 @@ package com.pietervandewalle.androidapp.ui
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -19,6 +18,7 @@ import com.pietervandewalle.androidapp.ui.carparks.overview.CarParksOverview
 import com.pietervandewalle.androidapp.ui.navigation.BottomNavigationBar
 import com.pietervandewalle.androidapp.ui.navigation.NavigationActions
 import com.pietervandewalle.androidapp.ui.navigation.Screens
+import com.pietervandewalle.androidapp.ui.studylocations.StudyLocationsOverview
 
 @Composable
 fun AndroidApp(
@@ -31,7 +31,7 @@ fun AndroidApp(
     val currentDestination = navBackStackEntry?.destination
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(currentRoute = currentDestination?.route, goHome = navActions::navigateToHome, goCarParks = navActions::navigateToCarParksOverview, goProfile = navActions::navigateToProfile)
+            BottomNavigationBar(currentRoute = currentDestination?.route, goHome = navActions::navigateToHome, goCarParks = navActions::navigateToCarParksOverview, goStudyLocations = navActions::navigateToStudyLocations)
         },
     ) { innerPadding ->
 
@@ -72,8 +72,8 @@ fun AndroidApp(
                 CarParkDetailView(onNavigateBack = navController::popBackStack)
             }
 
-            composable(route = Screens.BicycleParking.route) {
-                Text("TODO")
+            composable(route = Screens.StudyLocations.route) {
+                StudyLocationsOverview()
             }
         }
     }

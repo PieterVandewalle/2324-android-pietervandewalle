@@ -9,6 +9,7 @@ import retrofit2.Retrofit
 interface AppContainer {
     val carParkRepository: CarParkRepository
     val articleRepository: ArticleRepository
+    val studyLocationRepository: StudyLocationRepository
 }
 
 // container that takes care of dependencies
@@ -36,5 +37,9 @@ class DefaultAppContainer() : AppContainer {
 
     override val articleRepository: ArticleRepository by lazy {
         ApiArticleRepository(retrofitService)
+    }
+
+    override val studyLocationRepository: StudyLocationRepository by lazy {
+        ApiStudyLocationRepository(retrofitService)
     }
 }

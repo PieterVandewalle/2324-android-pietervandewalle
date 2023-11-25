@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Android App</string>
     <string name="home_title">Nieuws</string>
-    <string name="bicycle_parking">Fietsenstallingen</string>
+    <string name="studylocations">Bloklocaties</string>
     <string name="car_parking">Parkeergarages</string>
     <string name="full">Volzet</string>
     <string name="available_space">Vrij</string>
