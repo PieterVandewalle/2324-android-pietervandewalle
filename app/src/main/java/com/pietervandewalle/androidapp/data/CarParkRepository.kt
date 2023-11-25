@@ -11,7 +11,7 @@ interface CarParkRepository {
 }
 class ApiCarParkRepository(private val ghentApiService: GhentApiService) : CarParkRepository {
     override suspend fun getCarParks(): List<CarPark> {
-        return ghentApiService.getCarParks().results.asDomainObjects().sortedBy { carPark -> carPark.name.lowercase() }
+        return ghentApiService.getCarParks().results.asDomainObjects()
     }
     override suspend fun getCarParkByName(name: String): CarPark {
         return ghentApiService.getCarParks().results.asDomainObjects().firstOrNull { carPark -> carPark.name == name } ?: throw IOException()
