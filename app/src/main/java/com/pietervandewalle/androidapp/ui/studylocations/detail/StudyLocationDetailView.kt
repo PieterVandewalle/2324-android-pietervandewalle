@@ -6,12 +6,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Beenhere
 import androidx.compose.material.icons.filled.BookmarkAdded
@@ -20,7 +18,6 @@ import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -37,7 +34,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.SubcomposeAsyncImage
 import com.pietervandewalle.androidapp.R
 import com.pietervandewalle.androidapp.model.StudyLocation
-import com.pietervandewalle.androidapp.ui.carparks.detail.DetailItem
+import com.pietervandewalle.androidapp.ui.common.components.InformationCard
+import com.pietervandewalle.androidapp.ui.common.components.InformationCardSpacer
+import com.pietervandewalle.androidapp.ui.common.components.InformationHeader
+import com.pietervandewalle.androidapp.ui.common.components.InformationList
+import com.pietervandewalle.androidapp.ui.common.components.InformationListItem
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 
@@ -65,93 +66,67 @@ fun StudyLocationDetailView(modifier: Modifier = Modifier, onNavigateBack: () ->
 fun StudyLocationDetail(modifier: Modifier = Modifier, studyLocation: StudyLocation) {
     val context = LocalContext.current
 
-    ElevatedCard(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp), // TODO use dimension resource?
-    ) {
-        Column(modifier = Modifier.padding(10.dp)) {
-            StudyLocationHeader(studyLocation = studyLocation)
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            StudyLocationInformation(studyLocation = studyLocation)
-
-            Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                OutlinedButton(onClick = {
-                    val showInBrowserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(studyLocation.readMoreUrl))
-                    context.startActivity(showInBrowserIntent)
-                }) {
-                    Text("Lees meer")
-                }
-                Button(onClick = {
-                    val gmmIntentUri = Uri.parse("geo:${studyLocation.location.latitude},${studyLocation.location.longitude}?q=${Uri.encode(studyLocation.address)}")
-                    val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-                    context.startActivity(mapIntent)
-                }) {
-                    Text("Navigeer naar locatie")
-                }
+    InformationCard(modifier = modifier) {
+        InformationHeader(title = studyLocation.title) {
+            studyLocation.imageUrl?.let {
+                SubcomposeAsyncImage(
+                    model = it,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp),
+                    contentScale = ContentScale.Crop,
+                    loading = {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    },
+                )
             }
-        }
-    }
-}
-
-@Composable
-fun StudyLocationHeader(studyLocation: StudyLocation) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        Text(
-            text = studyLocation.title,
-            style = MaterialTheme.typography.titleLarge,
-        )
-        studyLocation.imageUrl?.let {
-            SubcomposeAsyncImage(
-                model = it,
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp),
-                contentScale = ContentScale.Crop,
-                loading = {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                },
+            Text(
+                text = studyLocation.label,
+                style = MaterialTheme.typography.bodyMedium,
             )
         }
-        Text(
-            text = studyLocation.label,
-            style = MaterialTheme.typography.bodyMedium,
-        )
-    }
-}
 
-@Composable
-fun StudyLocationInformation(studyLocation: StudyLocation) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight(),
-    ) {
-        Text(
-            text = "Informatie",
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 4.dp),
-        )
-        DetailItem(Icons.Filled.Groups, "Aantal plaatsen", studyLocation.totalCapacity.toString())
-        DetailItem(Icons.Filled.Beenhere, "Gereserveerde plaatsen", studyLocation.reservedAmount.toString())
-        DetailItem(Icons.Filled.LocationOn, "Adres", studyLocation.address)
-        studyLocation.reservationTag?.let {
-            DetailItem(Icons.Filled.BookmarkAdded, "Reservatie", it)
+        InformationCardSpacer()
+
+        InformationList {
+            InformationListItem(Icons.Filled.Groups, "Aantal plaatsen", studyLocation.totalCapacity.toString())
+            InformationListItem(Icons.Filled.Beenhere, "Gereserveerde plaatsen", studyLocation.reservedAmount.toString())
+            InformationListItem(Icons.Filled.LocationOn, "Adres", studyLocation.address)
+            studyLocation.reservationTag?.let {
+                InformationListItem(Icons.Filled.BookmarkAdded, "Reservatie", it)
+            }
+            studyLocation.availableTag?.let {
+                InformationListItem(Icons.Filled.CheckCircle, "Beschikbaar", it)
+            }
         }
-        studyLocation.availableTag?.let {
-            DetailItem(Icons.Filled.CheckCircle, "Beschikbaar", it)
+        InformationCardSpacer()
+        Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+            OutlinedButton(onClick = {
+                val showInBrowserIntent =
+                    Intent(Intent.ACTION_VIEW, Uri.parse(studyLocation.readMoreUrl))
+                context.startActivity(showInBrowserIntent)
+            }) {
+                Text("Lees meer")
+            }
+            Button(onClick = {
+                val gmmIntentUri = Uri.parse(
+                    "geo:${studyLocation.location.latitude},${studyLocation.location.longitude}?q=${
+                        Uri.encode(
+                            studyLocation.address,
+                        )
+                    }",
+                )
+                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                context.startActivity(mapIntent)
+            }) {
+                Text("Navigeer naar locatie")
+            }
         }
     }
 }
