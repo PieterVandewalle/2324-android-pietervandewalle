@@ -15,8 +15,9 @@ object StudyLocationSampler {
                 longitude = 3.7071643003323533,
                 latitude = 51.05358700001341,
             ),
-            tags = emptyList(),
+            reservedAmount = 2,
             label = "Campus Coupure",
+            readmoreUrl = "https://bloklocaties.stad.gent/dashboard/42",
         ),
         StudyLocation(
             id = 25,
@@ -28,8 +29,10 @@ object StudyLocationSampler {
                 longitude = 3.702117900137771,
                 latitude = 51.035405499772274,
             ),
-            tags = listOf("Geen reservatie nodig"),
+            reservationTag = "Geen reservatie nodig",
+            reservedAmount = 0,
             label = "HOGENT campus Schoonmeersen - Gebouw D",
+            readmoreUrl = "https://bloklocaties.stad.gent/dashboard/25",
         ),
 
         StudyLocation(
@@ -42,8 +45,11 @@ object StudyLocationSampler {
                 longitude = 3.726882635229126,
                 latitude = 51.04281334990709,
             ),
-            tags = listOf("Geen reservatie nodig", "Week, 's Avonds"),
+            reservationTag = "Geen reservatie nodig",
+            availableTag = "Morgen nog beschikbaar, Week, Weekend",
+            reservedAmount = 10,
             label = "Campus Tweekerken, Economie en Bedrijfskunde",
+            readmoreUrl = "https://bloklocaties.stad.gent/dashboard/19",
         ),
     )
     val getAll: () -> MutableList<StudyLocation> = {

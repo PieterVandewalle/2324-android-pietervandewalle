@@ -10,6 +10,8 @@ data class ApiStudyLocation(
     val teaser_img_url: String,
     val adres: String,
     val totale_capaciteit: Int,
+    val gereserveerde_plaatsen: Int,
+    val lees_meer: String,
     val geo_punt: ApiGPSCoordinates,
     val tag_1: String?,
     val tag_2: String?,
@@ -26,7 +28,10 @@ fun List<ApiStudyLocation>.asDomainObjects(): List<StudyLocation> {
             totalCapacity = it.totale_capaciteit,
             location = it.geo_punt.asDomainObject(),
             label = it.label_1,
-            tags = listOfNotNull(it.tag_1, it.tag_2),
+            reservedAmount = it.gereserveerde_plaatsen,
+            readmoreUrl = it.lees_meer,
+            reservationTag = it.tag_1,
+            availableTag = it.tag_2,
         )
     }
     return domainList
