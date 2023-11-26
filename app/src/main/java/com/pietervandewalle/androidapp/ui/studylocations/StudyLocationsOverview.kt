@@ -1,6 +1,11 @@
 package com.pietervandewalle.androidapp.ui.studylocations
 
 import android.app.appsearch.SearchResult
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -54,13 +59,23 @@ fun StudyLocationsOverview(modifier: Modifier = Modifier, studyLocationsOverview
     val isRefreshing = studyLocationsApiRefreshingState is StudyLocationsApiState.Loading
     Scaffold(
         topBar = {
-            if (!studyLocationsOverviewState.isSearchOpen) {
+            AnimatedVisibility(
+                visible = !studyLocationsOverviewState.isSearchOpen,
+                enter = fadeIn(),
+                exit = fadeOut(),
+            ) {
                 MyTopAppBar(screenTitle = R.string.studylocations) {
                     IconButton(onClick = studyLocationsOverviewViewModel::openSearch) {
                         Icon(Icons.Filled.Search, contentDescription = null)
                     }
                 }
-            } else {
+            }
+
+            AnimatedVisibility(
+                visible = studyLocationsOverviewState.isSearchOpen,
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically(),
+            ) {
                 MySearchBar(
                     placeholder = stringResource(id = R.string.search_studylocations),
                     searchterm = studyLocationsOverviewState.currentSearchterm,
@@ -83,7 +98,7 @@ fun StudyLocationsOverview(modifier: Modifier = Modifier, studyLocationsOverview
                 is StudyLocationsApiState.Success ->
                     Column(modifier = Modifier.padding(5.dp)) {
                         if (studyLocationsOverviewState.areResultsFiltered) {
-                            SearchResult(hasMatches = studyLocationsOverviewState.studyLocations.isNotEmpty(), searchterm = studyLocationsOverviewState.completedSearchterm, onReset = studyLocationsOverviewViewModel::resetSearch) 
+                            SearchResult(hasMatches = studyLocationsOverviewState.studyLocations.isNotEmpty(), searchterm = studyLocationsOverviewState.completedSearchterm, onReset = studyLocationsOverviewViewModel::resetSearch)
                         }
                         StudyLocations(
                             studyLocations = studyLocationsOverviewState.studyLocations,
