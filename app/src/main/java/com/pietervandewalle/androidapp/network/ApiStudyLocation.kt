@@ -13,6 +13,7 @@ data class ApiStudyLocation(
     val geo_punt: ApiGPSCoordinates,
     val tag_1: String?,
     val tag_2: String?,
+    val label_1: String,
 )
 
 fun List<ApiStudyLocation>.asDomainObjects(): List<StudyLocation> {
@@ -24,6 +25,7 @@ fun List<ApiStudyLocation>.asDomainObjects(): List<StudyLocation> {
             address = it.adres,
             totalCapacity = it.totale_capaciteit,
             location = it.geo_punt.asDomainObject(),
+            label = it.label_1,
             tags = listOfNotNull(it.tag_1, it.tag_2),
         )
     }

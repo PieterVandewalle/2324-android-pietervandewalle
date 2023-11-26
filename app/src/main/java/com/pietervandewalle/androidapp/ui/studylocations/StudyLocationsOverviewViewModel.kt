@@ -22,7 +22,7 @@ class StudyLocationsOverviewViewModel(private val studyLocationRepository: Study
     private val _uiState = MutableStateFlow(StudyLocationsOverviewState(StudyLocationSampler.getAll()))
     val uiState: StateFlow<StudyLocationsOverviewState> = _uiState.asStateFlow()
 
-    private val useApi = false
+    private val useApi = true
 
     var studyLocationsApiState: StudyLocationsApiState by mutableStateOf(StudyLocationsApiState.Loading)
         private set
@@ -36,16 +36,17 @@ class StudyLocationsOverviewViewModel(private val studyLocationRepository: Study
 
     init {
         if (useApi) {
-            getApiCarParks()
+            getApiStudyLocations()
         } else {
             studyLocationsApiState = StudyLocationsApiState.Success(StudyLocationSampler.getAll())
         }
     }
 
-    private fun getApiCarParks() {
+    private fun getApiStudyLocations(searchterm: String? = null) {
+        studyLocationsApiState = StudyLocationsApiState.Loading
         viewModelScope.launch {
             try {
-                val listResult = studyLocationRepository.getStudyLocations()
+                val listResult = studyLocationRepository.getStudyLocations(searchterm)
                 _uiState.update {
                     it.copy(studyLocations = listResult)
                 }
@@ -65,7 +66,9 @@ class StudyLocationsOverviewViewModel(private val studyLocationRepository: Study
         studyLocationsApiRefreshingState = StudyLocationsApiState.Loading
         viewModelScope.launch {
             try {
-                val listResult = studyLocationRepository.getStudyLocations()
+                val listResult = studyLocationRepository.getStudyLocations(
+                    _uiState.value.currentSearchterm.ifBlank { null },
+                )
                 _uiState.update {
                     it.copy(studyLocations = listResult)
                 }
@@ -79,6 +82,47 @@ class StudyLocationsOverviewViewModel(private val studyLocationRepository: Study
                 studyLocationsApiRefreshingState = StudyLocationsApiState.Error
             }
         }
+    }
+
+    fun openSearch() {
+        _uiState.update {
+            it.copy(isSearchOpen = true)
+        }
+    }
+
+    fun closeSearch() {
+        _uiState.update {
+            it.copy(isSearchOpen = false)
+        }
+    }
+
+    fun updateSearchterm(newSearchterm: String) {
+        _uiState.update {
+            it.copy(currentSearchterm = newSearchterm)
+        }
+    }
+
+    fun resetSearch() {
+        _uiState.update {
+            it.copy(
+                currentSearchterm = "",
+                isSearchOpen = false,
+                areResultsFiltered = false,
+                completedSearchterm = "",
+            )
+        }
+        getApiStudyLocations()
+    }
+
+    fun search() {
+        _uiState.update {
+            it.copy(
+                isSearchOpen = false,
+                areResultsFiltered = true,
+                completedSearchterm = it.currentSearchterm,
+            )
+        }
+        getApiStudyLocations(_uiState.value.currentSearchterm)
     }
 
     companion object {

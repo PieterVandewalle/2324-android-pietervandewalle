@@ -16,6 +16,7 @@ object StudyLocationSampler {
                 latitude = 51.05358700001341,
             ),
             tags = emptyList(),
+            label = "Campus Coupure",
         ),
         StudyLocation(
             id = 25,
@@ -28,6 +29,7 @@ object StudyLocationSampler {
                 latitude = 51.035405499772274,
             ),
             tags = listOf("Geen reservatie nodig"),
+            label = "HOGENT campus Schoonmeersen - Gebouw D",
         ),
 
         StudyLocation(
@@ -41,6 +43,7 @@ object StudyLocationSampler {
                 latitude = 51.04281334990709,
             ),
             tags = listOf("Geen reservatie nodig", "Week, 's Avonds"),
+            label = "Campus Tweekerken, Economie en Bedrijfskunde",
         ),
     )
     val getAll: () -> MutableList<StudyLocation> = {
