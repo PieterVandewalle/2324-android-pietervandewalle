@@ -17,7 +17,7 @@ object StudyLocationSampler {
             ),
             reservedAmount = 2,
             label = "Campus Coupure",
-            readmoreUrl = "https://bloklocaties.stad.gent/dashboard/42",
+            readMoreUrl = "https://bloklocaties.stad.gent/dashboard/42",
         ),
         StudyLocation(
             id = 25,
@@ -32,7 +32,7 @@ object StudyLocationSampler {
             reservationTag = "Geen reservatie nodig",
             reservedAmount = 0,
             label = "HOGENT campus Schoonmeersen - Gebouw D",
-            readmoreUrl = "https://bloklocaties.stad.gent/dashboard/25",
+            readMoreUrl = "https://bloklocaties.stad.gent/dashboard/25",
         ),
 
         StudyLocation(
@@ -49,7 +49,7 @@ object StudyLocationSampler {
             availableTag = "Morgen nog beschikbaar, Week, Weekend",
             reservedAmount = 10,
             label = "Campus Tweekerken, Economie en Bedrijfskunde",
-            readmoreUrl = "https://bloklocaties.stad.gent/dashboard/19",
+            readMoreUrl = "https://bloklocaties.stad.gent/dashboard/19",
         ),
     )
     val getAll: () -> MutableList<StudyLocation> = {

@@ -7,7 +7,7 @@ data class StudyLocation(
     val address: String,
     val totalCapacity: Int,
     val reservedAmount: Int,
-    val readmoreUrl: String,
+    val readMoreUrl: String,
     val imageUrl: String? = null,
     val location: GPSCoordinates,
     val reservationTag: String? = null,

@@ -29,7 +29,7 @@ fun List<ApiStudyLocation>.asDomainObjects(): List<StudyLocation> {
             location = it.geo_punt.asDomainObject(),
             label = it.label_1,
             reservedAmount = it.gereserveerde_plaatsen,
-            readmoreUrl = it.lees_meer,
+            readMoreUrl = it.lees_meer,
             reservationTag = it.tag_1,
             availableTag = it.tag_2,
         )

@@ -47,4 +47,13 @@ class NavigationActions(private val navController: NavHostController) {
             ).replace("{", "").replace("}", ""),
         )
     }
+
+    fun navigateToStudyLocationDetail(studyLocationId: Int) {
+        navController.navigate(
+            Screens.StudyLocationDetail.route.replace(
+                DestinationsArgs.STUDYLOCATION_ID_ARG,
+                studyLocationId.toString(),
+            ).replace("{", "").replace("}", ""),
+        )
+    }
 }

@@ -52,7 +52,7 @@ import com.pietervandewalle.androidapp.ui.studylocations.components.ClickOutOfSe
 import com.pietervandewalle.androidapp.ui.studylocations.components.MySearchBar
 
 @Composable
-fun StudyLocationsOverview(modifier: Modifier = Modifier, studyLocationsOverviewViewModel: StudyLocationsOverviewViewModel = viewModel(factory = StudyLocationsOverviewViewModel.Factory)) {
+fun StudyLocationsOverview(modifier: Modifier = Modifier, onNavigateToDetail: (Int) -> Unit, studyLocationsOverviewViewModel: StudyLocationsOverviewViewModel = viewModel(factory = StudyLocationsOverviewViewModel.Factory)) {
     val studyLocationsOverviewState by studyLocationsOverviewViewModel.uiState.collectAsState()
     val studyLocationsApiState = studyLocationsOverviewViewModel.studyLocationsApiState
     val studyLocationsApiRefreshingState = studyLocationsOverviewViewModel.studyLocationsApiRefreshingState
@@ -102,7 +102,7 @@ fun StudyLocationsOverview(modifier: Modifier = Modifier, studyLocationsOverview
                         }
                         StudyLocations(
                             studyLocations = studyLocationsOverviewState.studyLocations,
-                            onViewDetail = { },
+                            onViewDetail = { onNavigateToDetail(it.id) },
                         )
                     }
             }

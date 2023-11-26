@@ -11,7 +11,7 @@ data class StudyLocationsOverviewState(
 )
 
 sealed interface StudyLocationsApiState {
-    data class Success(val carParks: List<StudyLocation>) : StudyLocationsApiState
+    data class Success(val studyLocations: List<StudyLocation>) : StudyLocationsApiState
     object Error : StudyLocationsApiState
     object Loading : StudyLocationsApiState
 }
