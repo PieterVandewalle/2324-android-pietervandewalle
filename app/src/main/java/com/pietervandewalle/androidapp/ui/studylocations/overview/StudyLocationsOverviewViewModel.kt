@@ -1,4 +1,4 @@
-package com.pietervandewalle.androidapp.ui.studylocations
+package com.pietervandewalle.androidapp.ui.studylocations.overview
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,7 +19,9 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 
 class StudyLocationsOverviewViewModel(private val studyLocationRepository: StudyLocationRepository) : ViewModel() {
-    private val _uiState = MutableStateFlow(StudyLocationsOverviewState(StudyLocationSampler.getAll()))
+    private val _uiState = MutableStateFlow(
+        StudyLocationsOverviewState(StudyLocationSampler.getAll())
+    )
     val uiState: StateFlow<StudyLocationsOverviewState> = _uiState.asStateFlow()
 
     private val useApi = true

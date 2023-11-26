@@ -21,7 +21,7 @@ import com.pietervandewalle.androidapp.ui.navigation.BottomNavigationBar
 import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs.STUDYLOCATION_ID_ARG
 import com.pietervandewalle.androidapp.ui.navigation.NavigationActions
 import com.pietervandewalle.androidapp.ui.navigation.Screens
-import com.pietervandewalle.androidapp.ui.studylocations.StudyLocationsOverview
+import com.pietervandewalle.androidapp.ui.studylocations.overview.StudyLocationsOverview
 import com.pietervandewalle.androidapp.ui.studylocations.detail.StudyLocationDetailView
 
 @Composable

@@ -1,4 +1,4 @@
-package com.pietervandewalle.androidapp.ui.studylocations
+package com.pietervandewalle.androidapp.ui.studylocations.overview
 
 import com.pietervandewalle.androidapp.model.StudyLocation
 
