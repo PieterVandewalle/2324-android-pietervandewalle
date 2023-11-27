@@ -9,14 +9,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun InformationCard(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+fun InformationCard(modifier: Modifier = Modifier, headerTitle: String, headerContent: @Composable () -> Unit, informationListContent: @Composable () -> Unit, bottomContent: @Composable () -> Unit) {
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp), // TODO use dimension resource?
     ) {
         Column(modifier = Modifier.padding(10.dp)) {
-            content()
+            InformationHeader(title = headerTitle) {
+                headerContent()
+            }
+
+            InformationCardSpacer()
+
+            InformationList {
+                informationListContent()
+            }
+
+            InformationCardSpacer()
+
+            bottomContent()
         }
     }
 }

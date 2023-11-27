@@ -35,9 +35,6 @@ import coil.compose.SubcomposeAsyncImage
 import com.pietervandewalle.androidapp.R
 import com.pietervandewalle.androidapp.model.StudyLocation
 import com.pietervandewalle.androidapp.ui.common.components.InformationCard
-import com.pietervandewalle.androidapp.ui.common.components.InformationCardSpacer
-import com.pietervandewalle.androidapp.ui.common.components.InformationHeader
-import com.pietervandewalle.androidapp.ui.common.components.InformationList
 import com.pietervandewalle.androidapp.ui.common.components.InformationListItem
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
@@ -66,8 +63,10 @@ fun StudyLocationDetailView(modifier: Modifier = Modifier, onNavigateBack: () ->
 fun StudyLocationDetail(modifier: Modifier = Modifier, studyLocation: StudyLocation) {
     val context = LocalContext.current
 
-    InformationCard(modifier = modifier) {
-        InformationHeader(title = studyLocation.title) {
+    InformationCard(
+        modifier = modifier,
+        headerTitle = studyLocation.title,
+        headerContent = {
             studyLocation.imageUrl?.let {
                 SubcomposeAsyncImage(
                     model = it,
@@ -90,11 +89,8 @@ fun StudyLocationDetail(modifier: Modifier = Modifier, studyLocation: StudyLocat
                 text = studyLocation.label,
                 style = MaterialTheme.typography.bodyMedium,
             )
-        }
-
-        InformationCardSpacer()
-
-        InformationList {
+        },
+        informationListContent = {
             InformationListItem(Icons.Filled.Groups, "Aantal plaatsen", studyLocation.totalCapacity.toString())
             InformationListItem(Icons.Filled.Beenhere, "Gereserveerde plaatsen", studyLocation.reservedAmount.toString())
             InformationListItem(Icons.Filled.LocationOn, "Adres", studyLocation.address)
@@ -104,29 +100,30 @@ fun StudyLocationDetail(modifier: Modifier = Modifier, studyLocation: StudyLocat
             studyLocation.availableTag?.let {
                 InformationListItem(Icons.Filled.CheckCircle, "Beschikbaar", it)
             }
-        }
-        InformationCardSpacer()
-        Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-            OutlinedButton(onClick = {
-                val showInBrowserIntent =
-                    Intent(Intent.ACTION_VIEW, Uri.parse(studyLocation.readMoreUrl))
-                context.startActivity(showInBrowserIntent)
-            }) {
-                Text("Lees meer")
+        },
+        bottomContent = {
+            Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                OutlinedButton(onClick = {
+                    val showInBrowserIntent =
+                        Intent(Intent.ACTION_VIEW, Uri.parse(studyLocation.readMoreUrl))
+                    context.startActivity(showInBrowserIntent)
+                }) {
+                    Text("Lees meer")
+                }
+                Button(onClick = {
+                    val gmmIntentUri = Uri.parse(
+                        "geo:${studyLocation.location.latitude},${studyLocation.location.longitude}?q=${
+                            Uri.encode(
+                                studyLocation.address,
+                            )
+                        }",
+                    )
+                    val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                    context.startActivity(mapIntent)
+                }) {
+                    Text("Navigeer naar locatie")
+                }
             }
-            Button(onClick = {
-                val gmmIntentUri = Uri.parse(
-                    "geo:${studyLocation.location.latitude},${studyLocation.location.longitude}?q=${
-                        Uri.encode(
-                            studyLocation.address,
-                        )
-                    }",
-                )
-                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-                context.startActivity(mapIntent)
-            }) {
-                Text("Navigeer naar locatie")
-            }
-        }
-    }
+        },
+    )
 }

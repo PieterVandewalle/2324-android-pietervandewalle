@@ -28,9 +28,6 @@ import com.pietervandewalle.androidapp.model.CarPark
 import com.pietervandewalle.androidapp.ui.carparks.common.components.CarParkStatusCard
 import com.pietervandewalle.androidapp.ui.carparks.common.helpers.getRelativeTimeSpanString
 import com.pietervandewalle.androidapp.ui.common.components.InformationCard
-import com.pietervandewalle.androidapp.ui.common.components.InformationCardSpacer
-import com.pietervandewalle.androidapp.ui.common.components.InformationHeader
-import com.pietervandewalle.androidapp.ui.common.components.InformationList
 import com.pietervandewalle.androidapp.ui.common.components.InformationListItem
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
@@ -59,18 +56,17 @@ fun CarParkDetailView(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
 @Composable
 fun CarParkDetail(carPark: CarPark, modifier: Modifier = Modifier) {
     val context = LocalContext.current
-    InformationCard(modifier = modifier) {
-        InformationHeader(title = carPark.name) {
+    InformationCard(
+        modifier = modifier,
+        headerTitle = carPark.name,
+        headerContent = {
             CarParkStatusCard(carPark = carPark)
             Text(
                 text = "Laatste update: ${getRelativeTimeSpanString(carPark.lastUpdate)}",
                 style = MaterialTheme.typography.bodySmall,
             )
-        }
-
-        InformationCardSpacer()
-
-        InformationList {
+        },
+        informationListContent = {
             InformationListItem(
                 Icons.Filled.Timeline,
                 "Totale capaciteit",
@@ -95,21 +91,21 @@ fun CarParkDetail(carPark: CarPark, modifier: Modifier = Modifier) {
             carPark.extraInfo?.let {
                 InformationListItem(Icons.Filled.Info, "Extra info", carPark.extraInfo)
             }
-        }
-        InformationCardSpacer()
-
-        Button(onClick = {
-            val gmmIntentUri = Uri.parse(
-                "geo:${carPark.location.latitude},${carPark.location.longitude}?q=" + Uri.encode(
-                    if (!carPark.name.contains("Park")) "Parking ${carPark.name}" else carPark.name,
-                ),
-            )
-            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-            context.startActivity(mapIntent)
-        }) {
-            Text("Navigeer naar deze parking")
-        }
-    }
+        },
+        bottomContent = {
+            Button(onClick = {
+                val gmmIntentUri = Uri.parse(
+                    "geo:${carPark.location.latitude},${carPark.location.longitude}?q=" + Uri.encode(
+                        if (!carPark.name.contains("Park")) "Parking ${carPark.name}" else carPark.name,
+                    ),
+                )
+                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                context.startActivity(mapIntent)
+            }) {
+                Text("Navigeer naar deze parking")
+            }
+        },
+    )
 }
 
 @Composable
