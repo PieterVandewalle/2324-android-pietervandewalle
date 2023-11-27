@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -140,7 +141,12 @@ fun CarParkList(modifier: Modifier = Modifier, carParks: List<CarPark>, onNaviga
     val lazyListState = rememberLazyListState()
     LazyColumn(state = lazyListState, modifier = modifier) {
         items(carParks) { carPark ->
-            CarParkListItem(carPark = carPark, modifier = modifier.clickable { onNavigateToDetail(carPark) }.padding(5.dp))
+            CarParkListItem(
+                carPark = carPark,
+                modifier = modifier.clickable { onNavigateToDetail(carPark) }.padding(
+                    dimensionResource(R.dimen.padding_extra_small),
+                ),
+            )
         }
     }
 }
@@ -160,7 +166,7 @@ fun CarParkListItem(modifier: Modifier = Modifier, carPark: CarPark, isBackgroun
 @Composable
 private fun CarParkDetails(carPark: CarPark) {
     Column(
-        modifier = Modifier.padding(top = 10.dp),
+        modifier = Modifier.padding(top = dimensionResource(id = R.dimen.padding_medium)),
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
         Text(carPark.description, style = MaterialTheme.typography.bodyMedium)

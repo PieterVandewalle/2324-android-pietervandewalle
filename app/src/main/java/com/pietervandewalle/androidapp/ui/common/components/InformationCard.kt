@@ -6,16 +6,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.dimensionResource
+import com.pietervandewalle.androidapp.R
 
 @Composable
 fun InformationCard(modifier: Modifier = Modifier, headerTitle: String, headerContent: @Composable () -> Unit, informationListContent: @Composable () -> Unit, bottomContent: @Composable () -> Unit) {
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp), // TODO use dimension resource?
+            .padding(horizontal = dimensionResource(id = R.dimen.padding_large)),
     ) {
-        Column(modifier = Modifier.padding(10.dp)) {
+        Column(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium))) {
             InformationHeader(title = headerTitle) {
                 headerContent()
             }

@@ -8,7 +8,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.dimensionResource
+import com.pietervandewalle.androidapp.R
 
 @Composable
 fun InformationList(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
@@ -20,7 +21,7 @@ fun InformationList(modifier: Modifier = Modifier, content: @Composable () -> Un
         Text(
             text = "Informatie",
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 4.dp),
+            modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small)),
         )
         content()
     }
