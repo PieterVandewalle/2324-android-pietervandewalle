@@ -1,26 +1,27 @@
 package com.pietervandewalle.androidapp.ui.articles.overview
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Button
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,6 +30,7 @@ import coil.compose.AsyncImage
 import com.pietervandewalle.androidapp.R
 import com.pietervandewalle.androidapp.data.ArticleSampler
 import com.pietervandewalle.androidapp.model.Article
+import com.pietervandewalle.androidapp.ui.LocalSnackbarHostState
 import com.pietervandewalle.androidapp.ui.articles.detail.ArticleDetail
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.common.components.PullRefreshContainer
@@ -39,10 +41,12 @@ import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 fun ArticleOverview(modifier: Modifier = Modifier, articleOverviewViewModel: ArticleOverviewViewModel = viewModel(factory = ArticleOverviewViewModel.Factory), onNavigateToDetail: (articleId: Int) -> Unit) {
     val uiState by articleOverviewViewModel.uiState.collectAsState()
     val articlesUiState = uiState.articles
-    val snackbarHostState = remember { SnackbarHostState() }
 
     val errorMessage = stringResource(id = R.string.error_text)
     val okText = stringResource(id = R.string.ok)
+
+    val snackbarHostState = LocalSnackbarHostState.current
+
     if (uiState.isError) {
         LaunchedEffect(snackbarHostState) {
             snackbarHostState.showSnackbar(
@@ -58,9 +62,6 @@ fun ArticleOverview(modifier: Modifier = Modifier, articleOverviewViewModel: Art
             MyTopAppBar(screenTitle = R.string.home_title) {
             }
         },
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        },
     ) { innerPadding ->
         PullRefreshContainer(
             isRefreshing = uiState.isRefreshing, // rememberPullRefreshState(refreshing = uiState.isRefreshing),
@@ -69,7 +70,13 @@ fun ArticleOverview(modifier: Modifier = Modifier, articleOverviewViewModel: Art
         ) {
             when (articlesUiState) {
                 is ArticlesOverviewUiState.Loading -> LoadingIndicator()
-                is ArticlesOverviewUiState.Error -> Text("Couldn't load...")
+                is ArticlesOverviewUiState.Error -> Column(Modifier.padding(horizontal = dimensionResource(R.dimen.padding_large)), verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))) {
+                    Text(stringResource(R.string.loading_failed))
+                    Button(onClick = articleOverviewViewModel::refresh) {
+                        Text(stringResource(R.string.try_again))
+                    }
+                }
+
                 is ArticlesOverviewUiState.Success ->
                     ArticleList(
                         articles = articlesUiState.articles,

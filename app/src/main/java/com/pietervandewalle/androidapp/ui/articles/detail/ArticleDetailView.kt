@@ -18,28 +18,43 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.pietervandewalle.androidapp.R
 import com.pietervandewalle.androidapp.model.Article
+import com.pietervandewalle.androidapp.ui.LocalSnackbarHostState
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import java.time.format.DateTimeFormatter
 
 @Composable
 fun ArticleDetailView(modifier: Modifier = Modifier, articleDetailViewModel: ArticleDetailViewModel = viewModel(factory = ArticleDetailViewModel.Factory), onNavigateBack: () -> Unit) {
-    val articleDetailState by articleDetailViewModel.uiState.collectAsState()
-    val articleApiState = articleDetailViewModel.articlesApiState
     val context = LocalContext.current
-    val uiArticleState = articleDetailViewModel.uiArticleState.collectAsState()
+    val uiState by articleDetailViewModel.uiState.collectAsState()
+    val articleUiState = uiState.article
 
+    val errorMessage = stringResource(id = R.string.error_text)
+    val okText = stringResource(id = R.string.ok)
+
+    val snackbarHostState = LocalSnackbarHostState.current
+    if (uiState.isError) {
+        LaunchedEffect(snackbarHostState) {
+            snackbarHostState.showSnackbar(
+                message = errorMessage,
+                actionLabel = okText,
+            )
+            articleDetailViewModel.onErrorConsumed()
+        }
+    }
     Scaffold(
         topBar = {
             MyTopAppBar(screenTitle = R.string.home_title, canNavigateBack = true, onNavigateBack = onNavigateBack) {
@@ -48,13 +63,13 @@ fun ArticleDetailView(modifier: Modifier = Modifier, articleDetailViewModel: Art
                         Intent().apply {
                             action = Intent.ACTION_SEND
                             putExtra(Intent.EXTRA_TITLE, "Bekijk dit artikel van Stad Gent")
-                            putExtra(Intent.EXTRA_TEXT, uiArticleState.value!!.readMoreUrl)
+                            putExtra(Intent.EXTRA_TEXT, if (articleUiState is ArticleDetailUiState.Success) articleUiState.article.readMoreUrl else "")
                             type = "text/plain"
                         },
                         "Artikel delen",
                     )
                     context.startActivity(shareIntent)
-                }, enabled = articleApiState is ArticleApiState.Success) {
+                }, enabled = articleUiState is ArticleDetailUiState.Success) {
                     Icon(
                         imageVector = Icons.Outlined.Share,
                         contentDescription = "share",
@@ -64,11 +79,11 @@ fun ArticleDetailView(modifier: Modifier = Modifier, articleDetailViewModel: Art
             }
         },
     ) { innerPadding ->
-        when (articleApiState) {
-            is ArticleApiState.Loading -> Column(modifier = modifier.padding(innerPadding)) { LoadingIndicator() }
-            is ArticleApiState.Error -> Column(modifier = modifier.padding(innerPadding)) { Text("Couldn't load...") }
-            is ArticleApiState.Success ->
-                ArticleDetail(article = uiArticleState.value!!, modifier = modifier.padding(innerPadding))
+        when (articleUiState) {
+            is ArticleDetailUiState.Loading -> Column(modifier = modifier.padding(innerPadding)) { LoadingIndicator() }
+            is ArticleDetailUiState.Error -> Column(modifier = modifier.padding(innerPadding)) { Text("Couldn't load...") }
+            is ArticleDetailUiState.Success ->
+                ArticleDetail(article = articleUiState.article, modifier = modifier.padding(innerPadding))
         }
     }
 }

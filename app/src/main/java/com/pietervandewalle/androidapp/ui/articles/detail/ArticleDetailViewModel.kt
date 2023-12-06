@@ -1,9 +1,5 @@
 package com.pietervandewalle.androidapp.ui.articles.detail
 
-import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -12,44 +8,50 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pietervandewalle.androidapp.AndroidApplication
+import com.pietervandewalle.androidapp.WhileUiSubscribed
+import com.pietervandewalle.androidapp.core.Result
+import com.pietervandewalle.androidapp.core.asResult
 import com.pietervandewalle.androidapp.data.ArticleRepository
-import com.pietervandewalle.androidapp.data.ArticleSampler
 import com.pietervandewalle.androidapp.model.Article
 import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.io.IOException
 
 class ArticleDetailViewModel(private val articleRepository: ArticleRepository, private val savedStateHandle: SavedStateHandle) : ViewModel() {
-    private val _uiState = MutableStateFlow(ArticleDetailState(ArticleSampler.getAll().first()))
-    val uiState: StateFlow<ArticleDetailState> = _uiState.asStateFlow()
-
     private val articleId: Int = savedStateHandle[DestinationsArgs.ARTICLE_ID_ARG]!!
+    private val article: Flow<Result<Article>> = articleRepository.getById(articleId).asResult()
+    private val isError = MutableStateFlow(false)
 
-    lateinit var uiArticleState: StateFlow<Article?>
-    var articlesApiState: ArticleApiState by mutableStateOf(ArticleApiState.Loading)
-        private set
+    val uiState: StateFlow<ArticleDetailState> = combine(
+        article,
+        isError,
+    ) { articleResult, errorOccurred ->
+        val articles: ArticleDetailUiState = when (articleResult) {
+            is Result.Success -> ArticleDetailUiState.Success(articleResult.data)
+            is Result.Loading -> ArticleDetailUiState.Loading
+            is Result.Error -> ArticleDetailUiState.Error
+        }
 
-    init {
-        getRepoArticle(articleId)
-    }
+        ArticleDetailState(
+            articles,
+            errorOccurred,
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = WhileUiSubscribed,
+        initialValue = ArticleDetailState(
+            ArticleDetailUiState.Loading,
+            isError = false,
+        ),
+    )
 
-    private fun getRepoArticle(articleId: Int) {
-        Log.i("articleId", articleId.toString())
-        try {
-            viewModelScope.launch { articleRepository.refresh() }
-            uiArticleState = articleRepository.getById(articleId).stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000L),
-                initialValue = null,
-            )
-            articlesApiState = ArticleApiState.Success
-        } catch (e: IOException) {
-            articlesApiState = ArticleApiState.Error
+    fun onErrorConsumed() {
+        viewModelScope.launch {
+            isError.emit(false)
         }
     }
 
