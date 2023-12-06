@@ -38,6 +38,7 @@ fun ArticleDetailView(modifier: Modifier = Modifier, articleDetailViewModel: Art
     val articleDetailState by articleDetailViewModel.uiState.collectAsState()
     val articleApiState = articleDetailViewModel.articlesApiState
     val context = LocalContext.current
+    val uiArticleState = articleDetailViewModel.uiArticleState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -47,7 +48,7 @@ fun ArticleDetailView(modifier: Modifier = Modifier, articleDetailViewModel: Art
                         Intent().apply {
                             action = Intent.ACTION_SEND
                             putExtra(Intent.EXTRA_TITLE, "Bekijk dit artikel van Stad Gent")
-                            putExtra(Intent.EXTRA_TEXT, articleDetailState.article.readMoreUrl)
+                            putExtra(Intent.EXTRA_TEXT, uiArticleState.value!!.readMoreUrl)
                             type = "text/plain"
                         },
                         "Artikel delen",
@@ -67,7 +68,7 @@ fun ArticleDetailView(modifier: Modifier = Modifier, articleDetailViewModel: Art
             is ArticleApiState.Loading -> Column(modifier = modifier.padding(innerPadding)) { LoadingIndicator() }
             is ArticleApiState.Error -> Column(modifier = modifier.padding(innerPadding)) { Text("Couldn't load...") }
             is ArticleApiState.Success ->
-                ArticleDetail(article = articleDetailState.article, modifier = modifier.padding(innerPadding))
+                ArticleDetail(article = uiArticleState.value!!, modifier = modifier.padding(innerPadding))
         }
     }
 }

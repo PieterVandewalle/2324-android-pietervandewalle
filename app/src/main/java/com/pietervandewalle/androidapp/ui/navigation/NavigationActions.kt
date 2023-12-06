@@ -30,11 +30,11 @@ class NavigationActions(private val navController: NavHostController) {
         navigateToMenuItem(Screens.CarParking.route)
     }
 
-    fun navigateToArticleDetail(title: String) {
+    fun navigateToArticleDetail(articleId: Int) {
         navController.navigate(
             Screens.ArticleDetail.route.replace(
-                DestinationsArgs.ARTICLE_TITLE_ARG,
-                URLEncoder.encode(title, "UTF-8"),
+                DestinationsArgs.ARTICLE_ID_ARG,
+                articleId.toString(),
             ).replace("{", "").replace("}", ""),
         )
     }

@@ -18,11 +18,12 @@ import com.pietervandewalle.androidapp.ui.articles.overview.ArticleOverview
 import com.pietervandewalle.androidapp.ui.carparks.detail.CarParkDetailView
 import com.pietervandewalle.androidapp.ui.carparks.overview.CarParksOverview
 import com.pietervandewalle.androidapp.ui.navigation.BottomNavigationBar
+import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs.ARTICLE_ID_ARG
 import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs.STUDYLOCATION_ID_ARG
 import com.pietervandewalle.androidapp.ui.navigation.NavigationActions
 import com.pietervandewalle.androidapp.ui.navigation.Screens
-import com.pietervandewalle.androidapp.ui.studylocations.overview.StudyLocationsOverview
 import com.pietervandewalle.androidapp.ui.studylocations.detail.StudyLocationDetailView
+import com.pietervandewalle.androidapp.ui.studylocations.overview.StudyLocationsOverview
 
 @Composable
 fun AndroidApp(
@@ -67,7 +68,14 @@ fun AndroidApp(
                 )
             }
 
-            composable(route = Screens.ArticleDetail.route) {
+            composable(
+                route = Screens.ArticleDetail.route,
+                arguments = listOf(
+                    navArgument(
+                        ARTICLE_ID_ARG,
+                    ) { type = NavType.IntType },
+                ),
+            ) {
                 ArticleDetailView(onNavigateBack = navController::popBackStack)
             }
 

@@ -11,12 +11,17 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -31,30 +36,44 @@ import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
 @Composable
-fun ArticleOverview(modifier: Modifier = Modifier, articleOverviewViewModel: ArticleOverviewViewModel = viewModel(factory = ArticleOverviewViewModel.Factory), onNavigateToDetail: (articleName: String) -> Unit) {
-    val articleOverviewState by articleOverviewViewModel.uiState.collectAsState()
-    val articlesApiState = articleOverviewViewModel.articlesApiState
-    val articlesApiRefreshingState = articleOverviewViewModel.articleApiRefreshingState
-    val isRefreshing = articlesApiRefreshingState is ArticlesApiState.Loading
+fun ArticleOverview(modifier: Modifier = Modifier, articleOverviewViewModel: ArticleOverviewViewModel = viewModel(factory = ArticleOverviewViewModel.Factory), onNavigateToDetail: (articleId: Int) -> Unit) {
+    val uiState by articleOverviewViewModel.uiState.collectAsState()
+    val articlesUiState = uiState.articles
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    val errorMessage = stringResource(id = R.string.error_text)
+    val okText = stringResource(id = R.string.ok)
+    if (uiState.isError) {
+        LaunchedEffect(snackbarHostState) {
+            snackbarHostState.showSnackbar(
+                message = errorMessage,
+                actionLabel = okText,
+            )
+            articleOverviewViewModel.onErrorConsumed()
+        }
+    }
 
     Scaffold(
         topBar = {
             MyTopAppBar(screenTitle = R.string.home_title) {
             }
         },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
     ) { innerPadding ->
         PullRefreshContainer(
-            isRefreshing = isRefreshing,
+            isRefreshing = uiState.isRefreshing, // rememberPullRefreshState(refreshing = uiState.isRefreshing),
             onRefresh = articleOverviewViewModel::refresh,
             modifier = modifier.padding(innerPadding),
         ) {
-            when (articlesApiState) {
-                is ArticlesApiState.Loading -> LoadingIndicator()
-                is ArticlesApiState.Error -> Text("Couldn't load...")
-                is ArticlesApiState.Success ->
+            when (articlesUiState) {
+                is ArticlesOverviewUiState.Loading -> LoadingIndicator()
+                is ArticlesOverviewUiState.Error -> Text("Couldn't load...")
+                is ArticlesOverviewUiState.Success ->
                     ArticleList(
-                        articles = articleOverviewState.articles,
-                        onViewDetail = { onNavigateToDetail(it.title) },
+                        articles = articlesUiState.articles,
+                        onViewDetail = { onNavigateToDetail(it.id) },
                     )
             }
         }

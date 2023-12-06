@@ -1,5 +1,6 @@
 package com.pietervandewalle.androidapp.ui.articles.detail
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,40 +14,42 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pietervandewalle.androidapp.AndroidApplication
 import com.pietervandewalle.androidapp.data.ArticleRepository
 import com.pietervandewalle.androidapp.data.ArticleSampler
+import com.pietervandewalle.androidapp.model.Article
 import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.io.IOException
-import java.net.URLDecoder
 
 class ArticleDetailViewModel(private val articleRepository: ArticleRepository, private val savedStateHandle: SavedStateHandle) : ViewModel() {
     private val _uiState = MutableStateFlow(ArticleDetailState(ArticleSampler.getAll().first()))
     val uiState: StateFlow<ArticleDetailState> = _uiState.asStateFlow()
 
-    private val articleTitleEncoded: String? = savedStateHandle[DestinationsArgs.ARTICLE_TITLE_ARG]
+    private val articleId: Int = savedStateHandle[DestinationsArgs.ARTICLE_ID_ARG]!!
 
+    lateinit var uiArticleState: StateFlow<Article?>
     var articlesApiState: ArticleApiState by mutableStateOf(ArticleApiState.Loading)
         private set
 
     init {
-        val articleTitleDecoded = URLDecoder.decode(articleTitleEncoded ?: "", "UTF-8")
-        getApiArticle(articleTitleDecoded)
+        getRepoArticle(articleId)
     }
 
-    private fun getApiArticle(articleTitle: String) {
-        viewModelScope.launch {
-            try {
-                val result = articleRepository.getArticleByTitle(articleTitle)
-                _uiState.update {
-                    it.copy(article = result)
-                }
-                articlesApiState = ArticleApiState.Success(result)
-            } catch (e: IOException) {
-                articlesApiState = ArticleApiState.Error
-            }
+    private fun getRepoArticle(articleId: Int) {
+        Log.i("articleId", articleId.toString())
+        try {
+            viewModelScope.launch { articleRepository.refresh() }
+            uiArticleState = articleRepository.getById(articleId).stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000L),
+                initialValue = null,
+            )
+            articlesApiState = ArticleApiState.Success
+        } catch (e: IOException) {
+            articlesApiState = ArticleApiState.Error
         }
     }
 

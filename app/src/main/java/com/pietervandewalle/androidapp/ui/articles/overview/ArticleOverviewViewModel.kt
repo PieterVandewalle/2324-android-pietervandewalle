@@ -1,96 +1,83 @@
 package com.pietervandewalle.androidapp.ui.articles.overview
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pietervandewalle.androidapp.AndroidApplication
+import com.pietervandewalle.androidapp.WhileUiSubscribed
+import com.pietervandewalle.androidapp.core.Result
+import com.pietervandewalle.androidapp.core.asResult
 import com.pietervandewalle.androidapp.data.ArticleRepository
-import com.pietervandewalle.androidapp.data.ArticleSampler
 import com.pietervandewalle.androidapp.model.Article
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.io.IOException
 
+// Based on https://github.com/jshvarts/UiStatePlayground/blob/master/app/src/main/java/com/example/uistateplayground/ui/HomeViewModel.kt
 class ArticleOverviewViewModel(private val articleRepository: ArticleRepository) : ViewModel() {
-    private val _uiState = MutableStateFlow(ArticleOverviewState(ArticleSampler.getAll()))
-    val uiState: StateFlow<ArticleOverviewState> = _uiState.asStateFlow()
+    private val articles: Flow<Result<List<Article>>> = articleRepository.getAll().asResult()
+    private val isRefreshing = MutableStateFlow(false)
 
-    private val useApi = true
+    private val isError = MutableStateFlow(false)
 
-    var articlesApiState: ArticlesApiState by mutableStateOf(ArticlesApiState.Loading)
-        private set
+    val uiState: StateFlow<ArticleOverviewState> = combine(
+        articles,
+        isRefreshing,
+        isError,
+    ) { articlesResult, refreshing, errorOccurred ->
+        val articles: ArticlesOverviewUiState = when (articlesResult) {
+            is Result.Success -> ArticlesOverviewUiState.Success(articlesResult.data)
+            is Result.Loading -> ArticlesOverviewUiState.Loading
+            is Result.Error -> ArticlesOverviewUiState.Error
+        }
 
-    var articleApiRefreshingState: ArticlesApiState by mutableStateOf(
-        ArticlesApiState.Success(
-            mutableListOf(),
+        ArticleOverviewState(
+            articles,
+            refreshing,
+            errorOccurred,
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = WhileUiSubscribed,
+        initialValue = ArticleOverviewState(
+            ArticlesOverviewUiState.Loading,
+            isRefreshing = false,
+            isError = false,
         ),
     )
-        private set
 
-    init {
-        if (useApi) {
-            getApiArticles()
-        } else {
-            articlesApiState = ArticlesApiState.Success(ArticleSampler.getAll())
-        }
-    }
-
-    private fun getApiArticles() {
+    private val exceptionHandler = CoroutineExceptionHandler { context, exception ->
         viewModelScope.launch {
-            try {
-                val listResult = articleRepository.getArticles()
-                _uiState.update {
-                    it.copy(articles = listResult)
-                }
-                articlesApiState = ArticlesApiState.Success(listResult)
-            } catch (e: IOException) {
-                articlesApiState = ArticlesApiState.Error
-            }
+            isError.emit(true)
         }
     }
 
     fun refresh() {
-        // Don't refresh if still in initial load
-        if (articlesApiState is ArticlesApiState.Loading) {
-            return
-        }
-
-        articleApiRefreshingState = ArticlesApiState.Loading
-        viewModelScope.launch {
-            try {
-                val listResult = articleRepository.getArticles()
-                _uiState.update {
-                    it.copy(articles = listResult)
+        viewModelScope.launch(exceptionHandler) {
+            with(articleRepository) {
+                val refreshArticlesDeferred = async { refresh() }
+                isRefreshing.emit(true)
+                try {
+                    awaitAll(refreshArticlesDeferred)
+                } finally {
+                    isRefreshing.emit(false)
                 }
-                articleApiRefreshingState = ArticlesApiState.Success(listResult)
-
-                // if first load was error and refresh was successful, we want to display the items now
-                if (articlesApiState is ArticlesApiState.Error) {
-                    articlesApiState = ArticlesApiState.Success(listResult)
-                }
-            } catch (e: IOException) {
-                articleApiRefreshingState = ArticlesApiState.Error
             }
         }
     }
 
-    fun showDetailView(article: Article) {
-        _uiState.update {
-            it.copy(articleInDetailView = article)
-        }
-    }
-
-    fun disableDetailView() {
-        _uiState.update {
-            it.copy(articleInDetailView = null)
+    // Should be called after snackbar message is shown
+    fun onErrorConsumed() {
+        viewModelScope.launch {
+            isError.emit(false)
         }
     }
 

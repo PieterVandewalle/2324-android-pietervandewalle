@@ -7,7 +7,7 @@ data class ArticleDetailState(
 )
 
 sealed interface ArticleApiState {
-    data class Success(val article: Article) : ArticleApiState
+    object Success : ArticleApiState
     object Error : ArticleApiState
     object Loading : ArticleApiState
 }
