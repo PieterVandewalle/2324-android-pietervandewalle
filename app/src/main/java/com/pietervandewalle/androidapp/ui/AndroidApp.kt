@@ -2,7 +2,11 @@ package com.pietervandewalle.androidapp.ui
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -25,6 +29,11 @@ import com.pietervandewalle.androidapp.ui.navigation.Screens
 import com.pietervandewalle.androidapp.ui.studylocations.detail.StudyLocationDetailView
 import com.pietervandewalle.androidapp.ui.studylocations.overview.StudyLocationsOverview
 
+// In a separate Kotlin file, e.g., LocalSnackbarHostState.kt
+val LocalSnackbarHostState = compositionLocalOf<SnackbarHostState> {
+    error("No Snackbar Host State provided")
+}
+
 @Composable
 fun AndroidApp(
     navController: NavHostController = rememberNavController(),
@@ -32,63 +41,67 @@ fun AndroidApp(
         NavigationActions(navController)
     },
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    Scaffold(
-        bottomBar = {
-            BottomNavigationBar(currentRoute = currentDestination?.route, goHome = navActions::navigateToHome, goCarParks = navActions::navigateToCarParksOverview, goStudyLocations = navActions::navigateToStudyLocations)
-        },
-    ) { innerPadding ->
 
-        NavHost(
-            navController = navController,
-            startDestination = Screens.Home.route,
-            modifier = Modifier.padding(innerPadding),
-//            enterTransition = {
-//                slideIntoContainer(
-//                    AnimatedContentTransitionScope.SlideDirection.Up,
-//                    animationSpec = tween(300),
-//                )
-//            },
-//            exitTransition = {
-//                slideOutOfContainer(
-//                    AnimatedContentTransitionScope.SlideDirection.Down,
-//                    animationSpec = tween(300),
-//                )
-//            },
-        ) {
-            composable(
-                route = Screens.Home.route,
-            ) {
-                ArticleOverview(onNavigateToDetail = navActions::navigateToArticleDetail)
-            }
-            composable(route = Screens.CarParking.route) {
-                CarParksOverview(
-                    onNavigateToDetail = navActions::navigateToCarParkDetail,
+    CompositionLocalProvider(
+        LocalSnackbarHostState provides snackbarHostState,
+    ) {
+        Scaffold(
+            bottomBar = {
+                BottomNavigationBar(
+                    currentRoute = currentDestination?.route,
+                    goHome = navActions::navigateToHome,
+                    goCarParks = navActions::navigateToCarParksOverview,
+                    goStudyLocations = navActions::navigateToStudyLocations,
                 )
-            }
-
-            composable(
-                route = Screens.ArticleDetail.route,
-                arguments = listOf(
-                    navArgument(
-                        ARTICLE_ID_ARG,
-                    ) { type = NavType.IntType },
-                ),
+            },
+            snackbarHost = { SnackbarHost(snackbarHostState) },
+        ) { innerPadding ->
+            NavHost(
+                navController = navController,
+                startDestination = Screens.Home.route,
+                modifier = Modifier.padding(innerPadding),
             ) {
-                ArticleDetailView(onNavigateBack = navController::popBackStack)
-            }
+                composable(
+                    route = Screens.Home.route,
+                ) {
+                    ArticleOverview(onNavigateToDetail = navActions::navigateToArticleDetail)
+                }
+                composable(route = Screens.CarParking.route) {
+                    CarParksOverview(
+                        onNavigateToDetail = navActions::navigateToCarParkDetail,
+                    )
+                }
 
-            composable(route = Screens.CarParkDetail.route) {
-                CarParkDetailView(onNavigateBack = navController::popBackStack)
-            }
+                composable(
+                    route = Screens.ArticleDetail.route,
+                    arguments = listOf(
+                        navArgument(
+                            ARTICLE_ID_ARG,
+                        ) { type = NavType.IntType },
+                    ),
+                ) {
+                    ArticleDetailView(onNavigateBack = navController::popBackStack)
+                }
 
-            composable(route = Screens.StudyLocations.route) {
-                StudyLocationsOverview(onNavigateToDetail = navActions::navigateToStudyLocationDetail)
-            }
+                composable(route = Screens.CarParkDetail.route) {
+                    CarParkDetailView(onNavigateBack = navController::popBackStack)
+                }
 
-            composable(route = Screens.StudyLocationDetail.route, arguments = listOf(navArgument(STUDYLOCATION_ID_ARG) { type = NavType.IntType })) {
-                StudyLocationDetailView(onNavigateBack = navController::popBackStack)
+                composable(route = Screens.StudyLocations.route) {
+                    StudyLocationsOverview(
+                        onNavigateToDetail = navActions::navigateToStudyLocationDetail,
+                    )
+                }
+
+                composable(
+                    route = Screens.StudyLocationDetail.route,
+                    arguments = listOf(navArgument(STUDYLOCATION_ID_ARG) { type = NavType.IntType }),
+                ) {
+                    StudyLocationDetailView(onNavigateBack = navController::popBackStack)
+                }
             }
         }
     }
