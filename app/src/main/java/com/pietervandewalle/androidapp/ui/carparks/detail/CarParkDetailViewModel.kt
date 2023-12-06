@@ -11,8 +11,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pietervandewalle.androidapp.AndroidApplication
-import com.pietervandewalle.androidapp.data.CarParkRepository
-import com.pietervandewalle.androidapp.data.CarParkSampler
+import com.pietervandewalle.androidapp.data.repo.CarParkRepository
+import com.pietervandewalle.androidapp.data.sampler.CarParkSampler
 import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

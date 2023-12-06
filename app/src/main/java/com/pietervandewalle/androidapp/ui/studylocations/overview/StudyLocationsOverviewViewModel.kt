@@ -9,8 +9,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pietervandewalle.androidapp.AndroidApplication
-import com.pietervandewalle.androidapp.data.StudyLocationRepository
-import com.pietervandewalle.androidapp.data.StudyLocationSampler
+import com.pietervandewalle.androidapp.data.repo.StudyLocationRepository
+import com.pietervandewalle.androidapp.data.sampler.StudyLocationSampler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

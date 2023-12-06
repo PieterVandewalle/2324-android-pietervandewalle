@@ -2,7 +2,6 @@ package com.pietervandewalle.androidapp.network
 
 import kotlinx.coroutines.flow.flow
 import retrofit2.http.GET
-import retrofit2.http.Query
 
 interface GhentApiService {
     @GET("bezetting-parkeergarages-real-time/records?order_by=name&limit=20")
@@ -12,7 +11,9 @@ interface GhentApiService {
     suspend fun getArticles(): ApiResult<ApiArticle>
 
     @GET("bloklocaties-gent/records?order_by=titel&limit=100")
-    suspend fun getStudyLocations(@Query("where")where: String? = null): ApiResult<ApiStudyLocation>
+    suspend fun getStudyLocations(): ApiResult<ApiStudyLocation>
 }
 
 fun GhentApiService.getArticlesAsFlow() = flow { emit(getArticles()) }
+
+fun GhentApiService.getStudyLocationsAsFlow() = flow { emit(getStudyLocations()) }

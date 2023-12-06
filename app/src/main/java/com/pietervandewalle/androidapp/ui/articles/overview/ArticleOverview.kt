@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.pietervandewalle.androidapp.R
-import com.pietervandewalle.androidapp.data.ArticleSampler
+import com.pietervandewalle.androidapp.data.sampler.ArticleSampler
 import com.pietervandewalle.androidapp.model.Article
 import com.pietervandewalle.androidapp.ui.LocalSnackbarHostState
 import com.pietervandewalle.androidapp.ui.articles.detail.ArticleDetail

@@ -11,7 +11,7 @@ import com.pietervandewalle.androidapp.AndroidApplication
 import com.pietervandewalle.androidapp.WhileUiSubscribed
 import com.pietervandewalle.androidapp.core.Result
 import com.pietervandewalle.androidapp.core.asResult
-import com.pietervandewalle.androidapp.data.ArticleRepository
+import com.pietervandewalle.androidapp.data.repo.ArticleRepository
 import com.pietervandewalle.androidapp.model.Article
 import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs
 import kotlinx.coroutines.flow.Flow

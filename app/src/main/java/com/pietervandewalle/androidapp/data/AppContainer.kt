@@ -5,6 +5,12 @@ import androidx.room.Room
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.pietervandewalle.androidapp.data.database.ArticleDao
 import com.pietervandewalle.androidapp.data.database.MyRoomDatabase
+import com.pietervandewalle.androidapp.data.database.StudyLocationDao
+import com.pietervandewalle.androidapp.data.repo.ApiCarParkRepository
+import com.pietervandewalle.androidapp.data.repo.ArticleRepository
+import com.pietervandewalle.androidapp.data.repo.CachingArticleRepository
+import com.pietervandewalle.androidapp.data.repo.CarParkRepository
+import com.pietervandewalle.androidapp.data.repo.StudyLocationRepository
 import com.pietervandewalle.androidapp.network.GhentApiService
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -45,6 +51,10 @@ class DefaultAppContainer(private val applicationContext: Context) : AppContaine
 
     private val articleDao: ArticleDao by lazy {
         myRoomDb.articleDao()
+    }
+
+    private val studyLocationDao: StudyLocationDao by lazy {
+        myRoomDb.studyLocationDao()
     }
 
     override val articleRepository: ArticleRepository by lazy {

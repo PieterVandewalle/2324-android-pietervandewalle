@@ -1,4 +1,4 @@
-package com.pietervandewalle.androidapp.data
+package com.pietervandewalle.androidapp.data.repo
 
 import com.pietervandewalle.androidapp.model.CarPark
 import com.pietervandewalle.androidapp.network.GhentApiService

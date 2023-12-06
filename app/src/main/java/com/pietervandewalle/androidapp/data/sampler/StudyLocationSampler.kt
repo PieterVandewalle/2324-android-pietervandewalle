@@ -1,4 +1,4 @@
-package com.pietervandewalle.androidapp.data
+package com.pietervandewalle.androidapp.data.sampler
 
 import com.pietervandewalle.androidapp.model.GPSCoordinates
 import com.pietervandewalle.androidapp.model.StudyLocation
