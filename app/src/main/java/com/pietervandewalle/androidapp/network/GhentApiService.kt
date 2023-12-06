@@ -17,3 +17,5 @@ interface GhentApiService {
 fun GhentApiService.getArticlesAsFlow() = flow { emit(getArticles()) }
 
 fun GhentApiService.getStudyLocationsAsFlow() = flow { emit(getStudyLocations()) }
+
+fun GhentApiService.getCarParksAsFlow() = flow { emit(getCarParks()) }

@@ -18,20 +18,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.pietervandewalle.androidapp.R
 import com.pietervandewalle.androidapp.model.Article
-import com.pietervandewalle.androidapp.ui.LocalSnackbarHostState
+import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import java.time.format.DateTimeFormatter
@@ -42,19 +40,8 @@ fun ArticleDetailView(modifier: Modifier = Modifier, articleDetailViewModel: Art
     val uiState by articleDetailViewModel.uiState.collectAsState()
     val articleUiState = uiState.article
 
-    val errorMessage = stringResource(id = R.string.error_text)
-    val okText = stringResource(id = R.string.ok)
+    ErrorSnackbar(isError = uiState.isError, onErrorConsumed = articleDetailViewModel::onErrorConsumed)
 
-    val snackbarHostState = LocalSnackbarHostState.current
-    if (uiState.isError) {
-        LaunchedEffect(snackbarHostState) {
-            snackbarHostState.showSnackbar(
-                message = errorMessage,
-                actionLabel = okText,
-            )
-            articleDetailViewModel.onErrorConsumed()
-        }
-    }
     Scaffold(
         topBar = {
             MyTopAppBar(screenTitle = R.string.home_title, canNavigateBack = true, onNavigateBack = onNavigateBack) {

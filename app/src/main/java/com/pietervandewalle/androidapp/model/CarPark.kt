@@ -4,6 +4,7 @@ import java.lang.reflect.Array.get
 import java.time.LocalDateTime
 
 data class CarPark(
+    val id: Int = 0,
     val name: String,
     val lastUpdate: LocalDateTime,
     val totalCapacity: Int,

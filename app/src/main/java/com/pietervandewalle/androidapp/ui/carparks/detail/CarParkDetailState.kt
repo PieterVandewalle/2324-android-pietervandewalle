@@ -3,11 +3,12 @@ package com.pietervandewalle.androidapp.ui.carparks.detail
 import com.pietervandewalle.androidapp.model.CarPark
 
 data class CarParkDetailState(
-    val carPark: CarPark,
+    val carPark: CarParkUiState,
+    val isError: Boolean,
 )
 
-sealed interface CarParkApiState {
-    data class Success(val carPark: CarPark) : CarParkApiState
-    object Error : CarParkApiState
-    object Loading : CarParkApiState
+sealed interface CarParkUiState {
+    data class Success(val carPark: CarPark) : CarParkUiState
+    object Error : CarParkUiState
+    object Loading : CarParkUiState
 }

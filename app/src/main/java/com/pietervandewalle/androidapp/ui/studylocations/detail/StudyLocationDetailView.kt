@@ -23,20 +23,18 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.SubcomposeAsyncImage
 import com.pietervandewalle.androidapp.R
 import com.pietervandewalle.androidapp.model.StudyLocation
-import com.pietervandewalle.androidapp.ui.LocalSnackbarHostState
+import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
 import com.pietervandewalle.androidapp.ui.common.components.InformationCard
 import com.pietervandewalle.androidapp.ui.common.components.InformationListItem
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
@@ -47,19 +45,7 @@ fun StudyLocationDetailView(modifier: Modifier = Modifier, onNavigateBack: () ->
     val uiState by studyLocationDetailViewModel.uiState.collectAsState()
     val studyLocationUiState = uiState.studyLocation
 
-    val errorMessage = stringResource(id = R.string.error_text)
-    val okText = stringResource(id = R.string.ok)
-
-    val snackbarHostState = LocalSnackbarHostState.current
-    if (uiState.isError) {
-        LaunchedEffect(snackbarHostState) {
-            snackbarHostState.showSnackbar(
-                message = errorMessage,
-                actionLabel = okText,
-            )
-            studyLocationDetailViewModel.onErrorConsumed()
-        }
-    }
+    ErrorSnackbar(isError = uiState.isError, onErrorConsumed = studyLocationDetailViewModel::onErrorConsumed)
     Scaffold(
         topBar = {
             MyTopAppBar(screenTitle = R.string.studylocations, canNavigateBack = true, onNavigateBack = onNavigateBack) {

@@ -42,6 +42,7 @@ import com.pietervandewalle.androidapp.model.CarPark
 import com.pietervandewalle.androidapp.model.isAlmostFull
 import com.pietervandewalle.androidapp.model.isFull
 import com.pietervandewalle.androidapp.ui.carparks.common.components.CarParkStatusCard
+import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.common.components.PullRefreshContainer
 import com.pietervandewalle.androidapp.ui.common.helpers.bitmapDescriptorFromVector
@@ -52,38 +53,36 @@ import java.time.Instant
 import java.time.ZoneOffset
 
 @Composable
-fun CarParksOverview(modifier: Modifier = Modifier, onNavigateToDetail: (String) -> Unit, carParksOverviewViewModel: CarParksOverviewViewModel = viewModel(factory = CarParksOverviewViewModel.Factory)) {
-    val carParksOverviewState by carParksOverviewViewModel.uiState.collectAsState()
+fun CarParksOverview(modifier: Modifier = Modifier, onNavigateToDetail: (Int) -> Unit, carParksOverviewViewModel: CarParksOverviewViewModel = viewModel(factory = CarParksOverviewViewModel.Factory)) {
+    val uiState by carParksOverviewViewModel.uiState.collectAsState()
+    val carParksUiState = uiState.carParks
 
-    val carParksApiState = carParksOverviewViewModel.carParksApiState
-    val carParksApiRefreshingState = carParksOverviewViewModel.carParksApiRefreshingState
-    val isRefreshing = carParksApiRefreshingState is CarParksApiState.Loading
-
+    ErrorSnackbar(isError = uiState.isError, onErrorConsumed = carParksOverviewViewModel::onErrorConsumed)
     Scaffold(
         topBar = {
-            CarParksTopAppBar(onToggleMap = carParksOverviewViewModel::toggleMapView, isMapVisible = carParksOverviewState.isMapViewVisible)
+            CarParksTopAppBar(onToggleMap = carParksOverviewViewModel::toggleMapView, isMapVisible = uiState.isMapViewVisible)
         },
     ) { innerPadding ->
         PullRefreshContainer(
-            isRefreshing = isRefreshing,
+            isRefreshing = uiState.isRefreshing,
             onRefresh = carParksOverviewViewModel::refresh,
             modifier = modifier.padding(innerPadding),
         ) {
-            when (carParksApiState) {
-                is CarParksApiState.Loading -> LoadingIndicator()
-                is CarParksApiState.Error -> Text("Couldn't load...")
-                is CarParksApiState.Success -> {
+            when (carParksUiState) {
+                is CarParksUiState.Loading -> LoadingIndicator()
+                is CarParksUiState.Error -> Text("Couldn't load...")
+                is CarParksUiState.Success -> {
                     AnimatedTabVisibility(
-                        isVisible = !carParksOverviewState.isMapViewVisible,
+                        isVisible = !uiState.isMapViewVisible,
                         isLeftTab = true,
                     ) {
-                        CarParkList(carParks = carParksOverviewState.carParks, onNavigateToDetail = { onNavigateToDetail(it.name) })
+                        CarParkList(carParks = carParksUiState.carParks, onNavigateToDetail = { onNavigateToDetail(it.id) })
                     }
                     AnimatedTabVisibility(
-                        isVisible = carParksOverviewState.isMapViewVisible,
+                        isVisible = uiState.isMapViewVisible,
                         isLeftTab = false,
                     ) {
-                        CarParkMap(carParks = carParksOverviewState.carParks, modifier = Modifier.zIndex(1f))
+                        CarParkMap(carParks = carParksUiState.carParks, modifier = Modifier.zIndex(1f))
                     }
                 }
             }
@@ -170,7 +169,7 @@ private fun CarParkDetails(carPark: CarPark) {
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
         Text(carPark.description, style = MaterialTheme.typography.bodyMedium)
-
+        // TODO this should be a use case?
         val lastUpdateMillis = carPark.lastUpdate.toInstant(ZoneOffset.UTC).toEpochMilli()
         val currentMillis = Instant.now().toEpochMilli()
 

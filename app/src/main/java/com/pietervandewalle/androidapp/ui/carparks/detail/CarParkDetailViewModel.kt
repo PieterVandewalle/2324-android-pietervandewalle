@@ -1,8 +1,5 @@
 package com.pietervandewalle.androidapp.ui.carparks.detail
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -11,42 +8,50 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pietervandewalle.androidapp.AndroidApplication
+import com.pietervandewalle.androidapp.WhileUiSubscribed
+import com.pietervandewalle.androidapp.core.Result
+import com.pietervandewalle.androidapp.core.asResult
 import com.pietervandewalle.androidapp.data.repo.CarParkRepository
-import com.pietervandewalle.androidapp.data.sampler.CarParkSampler
+import com.pietervandewalle.androidapp.model.CarPark
 import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.io.IOException
-import java.net.URLDecoder
 
 class CarParkDetailViewModel(private val carParkRepository: CarParkRepository, private val savedStateHandle: SavedStateHandle) : ViewModel() {
-    private val _uiState = MutableStateFlow(CarParkDetailState(CarParkSampler.getAll().first()))
-    val uiState: StateFlow<CarParkDetailState> = _uiState.asStateFlow()
+    private val carParkId: Int = savedStateHandle[DestinationsArgs.CARPARK_ID_ARG]!!
+    private val carPark: Flow<Result<CarPark>> = carParkRepository.getById(carParkId).asResult()
+    private val isError = MutableStateFlow(false)
 
-    private val carParkNameEncoded: String? = savedStateHandle[DestinationsArgs.CARPARK_NAME_ARG]
+    val uiState: StateFlow<CarParkDetailState> = combine(
+        carPark,
+        isError,
+    ) { carParkResult, errorOccurred ->
+        val carPark: CarParkUiState = when (carParkResult) {
+            is Result.Success -> CarParkUiState.Success(carParkResult.data)
+            is Result.Loading -> CarParkUiState.Loading
+            is Result.Error -> CarParkUiState.Error
+        }
 
-    var carParkApiState: CarParkApiState by mutableStateOf(CarParkApiState.Loading)
-        private set
+        CarParkDetailState(
+            carPark,
+            errorOccurred,
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = WhileUiSubscribed,
+        initialValue = CarParkDetailState(
+            CarParkUiState.Loading,
+            isError = false,
+        ),
+    )
 
-    init {
-        val carParkNameDecoded = URLDecoder.decode(carParkNameEncoded ?: "", "UTF-8")
-        getApiCarPark(carParkNameDecoded)
-    }
-
-    private fun getApiCarPark(carParkName: String) {
+    fun onErrorConsumed() {
         viewModelScope.launch {
-            try {
-                val result = carParkRepository.getCarParkByName(carParkName)
-                _uiState.update {
-                    it.copy(carPark = result)
-                }
-                carParkApiState = CarParkApiState.Success(result)
-            } catch (e: IOException) {
-                carParkApiState = CarParkApiState.Error
-            }
+            isError.emit(false)
         }
     }
 

@@ -32,7 +32,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -44,7 +43,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.pietervandewalle.androidapp.R
 import com.pietervandewalle.androidapp.model.StudyLocation
-import com.pietervandewalle.androidapp.ui.LocalSnackbarHostState
+import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.common.components.PullRefreshContainer
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
@@ -56,19 +55,7 @@ fun StudyLocationsOverview(modifier: Modifier = Modifier, onNavigateToDetail: (I
     val uiState by studyLocationsOverviewViewModel.uiState.collectAsState()
     val studyLocationsUiState = uiState.studyLocations
 
-    val snackbarHostState = LocalSnackbarHostState.current
-    val errorMessage = stringResource(id = R.string.error_text)
-    val okText = stringResource(id = R.string.ok)
-
-    if (uiState.isError) {
-        LaunchedEffect(snackbarHostState) {
-            snackbarHostState.showSnackbar(
-                message = errorMessage,
-                actionLabel = okText,
-            )
-            studyLocationsOverviewViewModel.onErrorConsumed()
-        }
-    }
+    ErrorSnackbar(isError = uiState.isError, onErrorConsumed = studyLocationsOverviewViewModel::onErrorConsumed)
 
     Scaffold(
         topBar = {

@@ -23,13 +23,13 @@ import com.pietervandewalle.androidapp.ui.carparks.detail.CarParkDetailView
 import com.pietervandewalle.androidapp.ui.carparks.overview.CarParksOverview
 import com.pietervandewalle.androidapp.ui.navigation.BottomNavigationBar
 import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs.ARTICLE_ID_ARG
+import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs.CARPARK_ID_ARG
 import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs.STUDYLOCATION_ID_ARG
 import com.pietervandewalle.androidapp.ui.navigation.NavigationActions
 import com.pietervandewalle.androidapp.ui.navigation.Screens
 import com.pietervandewalle.androidapp.ui.studylocations.detail.StudyLocationDetailView
 import com.pietervandewalle.androidapp.ui.studylocations.overview.StudyLocationsOverview
 
-// In a separate Kotlin file, e.g., LocalSnackbarHostState.kt
 val LocalSnackbarHostState = compositionLocalOf<SnackbarHostState> {
     error("No Snackbar Host State provided")
 }
@@ -86,7 +86,14 @@ fun AndroidApp(
                     ArticleDetailView(onNavigateBack = navController::popBackStack)
                 }
 
-                composable(route = Screens.CarParkDetail.route) {
+                composable(
+                    route = Screens.CarParkDetail.route,
+                    arguments = listOf(
+                        navArgument(
+                            CARPARK_ID_ARG,
+                        ) { type = NavType.IntType },
+                    ),
+                ) {
                     CarParkDetailView(onNavigateBack = navController::popBackStack)
                 }
 

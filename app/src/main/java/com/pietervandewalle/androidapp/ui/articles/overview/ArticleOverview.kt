@@ -16,7 +16,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -30,8 +29,8 @@ import coil.compose.AsyncImage
 import com.pietervandewalle.androidapp.R
 import com.pietervandewalle.androidapp.data.sampler.ArticleSampler
 import com.pietervandewalle.androidapp.model.Article
-import com.pietervandewalle.androidapp.ui.LocalSnackbarHostState
 import com.pietervandewalle.androidapp.ui.articles.detail.ArticleDetail
+import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.common.components.PullRefreshContainer
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
@@ -42,20 +41,7 @@ fun ArticleOverview(modifier: Modifier = Modifier, articleOverviewViewModel: Art
     val uiState by articleOverviewViewModel.uiState.collectAsState()
     val articlesUiState = uiState.articles
 
-    val errorMessage = stringResource(id = R.string.error_text)
-    val okText = stringResource(id = R.string.ok)
-
-    val snackbarHostState = LocalSnackbarHostState.current
-
-    if (uiState.isError) {
-        LaunchedEffect(snackbarHostState) {
-            snackbarHostState.showSnackbar(
-                message = errorMessage,
-                actionLabel = okText,
-            )
-            articleOverviewViewModel.onErrorConsumed()
-        }
-    }
+    ErrorSnackbar(isError = uiState.isError, onErrorConsumed = articleOverviewViewModel::onErrorConsumed)
 
     Scaffold(
         topBar = {

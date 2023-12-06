@@ -27,6 +27,7 @@ import com.pietervandewalle.androidapp.data.sampler.CarParkSampler
 import com.pietervandewalle.androidapp.model.CarPark
 import com.pietervandewalle.androidapp.ui.carparks.common.components.CarParkStatusCard
 import com.pietervandewalle.androidapp.ui.carparks.common.helpers.getRelativeTimeSpanString
+import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
 import com.pietervandewalle.androidapp.ui.common.components.InformationCard
 import com.pietervandewalle.androidapp.ui.common.components.InformationListItem
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
@@ -35,8 +36,10 @@ import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
 @Composable
 fun CarParkDetailView(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, carParkDetailViewModel: CarParkDetailViewModel = viewModel(factory = CarParkDetailViewModel.Factory)) {
-    val carParkDetailState by carParkDetailViewModel.uiState.collectAsState()
-    val carParkApiState = carParkDetailViewModel.carParkApiState
+    val uiState by carParkDetailViewModel.uiState.collectAsState()
+    val carParkUiState = uiState.carPark
+
+    ErrorSnackbar(isError = uiState.isError, onErrorConsumed = carParkDetailViewModel::onErrorConsumed)
 
     Scaffold(
         topBar = {
@@ -44,11 +47,11 @@ fun CarParkDetailView(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
             }
         },
     ) { innerPadding ->
-        when (carParkApiState) {
-            is CarParkApiState.Loading -> Column(modifier = modifier.padding(innerPadding)) { LoadingIndicator() }
-            is CarParkApiState.Error -> Column(modifier = modifier.padding(innerPadding)) { Text("Couldn't load...") }
-            is CarParkApiState.Success ->
-                CarParkDetail(carPark = carParkDetailState.carPark, modifier = modifier.padding(innerPadding))
+        when (carParkUiState) {
+            is CarParkUiState.Loading -> Column(modifier = modifier.padding(innerPadding)) { LoadingIndicator() }
+            is CarParkUiState.Error -> Column(modifier = modifier.padding(innerPadding)) { Text("Couldn't load...") }
+            is CarParkUiState.Success ->
+                CarParkDetail(carPark = carParkUiState.carPark, modifier = modifier.padding(innerPadding))
         }
     }
 }

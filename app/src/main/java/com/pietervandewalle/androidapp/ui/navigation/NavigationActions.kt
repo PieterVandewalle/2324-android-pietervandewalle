@@ -2,7 +2,6 @@ package com.pietervandewalle.androidapp.ui.navigation
 
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import java.net.URLEncoder
 
 class NavigationActions(private val navController: NavHostController) {
     private fun navigateToMenuItem(route: String) {
@@ -39,11 +38,11 @@ class NavigationActions(private val navController: NavHostController) {
         )
     }
 
-    fun navigateToCarParkDetail(carParkName: String) {
+    fun navigateToCarParkDetail(carParkId: Int) {
         navController.navigate(
             Screens.CarParkDetail.route.replace(
-                DestinationsArgs.CARPARK_NAME_ARG,
-                URLEncoder.encode(carParkName, "UTF-8"),
+                DestinationsArgs.CARPARK_ID_ARG,
+                carParkId.toString(),
             ).replace("{", "").replace("}", ""),
         )
     }

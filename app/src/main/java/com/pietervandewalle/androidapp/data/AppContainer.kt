@@ -4,11 +4,12 @@ import android.content.Context
 import androidx.room.Room
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.pietervandewalle.androidapp.data.database.ArticleDao
+import com.pietervandewalle.androidapp.data.database.CarParkDao
 import com.pietervandewalle.androidapp.data.database.MyRoomDatabase
 import com.pietervandewalle.androidapp.data.database.StudyLocationDao
-import com.pietervandewalle.androidapp.data.repo.ApiCarParkRepository
 import com.pietervandewalle.androidapp.data.repo.ArticleRepository
 import com.pietervandewalle.androidapp.data.repo.CachingArticleRepository
+import com.pietervandewalle.androidapp.data.repo.CachingCarParkRepository
 import com.pietervandewalle.androidapp.data.repo.CachingStudyLocationRepository
 import com.pietervandewalle.androidapp.data.repo.CarParkRepository
 import com.pietervandewalle.androidapp.data.repo.StudyLocationRepository
@@ -42,10 +43,6 @@ class DefaultAppContainer(private val applicationContext: Context) : AppContaine
         retrofit.create(GhentApiService::class.java)
     }
 
-    override val carParkRepository: CarParkRepository by lazy {
-        ApiCarParkRepository(retrofitService)
-    }
-
     private val myRoomDb: MyRoomDatabase by lazy {
         Room.databaseBuilder(applicationContext, MyRoomDatabase::class.java, "article_database").build()
     }
@@ -58,11 +55,19 @@ class DefaultAppContainer(private val applicationContext: Context) : AppContaine
         myRoomDb.studyLocationDao()
     }
 
+    private val carParkDao: CarParkDao by lazy {
+        myRoomDb.carParkDao()
+    }
+
     override val articleRepository: ArticleRepository by lazy {
         CachingArticleRepository(articleDao = articleDao, ghentApiService = retrofitService)
     }
 
     override val studyLocationRepository: StudyLocationRepository by lazy {
         CachingStudyLocationRepository(studyLocationDao = studyLocationDao, ghentApiService = retrofitService)
+    }
+
+    override val carParkRepository: CarParkRepository by lazy {
+        CachingCarParkRepository(carParkDao = carParkDao, ghentApiService = retrofitService)
     }
 }

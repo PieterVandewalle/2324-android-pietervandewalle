@@ -3,12 +3,14 @@ package com.pietervandewalle.androidapp.ui.carparks.overview
 import com.pietervandewalle.androidapp.model.CarPark
 
 data class CarParksOverviewState(
-    val carParks: List<CarPark>,
-    val isMapViewVisible: Boolean = false,
+    val carParks: CarParksUiState,
+    val isRefreshing: Boolean,
+    val isError: Boolean,
+    val isMapViewVisible: Boolean,
 )
 
-sealed interface CarParksApiState {
-    data class Success(val carParks: List<CarPark>) : CarParksApiState
-    object Error : CarParksApiState
-    object Loading : CarParksApiState
+sealed interface CarParksUiState {
+    data class Success(val carParks: List<CarPark>) : CarParksUiState
+    object Error : CarParksUiState
+    object Loading : CarParksUiState
 }
