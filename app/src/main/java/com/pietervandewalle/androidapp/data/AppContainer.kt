@@ -9,6 +9,7 @@ import com.pietervandewalle.androidapp.data.database.StudyLocationDao
 import com.pietervandewalle.androidapp.data.repo.ApiCarParkRepository
 import com.pietervandewalle.androidapp.data.repo.ArticleRepository
 import com.pietervandewalle.androidapp.data.repo.CachingArticleRepository
+import com.pietervandewalle.androidapp.data.repo.CachingStudyLocationRepository
 import com.pietervandewalle.androidapp.data.repo.CarParkRepository
 import com.pietervandewalle.androidapp.data.repo.StudyLocationRepository
 import com.pietervandewalle.androidapp.network.GhentApiService
@@ -62,6 +63,6 @@ class DefaultAppContainer(private val applicationContext: Context) : AppContaine
     }
 
     override val studyLocationRepository: StudyLocationRepository by lazy {
-        ApiStudyLocationRepository(retrofitService)
+        CachingStudyLocationRepository(studyLocationDao = studyLocationDao, ghentApiService = retrofitService)
     }
 }

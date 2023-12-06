@@ -30,14 +30,14 @@ class ArticleDetailViewModel(private val articleRepository: ArticleRepository, p
         article,
         isError,
     ) { articleResult, errorOccurred ->
-        val articles: ArticleDetailUiState = when (articleResult) {
+        val article: ArticleDetailUiState = when (articleResult) {
             is Result.Success -> ArticleDetailUiState.Success(articleResult.data)
             is Result.Loading -> ArticleDetailUiState.Loading
             is Result.Error -> ArticleDetailUiState.Error
         }
 
         ArticleDetailState(
-            articles,
+            article,
             errorOccurred,
         )
     }.stateIn(

@@ -5,7 +5,9 @@ import androidx.room.PrimaryKey
 import com.pietervandewalle.androidapp.model.GPSCoordinates
 import com.pietervandewalle.androidapp.model.StudyLocation
 
-@Entity(tableName = "studyLocations")
+@Entity(
+    tableName = "studyLocations",
+)
 data class DbStudyLocation(
     @PrimaryKey(autoGenerate = false)
     val id: Int,

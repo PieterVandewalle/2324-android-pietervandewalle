@@ -1,8 +1,5 @@
 package com.pietervandewalle.androidapp.ui.studylocations.detail
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -11,42 +8,50 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pietervandewalle.androidapp.AndroidApplication
+import com.pietervandewalle.androidapp.WhileUiSubscribed
+import com.pietervandewalle.androidapp.core.Result
+import com.pietervandewalle.androidapp.core.asResult
 import com.pietervandewalle.androidapp.data.repo.StudyLocationRepository
-import com.pietervandewalle.androidapp.data.sampler.StudyLocationSampler
+import com.pietervandewalle.androidapp.model.StudyLocation
 import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.io.IOException
 
 class StudyLocationDetailViewModel(private val studyLocationRepository: StudyLocationRepository, private val savedStateHandle: SavedStateHandle) : ViewModel() {
-    private val _uiState = MutableStateFlow(
-        StudyLocationDetailState(StudyLocationSampler.getAll().first()),
-    )
-    val uiState: StateFlow<StudyLocationDetailState> = _uiState.asStateFlow()
-
     private val studyLocationId: Int = savedStateHandle[DestinationsArgs.STUDYLOCATION_ID_ARG]!!
-    var studyLocationApiState: StudyLocationApiState by mutableStateOf(StudyLocationApiState.Loading)
-        private set
+    private val studyLocation: Flow<Result<StudyLocation>> = studyLocationRepository.getById(studyLocationId).asResult()
+    private val isError = MutableStateFlow(false)
 
-    init {
-        getApiStudyLocation(studyLocationId)
-    }
+    val uiState: StateFlow<StudyLocationDetailState> = combine(
+        studyLocation,
+        isError,
+    ) { studyLocationResult, errorOccurred ->
+        val studyLocation: StudyLocationUiState = when (studyLocationResult) {
+            is Result.Success -> StudyLocationUiState.Success(studyLocationResult.data)
+            is Result.Loading -> StudyLocationUiState.Loading
+            is Result.Error -> StudyLocationUiState.Error
+        }
 
-    private fun getApiStudyLocation(id: Int) {
-        studyLocationApiState = StudyLocationApiState.Loading
+        StudyLocationDetailState(
+            studyLocation,
+            errorOccurred,
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = WhileUiSubscribed,
+        initialValue = StudyLocationDetailState(
+            StudyLocationUiState.Loading,
+            isError = false,
+        ),
+    )
+
+    fun onErrorConsumed() {
         viewModelScope.launch {
-            try {
-                val result = studyLocationRepository.getStudyLocationById(id)
-                _uiState.update {
-                    it.copy(studyLocation = result)
-                }
-                studyLocationApiState = StudyLocationApiState.Success(result)
-            } catch (e: IOException) {
-                studyLocationApiState = StudyLocationApiState.Error
-            }
+            isError.emit(false)
         }
     }
 

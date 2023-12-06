@@ -27,8 +27,8 @@ fun InformationListItem(icon: ImageVector, label: String, value: String, modifie
             imageVector = icon,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.tertiary,
+            modifier = Modifier.padding(end = dimensionResource(id = R.dimen.padding_extra_large)),
         )
-        InformationCardSpacer()
         Column {
             Text(
                 text = label,

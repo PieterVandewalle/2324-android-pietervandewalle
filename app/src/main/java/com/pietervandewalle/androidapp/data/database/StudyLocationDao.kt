@@ -14,7 +14,7 @@ interface StudyLocationDao {
     @Query("SELECT * from studyLocations ORDER BY title")
     fun getAll(): Flow<List<DbStudyLocation>>
 
-    @Query("SELECT * FROM studyLocations WHERE LOWER(title) LIKE LOWER(:searchTerm) OR LOWER(label) LIKE LOWER(:searchTerm) OR LOWER(address) LIKE LOWER(:searchTerm) ORDER BY title")
+    @Query("SELECT * FROM studyLocations WHERE title LIKE '%' || :searchTerm || '%' OR address LIKE '%' || :searchTerm || '%' ORDER BY title")
     fun getAllBySearchTerm(searchTerm: String): Flow<List<DbStudyLocation>>
 
     @Query("SELECT * from studyLocations WHERE id = :id")

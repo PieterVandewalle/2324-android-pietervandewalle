@@ -41,7 +41,6 @@ class CachingArticleRepository(private val articleDao: ArticleDao, private val g
     override suspend fun refresh() {
         ghentApiService.getArticlesAsFlow().collect {
             for (article in it.results.asDomainObjects()) {
-                Log.i("TEST", "refresh: $article")
                 insert(article)
             }
         }

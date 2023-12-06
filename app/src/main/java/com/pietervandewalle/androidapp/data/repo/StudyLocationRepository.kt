@@ -1,5 +1,6 @@
 package com.pietervandewalle.androidapp.data.repo
 
+import android.util.Log
 import com.pietervandewalle.androidapp.data.database.StudyLocationDao
 import com.pietervandewalle.androidapp.data.database.asDbStudyLocation
 import com.pietervandewalle.androidapp.data.database.asDomainStudyLocation
@@ -9,6 +10,7 @@ import com.pietervandewalle.androidapp.network.GhentApiService
 import com.pietervandewalle.androidapp.network.asDomainObjects
 import com.pietervandewalle.androidapp.network.getStudyLocationsAsFlow
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 
