@@ -43,6 +43,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.pietervandewalle.androidapp.R
 import com.pietervandewalle.androidapp.model.StudyLocation
+import com.pietervandewalle.androidapp.ui.common.components.ErrorLoadingIndicatorWithRetry
 import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.common.components.PullRefreshContainer
@@ -94,7 +95,7 @@ fun StudyLocationsOverview(modifier: Modifier = Modifier, onNavigateToDetail: (I
         ) {
             when (studyLocationsUiState) {
                 is StudyLocationsUiState.Loading -> LoadingIndicator()
-                is StudyLocationsUiState.Error -> Text("Couldn't load...")
+                is StudyLocationsUiState.Error -> ErrorLoadingIndicatorWithRetry(onRetry = studyLocationsOverviewViewModel::refresh)
                 is StudyLocationsUiState.Success ->
                     Column(modifier = Modifier.padding(5.dp)) {
                         if (uiState.areResultsFiltered) {

@@ -20,6 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pietervandewalle.androidapp.R
@@ -49,7 +50,9 @@ fun CarParkDetailView(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
     ) { innerPadding ->
         when (carParkUiState) {
             is CarParkUiState.Loading -> Column(modifier = modifier.padding(innerPadding)) { LoadingIndicator() }
-            is CarParkUiState.Error -> Column(modifier = modifier.padding(innerPadding)) { Text("Couldn't load...") }
+            is CarParkUiState.Error -> Column(modifier = modifier.padding(innerPadding)) {
+                Text(stringResource(id = R.string.loading_failed))
+            }
             is CarParkUiState.Success ->
                 CarParkDetail(carPark = carParkUiState.carPark, modifier = modifier.padding(innerPadding))
         }
@@ -65,34 +68,37 @@ fun CarParkDetail(carPark: CarPark, modifier: Modifier = Modifier) {
         headerContent = {
             CarParkStatusCard(carPark = carPark)
             Text(
-                text = "Laatste update: ${getRelativeTimeSpanString(carPark.lastUpdate)}",
+                text = stringResource(
+                    R.string.last_update,
+                    getRelativeTimeSpanString(carPark.lastUpdate),
+                ),
                 style = MaterialTheme.typography.bodySmall,
             )
         },
         informationListContent = {
             InformationListItem(
                 Icons.Filled.Timeline,
-                "Totale capaciteit",
+                stringResource(R.string.total_capacity),
                 carPark.totalCapacity.toString(),
             )
             InformationListItem(
                 Icons.Filled.CheckCircle,
-                "Beschikbare capaciteit",
+                stringResource(R.string.available_capacity),
                 carPark.availableCapacity.toString(),
             )
-            InformationListItem(Icons.Filled.Work, "Beheerder", carPark.operator)
+            InformationListItem(Icons.Filled.Work, stringResource(R.string.operator), carPark.operator)
             InformationListItem(
                 Icons.Filled.Co2,
-                "Lage-emissiezone",
-                if (carPark.isInLEZ) "Ja" else "Nee",
+                stringResource(R.string.low_emission_zone),
+                if (carPark.isInLEZ) stringResource(R.string.yes) else stringResource(R.string.no),
             )
             InformationListItem(
                 Icons.Filled.Payments,
                 "Gratis parkeren",
-                if (carPark.isFree) "Ja" else "Nee",
+                if (carPark.isFree) stringResource(R.string.yes) else stringResource(R.string.no),
             )
             carPark.extraInfo?.let {
-                InformationListItem(Icons.Filled.Info, "Extra info", carPark.extraInfo)
+                InformationListItem(Icons.Filled.Info, stringResource(R.string.extra_info), carPark.extraInfo)
             }
         },
         bottomContent = {
@@ -105,7 +111,7 @@ fun CarParkDetail(carPark: CarPark, modifier: Modifier = Modifier) {
                 val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
                 context.startActivity(mapIntent)
             }) {
-                Text("Navigeer naar deze parking")
+                Text(stringResource(R.string.navigate))
             }
         },
     )

@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.SubcomposeAsyncImage
@@ -54,7 +55,7 @@ fun StudyLocationDetailView(modifier: Modifier = Modifier, onNavigateBack: () ->
     ) { innerPadding ->
         when (studyLocationUiState) {
             is StudyLocationUiState.Loading -> Column(modifier = modifier.padding(innerPadding)) { LoadingIndicator() }
-            is StudyLocationUiState.Error -> Column(modifier = modifier.padding(innerPadding)) { Text("Couldn't load...") }
+            is StudyLocationUiState.Error -> Column(modifier = modifier.padding(innerPadding)) { Text(stringResource(id = R.string.loading_failed)) }
             is StudyLocationUiState.Success ->
                 StudyLocationDetail(modifier = modifier.padding(innerPadding), studyLocation = studyLocationUiState.studyLocation)
         }
@@ -93,14 +94,26 @@ fun StudyLocationDetail(modifier: Modifier = Modifier, studyLocation: StudyLocat
             )
         },
         informationListContent = {
-            InformationListItem(Icons.Filled.Groups, "Aantal plaatsen", studyLocation.totalCapacity.toString())
-            InformationListItem(Icons.Filled.Beenhere, "Gereserveerde plaatsen", studyLocation.reservedAmount.toString())
-            InformationListItem(Icons.Filled.LocationOn, "Adres", studyLocation.address)
+            InformationListItem(Icons.Filled.Groups, stringResource(R.string.number_of_study_spots), studyLocation.totalCapacity.toString())
+            InformationListItem(
+                Icons.Filled.Beenhere,
+                stringResource(
+                    R.string.reserved_study_spots,
+                ),
+                studyLocation.reservedAmount.toString(),
+            )
+            InformationListItem(Icons.Filled.LocationOn, stringResource(R.string.address), studyLocation.address)
             studyLocation.reservationTag?.let {
-                InformationListItem(Icons.Filled.BookmarkAdded, "Reservatie", it)
+                InformationListItem(
+                    Icons.Filled.BookmarkAdded,
+                    stringResource(
+                        R.string.reservation,
+                    ),
+                    it,
+                )
             }
             studyLocation.availableTag?.let {
-                InformationListItem(Icons.Filled.CheckCircle, "Beschikbaar", it)
+                InformationListItem(Icons.Filled.CheckCircle, stringResource(R.string.available), it)
             }
         },
         bottomContent = {
@@ -110,7 +123,7 @@ fun StudyLocationDetail(modifier: Modifier = Modifier, studyLocation: StudyLocat
                         Intent(Intent.ACTION_VIEW, Uri.parse(studyLocation.readMoreUrl))
                     context.startActivity(showInBrowserIntent)
                 }) {
-                    Text("Lees meer")
+                    Text(stringResource(R.string.read_more))
                 }
                 Button(onClick = {
                     val gmmIntentUri = Uri.parse(
@@ -123,7 +136,7 @@ fun StudyLocationDetail(modifier: Modifier = Modifier, studyLocation: StudyLocat
                     val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
                     context.startActivity(mapIntent)
                 }) {
-                    Text("Navigeer naar locatie")
+                    Text(stringResource(R.string.navigate))
                 }
             }
         },

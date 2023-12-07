@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -40,6 +41,11 @@ fun ArticleDetailView(modifier: Modifier = Modifier, articleDetailViewModel: Art
     val uiState by articleDetailViewModel.uiState.collectAsState()
     val articleUiState = uiState.article
 
+    val shareIntentTitle = stringResource(R.string.share_article)
+    val shareIntentExtraTitle = stringResource(
+        R.string.read_this_article_from_city_ghent,
+    )
+
     ErrorSnackbar(isError = uiState.isError, onErrorConsumed = articleDetailViewModel::onErrorConsumed)
 
     Scaffold(
@@ -49,11 +55,14 @@ fun ArticleDetailView(modifier: Modifier = Modifier, articleDetailViewModel: Art
                     val shareIntent: Intent = Intent.createChooser(
                         Intent().apply {
                             action = Intent.ACTION_SEND
-                            putExtra(Intent.EXTRA_TITLE, "Bekijk dit artikel van Stad Gent")
+                            putExtra(
+                                Intent.EXTRA_TITLE,
+                                shareIntentExtraTitle,
+                            )
                             putExtra(Intent.EXTRA_TEXT, if (articleUiState is ArticleDetailUiState.Success) articleUiState.article.readMoreUrl else "")
                             type = "text/plain"
                         },
-                        "Artikel delen",
+                        shareIntentTitle,
                     )
                     context.startActivity(shareIntent)
                 }, enabled = articleUiState is ArticleDetailUiState.Success) {
@@ -68,7 +77,11 @@ fun ArticleDetailView(modifier: Modifier = Modifier, articleDetailViewModel: Art
     ) { innerPadding ->
         when (articleUiState) {
             is ArticleDetailUiState.Loading -> Column(modifier = modifier.padding(innerPadding)) { LoadingIndicator() }
-            is ArticleDetailUiState.Error -> Column(modifier = modifier.padding(innerPadding)) { Text("Couldn't load...") }
+            is ArticleDetailUiState.Error -> Column(modifier = modifier.padding(innerPadding)) {
+                Text(
+                    stringResource(id = R.string.loading_failed),
+                )
+            }
             is ArticleDetailUiState.Success ->
                 ArticleDetail(article = articleUiState.article, modifier = modifier.padding(innerPadding))
         }
@@ -93,7 +106,7 @@ fun ArticleDetail(modifier: Modifier = Modifier, article: Article) {
         Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Text(article.title, style = MaterialTheme.typography.titleLarge)
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Stad Gent", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.city_ghent), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
                 Text(
                     dateFormatter.format(article.date),
                     style = MaterialTheme.typography.bodyMedium,

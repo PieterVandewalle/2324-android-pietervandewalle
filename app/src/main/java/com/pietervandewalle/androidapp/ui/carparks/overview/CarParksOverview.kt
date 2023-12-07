@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -42,6 +43,7 @@ import com.pietervandewalle.androidapp.model.CarPark
 import com.pietervandewalle.androidapp.model.isAlmostFull
 import com.pietervandewalle.androidapp.model.isFull
 import com.pietervandewalle.androidapp.ui.carparks.common.components.CarParkStatusCard
+import com.pietervandewalle.androidapp.ui.common.components.ErrorLoadingIndicatorWithRetry
 import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.common.components.PullRefreshContainer
@@ -70,7 +72,7 @@ fun CarParksOverview(modifier: Modifier = Modifier, onNavigateToDetail: (Int) ->
         ) {
             when (carParksUiState) {
                 is CarParksUiState.Loading -> LoadingIndicator()
-                is CarParksUiState.Error -> Text("Couldn't load...")
+                is CarParksUiState.Error -> ErrorLoadingIndicatorWithRetry(onRetry = carParksOverviewViewModel::refresh)
                 is CarParksUiState.Success -> {
                     AnimatedTabVisibility(
                         isVisible = !uiState.isMapViewVisible,
@@ -142,9 +144,11 @@ fun CarParkList(modifier: Modifier = Modifier, carParks: List<CarPark>, onNaviga
         items(carParks) { carPark ->
             CarParkListItem(
                 carPark = carPark,
-                modifier = modifier.clickable { onNavigateToDetail(carPark) }.padding(
-                    dimensionResource(R.dimen.padding_extra_small),
-                ),
+                modifier = modifier
+                    .clickable { onNavigateToDetail(carPark) }
+                    .padding(
+                        dimensionResource(R.dimen.padding_extra_small),
+                    ),
             )
         }
     }
@@ -181,7 +185,7 @@ private fun CarParkDetails(carPark: CarPark) {
         ).toString()
 
         Text(
-            "Laatste update: $elapsedTime",
+            stringResource(id = R.string.last_update, elapsedTime),
             style = MaterialTheme.typography.bodySmall,
         )
     }
