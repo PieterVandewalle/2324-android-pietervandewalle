@@ -1,5 +1,6 @@
 package com.pietervandewalle.androidapp.ui.articles.overview
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -9,15 +10,19 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,6 +41,7 @@ import com.pietervandewalle.androidapp.ui.common.components.PullRefreshContainer
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArticleOverview(modifier: Modifier = Modifier, articleOverviewViewModel: ArticleOverviewViewModel = viewModel(factory = ArticleOverviewViewModel.Factory), onNavigateToDetail: (articleId: Int) -> Unit) {
     val uiState by articleOverviewViewModel.uiState.collectAsState()
@@ -43,16 +49,19 @@ fun ArticleOverview(modifier: Modifier = Modifier, articleOverviewViewModel: Art
 
     ErrorSnackbar(isError = uiState.isError, onErrorConsumed = articleOverviewViewModel::onErrorConsumed)
 
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     Scaffold(
         topBar = {
-            MyTopAppBar(screenTitle = R.string.home_title) {
+            MyTopAppBar(screenTitle = R.string.home_title, scrollBehavior = scrollBehavior) {
             }
         },
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { innerPadding ->
         PullRefreshContainer(
-            isRefreshing = uiState.isRefreshing, // rememberPullRefreshState(refreshing = uiState.isRefreshing),
+            topAppBarState = scrollBehavior.state,
+            isRefreshing = uiState.isRefreshing,
             onRefresh = articleOverviewViewModel::refresh,
-            modifier = modifier.padding(innerPadding),
+            modifier = Modifier.padding(innerPadding),
         ) {
             when (articlesUiState) {
                 is ArticlesOverviewUiState.Loading -> LoadingIndicator()

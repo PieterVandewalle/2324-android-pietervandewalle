@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material.icons.filled.Timeline
 import androidx.compose.material.icons.filled.Work
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,6 +36,7 @@ import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CarParkDetailView(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, carParkDetailViewModel: CarParkDetailViewModel = viewModel(factory = CarParkDetailViewModel.Factory)) {
     val uiState by carParkDetailViewModel.uiState.collectAsState()

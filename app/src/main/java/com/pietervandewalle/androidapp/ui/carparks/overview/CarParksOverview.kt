@@ -14,15 +14,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -54,21 +58,26 @@ import com.pietervandewalle.androidapp.ui.theme.warning
 import java.time.Instant
 import java.time.ZoneOffset
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CarParksOverview(modifier: Modifier = Modifier, onNavigateToDetail: (Int) -> Unit, carParksOverviewViewModel: CarParksOverviewViewModel = viewModel(factory = CarParksOverviewViewModel.Factory)) {
     val uiState by carParksOverviewViewModel.uiState.collectAsState()
     val carParksUiState = uiState.carParks
 
     ErrorSnackbar(isError = uiState.isError, onErrorConsumed = carParksOverviewViewModel::onErrorConsumed)
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+
     Scaffold(
         topBar = {
-            CarParksTopAppBar(onToggleMap = carParksOverviewViewModel::toggleMapView, isMapVisible = uiState.isMapViewVisible)
+            CarParksTopAppBar(onToggleMap = carParksOverviewViewModel::toggleMapView, isMapVisible = uiState.isMapViewVisible, scrollBehavior = scrollBehavior)
         },
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { innerPadding ->
         PullRefreshContainer(
+            topAppBarState = scrollBehavior.state,
             isRefreshing = uiState.isRefreshing,
             onRefresh = carParksOverviewViewModel::refresh,
-            modifier = modifier.padding(innerPadding),
+            modifier = Modifier.padding(innerPadding),
         ) {
             when (carParksUiState) {
                 is CarParksUiState.Loading -> LoadingIndicator()

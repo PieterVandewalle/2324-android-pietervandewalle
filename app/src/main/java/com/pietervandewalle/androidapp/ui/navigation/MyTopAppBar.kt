@@ -10,12 +10,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBar(screenTitle: Int, canNavigateBack: Boolean = false, onNavigateBack: (() -> Unit)? = null, actions: @Composable() RowScope.() -> Unit) {
+fun MyTopAppBar(screenTitle: Int, canNavigateBack: Boolean = false, onNavigateBack: (() -> Unit)? = null, scrollBehavior: TopAppBarScrollBehavior? = null, actions: @Composable() RowScope.() -> Unit) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             titleContentColor = MaterialTheme.colorScheme.primary,
@@ -33,6 +34,7 @@ fun MyTopAppBar(screenTitle: Int, canNavigateBack: Boolean = false, onNavigateBa
                 }
             }
         },
+        scrollBehavior = scrollBehavior,
         actions = actions,
     )
 }

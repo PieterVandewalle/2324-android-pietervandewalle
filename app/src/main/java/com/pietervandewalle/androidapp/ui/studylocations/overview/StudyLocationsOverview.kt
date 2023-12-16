@@ -24,17 +24,21 @@ import androidx.compose.material.icons.outlined.Groups
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -51,13 +55,14 @@ import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import com.pietervandewalle.androidapp.ui.studylocations.components.ClickOutOfSearchBox
 import com.pietervandewalle.androidapp.ui.studylocations.components.MySearchBar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StudyLocationsOverview(modifier: Modifier = Modifier, onNavigateToDetail: (Int) -> Unit, studyLocationsOverviewViewModel: StudyLocationsOverviewViewModel = viewModel(factory = StudyLocationsOverviewViewModel.Factory)) {
     val uiState by studyLocationsOverviewViewModel.uiState.collectAsState()
     val studyLocationsUiState = uiState.studyLocations
 
     ErrorSnackbar(isError = uiState.isError, onErrorConsumed = studyLocationsOverviewViewModel::onErrorConsumed)
-
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     Scaffold(
         topBar = {
             AnimatedVisibility(
@@ -65,7 +70,7 @@ fun StudyLocationsOverview(modifier: Modifier = Modifier, onNavigateToDetail: (I
                 enter = fadeIn(),
                 exit = fadeOut(),
             ) {
-                MyTopAppBar(screenTitle = R.string.studylocations) {
+                MyTopAppBar(screenTitle = R.string.studylocations, scrollBehavior = scrollBehavior) {
                     IconButton(onClick = studyLocationsOverviewViewModel::openSearch) {
                         Icon(Icons.Filled.Search, contentDescription = null)
                     }
@@ -86,11 +91,13 @@ fun StudyLocationsOverview(modifier: Modifier = Modifier, onNavigateToDetail: (I
                 )
             }
         },
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { innerPadding ->
         PullRefreshContainer(
+            topAppBarState = scrollBehavior.state,
             isRefreshing = uiState.isRefreshing,
             onRefresh = studyLocationsOverviewViewModel::refresh,
-            modifier = modifier
+            modifier = Modifier
                 .padding(innerPadding),
         ) {
             when (studyLocationsUiState) {

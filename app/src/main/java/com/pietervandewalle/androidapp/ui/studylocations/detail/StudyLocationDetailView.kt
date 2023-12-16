@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -41,6 +42,7 @@ import com.pietervandewalle.androidapp.ui.common.components.InformationListItem
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StudyLocationDetailView(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, studyLocationDetailViewModel: StudyLocationDetailViewModel = viewModel(factory = StudyLocationDetailViewModel.Factory)) {
     val uiState by studyLocationDetailViewModel.uiState.collectAsState()
