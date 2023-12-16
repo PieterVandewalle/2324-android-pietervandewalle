@@ -8,6 +8,7 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -140,48 +142,79 @@ fun SearchResult(hasMatches: Boolean, searchterm: String, onReset: () -> Unit) {
 @Composable
 fun StudyLocations(modifier: Modifier = Modifier, studyLocations: List<StudyLocation>, onViewDetail: (StudyLocation) -> Unit) {
     val lazyListState = rememberLazyListState()
-    LazyColumn(state = lazyListState, modifier = modifier.fillMaxSize()) {
-        items(studyLocations) { studyLocation ->
 
-            DefaultOverviewListItemCard(
-                modifier = Modifier.clickable { onViewDetail(studyLocation) },
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                ) {
-                    Box(modifier = Modifier.height(150.dp)) {
-                        AsyncImage(
-                            model = studyLocation.imageUrl,
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize(),
-                        )
-                        Card(modifier = Modifier.padding(10.dp), shape = RoundedCornerShape(2.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)) {
-                            Text(studyLocation.label, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(5.dp))
+    BoxWithConstraints(modifier = modifier) {
+        if (maxWidth < 1200.dp) {
+            LazyColumn(state = lazyListState) {
+                items(studyLocations) { studyLocation ->
+                    StudyLocationListItem(
+                        onViewDetail = { onViewDetail(studyLocation) },
+                        studyLocation = studyLocation,
+                    )
+                }
+            }
+        } else {
+            // 2 studyLocations per row on large screens
+            LazyColumn(state = lazyListState) {
+                for (index in studyLocations.indices step 2) {
+                    item {
+                        Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))) {
+                            StudyLocationListItem(
+                                modifier = modifier.fillMaxWidth(0.5f), studyLocation = studyLocations[index],
+                                onViewDetail = { onViewDetail(studyLocations[index]) },
+                            )
+                            if (index + 1 != studyLocations.size) {
+                                StudyLocationListItem(
+                                    studyLocation = studyLocations[index + 1],
+                                    onViewDetail = { onViewDetail(studyLocations[index + 1]) },
+                                )
+                            }
                         }
                     }
-                    Text(studyLocation.title, style = MaterialTheme.typography.titleMedium)
-                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Outlined.LocationOn,
-                            contentDescription = "location",
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                        Text(studyLocation.address, style = MaterialTheme.typography.bodyMedium)
-                    }
-
-                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Outlined.Groups,
-                            contentDescription = "capacity",
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                        Text(studyLocation.totalCapacity.toString(), style = MaterialTheme.typography.bodyMedium)
-                    }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun StudyLocationListItem(modifier: Modifier = Modifier, studyLocation: StudyLocation, onViewDetail: () -> Unit) {
+    DefaultOverviewListItemCard(
+        modifier = modifier.clickable { onViewDetail() },
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth()
+                .padding(10.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            Box(modifier = Modifier.height(150.dp)) {
+                AsyncImage(
+                    model = studyLocation.imageUrl,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize(),
+                )
+                Card(modifier = Modifier.padding(10.dp), shape = RoundedCornerShape(2.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)) {
+                    Text(studyLocation.label, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(5.dp))
+                }
+            }
+            Text(studyLocation.title, style = MaterialTheme.typography.titleMedium)
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Outlined.LocationOn,
+                    contentDescription = "location",
+                    tint = MaterialTheme.colorScheme.primary,
+                )
+                Text(studyLocation.address, style = MaterialTheme.typography.bodyMedium)
+            }
+
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Outlined.Groups,
+                    contentDescription = "capacity",
+                    tint = MaterialTheme.colorScheme.primary,
+                )
+                Text(studyLocation.totalCapacity.toString(), style = MaterialTheme.typography.bodyMedium)
             }
         }
     }

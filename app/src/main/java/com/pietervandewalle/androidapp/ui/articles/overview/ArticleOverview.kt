@@ -1,9 +1,12 @@
 package com.pietervandewalle.androidapp.ui.articles.overview
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -24,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -79,9 +83,31 @@ fun ArticleOverview(modifier: Modifier = Modifier, articleOverviewViewModel: Art
 @Composable
 fun ArticleList(modifier: Modifier = Modifier, articles: List<Article>, onViewDetail: (Article) -> Unit) {
     val lazyListState = rememberLazyListState()
-    LazyColumn(state = lazyListState, modifier = modifier) {
-        items(articles) { article ->
-            ArticleListItem(article = article, onViewDetail = { onViewDetail(article) })
+    BoxWithConstraints(modifier = modifier) {
+        if (maxWidth < 1200.dp) {
+            LazyColumn(state = lazyListState) {
+                items(articles) { article ->
+                    ArticleListItem(article = article, onViewDetail = { onViewDetail(article) })
+                }
+            }
+        } else {
+            // 2 articles per row on large screens
+            LazyColumn(state = lazyListState) {
+                for (index in articles.indices step 2) {
+                    item {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(
+                                dimensionResource(R.dimen.padding_small),
+                            ),
+                        ) {
+                            ArticleListItem(modifier = modifier.fillMaxWidth(0.5f), article = articles[index], onViewDetail = { onViewDetail(articles[index]) })
+                            if (index + 1 != articles.size) {
+                                ArticleListItem(article = articles[index + 1], onViewDetail = { onViewDetail(articles[index + 1]) })
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

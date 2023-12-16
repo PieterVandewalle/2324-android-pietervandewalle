@@ -4,9 +4,9 @@ import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -96,7 +96,7 @@ fun ArticleDetail(modifier: Modifier = Modifier, article: Article) {
     val scrollState = rememberScrollState()
     Column(modifier = modifier.fillMaxSize().verticalScroll(scrollState), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         if (article.imageUrl != null) {
-            Row(modifier = Modifier.fillMaxWidth().fillMaxHeight(0.3f)) {
+            Row(modifier = Modifier.fillMaxWidth().height(250.dp)) {
                 AsyncImage(
                     model = article.imageUrl,
                     contentDescription = null,
