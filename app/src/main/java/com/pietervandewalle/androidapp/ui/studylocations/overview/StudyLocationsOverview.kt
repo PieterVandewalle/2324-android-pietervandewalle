@@ -24,7 +24,6 @@ import androidx.compose.material.icons.outlined.Groups
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +42,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.pietervandewalle.androidapp.R
 import com.pietervandewalle.androidapp.model.StudyLocation
+import com.pietervandewalle.androidapp.ui.common.components.DefaultOverviewListItemCard
 import com.pietervandewalle.androidapp.ui.common.components.ErrorLoadingIndicatorWithRetry
 import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
@@ -135,14 +135,9 @@ fun StudyLocations(modifier: Modifier = Modifier, studyLocations: List<StudyLoca
     val lazyListState = rememberLazyListState()
     LazyColumn(state = lazyListState, modifier = modifier.fillMaxSize()) {
         items(studyLocations) { studyLocation ->
-            ElevatedCard(
-                Modifier
-                    .padding(5.dp).clickable { onViewDetail(studyLocation) }
-                    .fillMaxWidth(),
-                shape = RoundedCornerShape(1.dp),
-                elevation = CardDefaults.elevatedCardElevation(
-                    defaultElevation = 2.dp,
-                ),
+
+            DefaultOverviewListItemCard(
+                modifier = Modifier.clickable { onViewDetail(studyLocation) },
             ) {
                 Column(
                     modifier = Modifier

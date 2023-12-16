@@ -30,6 +30,9 @@
     <string name="read_this_article_from_city_ghent">Bekijk dit artikel van Stad Gent</string>
     <string name="share_article">Artikel delen</string>
     <string name="city_ghent">Stad Gent</string>
+    <string name="melding_opgelet_parking_is_volzet">Opgelet: parking %1$s is volzet.</string>
+    <string name="melding_opgelet_meerdere_parkings_volzet">Opgelet: meerdere parkings in Gent zijn momenteel volzet.</string>
+    <string name="opgelet_een_aantal_parkings_bijna_volzet">Opgelet: een aantal parkings in Gent zijn bijna volzet.</string>
     <plurals name="numberOfParkingSpotsAvailable">
         <item quantity="one">nog %1$d plaats</item>
         <item quantity="other">nog %1$d plaatsen</item>

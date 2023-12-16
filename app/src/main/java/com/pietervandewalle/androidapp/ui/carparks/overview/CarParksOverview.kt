@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -43,6 +42,7 @@ import com.pietervandewalle.androidapp.model.CarPark
 import com.pietervandewalle.androidapp.model.isAlmostFull
 import com.pietervandewalle.androidapp.model.isFull
 import com.pietervandewalle.androidapp.ui.carparks.common.components.CarParkStatusCard
+import com.pietervandewalle.androidapp.ui.common.components.DefaultOverviewListItemCard
 import com.pietervandewalle.androidapp.ui.common.components.ErrorLoadingIndicatorWithRetry
 import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
@@ -129,9 +129,8 @@ fun CarParkMap(modifier: Modifier = Modifier, carParks: List<CarPark>) {
                     R.drawable.parking_location_marker,
                     determineLocationIconColor(carPark = carPark),
                 ),
-
             ) {
-                CarParkListItem(carPark = carPark, isBackgroundVisible = false)
+                CarParkListItem(carPark = carPark)
             }
         }
     }
@@ -140,30 +139,32 @@ fun CarParkMap(modifier: Modifier = Modifier, carParks: List<CarPark>) {
 @Composable
 fun CarParkList(modifier: Modifier = Modifier, carParks: List<CarPark>, onNavigateToDetail: (CarPark) -> Unit) {
     val lazyListState = rememberLazyListState()
-    LazyColumn(state = lazyListState, modifier = modifier) {
+    LazyColumn(state = lazyListState, modifier = modifier.padding(5.dp)) {
         items(carParks) { carPark ->
             CarParkListItem(
                 carPark = carPark,
-                modifier = modifier
-                    .clickable { onNavigateToDetail(carPark) }
-                    .padding(
-                        dimensionResource(R.dimen.padding_extra_small),
-                    ),
+                modifier = Modifier
+                    .clickable { onNavigateToDetail(carPark) },
             )
         }
     }
 }
 
 @Composable
-fun CarParkListItem(modifier: Modifier = Modifier, carPark: CarPark, isBackgroundVisible: Boolean = true) {
-    ListItem(
-        shadowElevation = 2.dp,
-        colors = ListItemDefaults.colors(containerColor = if (isBackgroundVisible) MaterialTheme.colorScheme.background else Color.Transparent),
-        modifier = modifier,
-        headlineContent = { Text(carPark.name, style = MaterialTheme.typography.titleMedium, maxLines = 2) },
-        supportingContent = { CarParkDetails(carPark = carPark) },
-        trailingContent = { CarParkStatusCard(carPark = carPark) },
-    )
+fun CarParkListItem(modifier: Modifier = Modifier, carPark: CarPark) {
+    DefaultOverviewListItemCard(modifier = modifier) {
+        ListItem(
+            headlineContent = {
+                Text(
+                    carPark.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 2,
+                )
+            },
+            supportingContent = { CarParkDetails(carPark = carPark) },
+            trailingContent = { CarParkStatusCard(carPark = carPark) },
+        )
+    }
 }
 
 @Composable
