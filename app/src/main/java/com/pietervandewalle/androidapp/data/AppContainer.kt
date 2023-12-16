@@ -44,7 +44,7 @@ class DefaultAppContainer(private val applicationContext: Context) : AppContaine
     }
 
     private val myRoomDb: MyRoomDatabase by lazy {
-        Room.databaseBuilder(applicationContext, MyRoomDatabase::class.java, "article_database").build()
+        Room.databaseBuilder(applicationContext, MyRoomDatabase::class.java, "myapp_db").build()
     }
 
     private val articleDao: ArticleDao by lazy {
@@ -68,6 +68,6 @@ class DefaultAppContainer(private val applicationContext: Context) : AppContaine
     }
 
     override val carParkRepository: CarParkRepository by lazy {
-        CachingCarParkRepository(carParkDao = carParkDao, ghentApiService = retrofitService)
+        CachingCarParkRepository(carParkDao = carParkDao, ghentApiService = retrofitService, context = applicationContext)
     }
 }
