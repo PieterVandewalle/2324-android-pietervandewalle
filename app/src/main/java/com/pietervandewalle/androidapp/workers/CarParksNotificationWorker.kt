@@ -78,6 +78,7 @@ fun makeNotification(message: String, context: Context) {
         .setSmallIcon(R.drawable.ic_launcher_foreground)
         .setContentTitle("AndroidApp")
         .setContentText(message)
+        .setStyle(NotificationCompat.BigTextStyle().bigText(message))
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setVibrate(LongArray(0))
 
