@@ -15,6 +15,7 @@ import com.pietervandewalle.androidapp.AndroidApplication
 import com.pietervandewalle.androidapp.R
 import com.pietervandewalle.androidapp.model.isAlmostFull
 import com.pietervandewalle.androidapp.model.isFull
+import kotlinx.coroutines.flow.first
 
 class CarParksNotificationWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
     override suspend fun doWork(): Result {
@@ -23,27 +24,26 @@ class CarParksNotificationWorker(appContext: Context, workerParams: WorkerParame
 
         return try {
             carParkRepository.refresh()
+            val carParks = carParkRepository.getAll().first()
 
-            carParkRepository.getAll().collect { carParks ->
-                val numberOfFullCarParks = carParks.count { it.isFull }
-                val numberOfAlmostFullCarParks = carParks.count { it.isAlmostFull }
-                var notificationMessage: String? = null
+            val numberOfFullCarParks = carParks.count { it.isFull }
+            val numberOfAlmostFullCarParks = carParks.count { it.isAlmostFull }
+            var notificationMessage: String? = null
 
-                if (numberOfFullCarParks == 1) {
-                    val carPark = carParks.find { it.isFull }
-                    notificationMessage = applicationContext.getString(R.string.melding_opgelet_parking_is_volzet, carPark!!.name)
-                } else if (numberOfFullCarParks > 1) {
-                    notificationMessage =
-                        applicationContext.getString(
-                            R.string.melding_opgelet_meerdere_parkings_volzet,
-                        )
-                } else if (numberOfAlmostFullCarParks != 0) {
-                    notificationMessage =
-                        applicationContext.getString(R.string.opgelet_een_aantal_parkings_bijna_volzet)
-                }
-                if (notificationMessage != null) {
-                    makeNotification(notificationMessage, applicationContext)
-                }
+            if (numberOfFullCarParks == 1) {
+                val carPark = carParks.find { it.isFull }
+                notificationMessage = applicationContext.getString(R.string.notification_parking_full, carPark!!.name)
+            } else if (numberOfFullCarParks > 1) {
+                notificationMessage =
+                    applicationContext.getString(
+                        R.string.notification_multiple_parkings_full,
+                    )
+            } else if (numberOfAlmostFullCarParks != 0) {
+                notificationMessage =
+                    applicationContext.getString(R.string.notification_multiple_parkings_almost_full)
+            }
+            if (notificationMessage != null) {
+                makeNotification(notificationMessage, applicationContext)
             }
 
             Result.success()
