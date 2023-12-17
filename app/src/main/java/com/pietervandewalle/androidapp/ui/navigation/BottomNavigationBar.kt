@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
 @Composable
 fun BottomNavigationBar(currentRoute: String?, goHome: () -> Unit, goCarParks: () -> Unit, goStudyLocations: () -> Unit) {
@@ -63,3 +65,11 @@ data class BottomNavigationItem(
     val route: String,
     val onClick: () -> Unit,
 )
+
+@Composable
+@Preview(showBackground = true)
+private fun BottomNavigationBarPreview() {
+    AndroidAppTheme {
+        BottomNavigationBar(currentRoute = Screens.Home.route, goHome = { /*TODO*/ }, goCarParks = { /*TODO*/ }, goStudyLocations = {})
+    }
+}

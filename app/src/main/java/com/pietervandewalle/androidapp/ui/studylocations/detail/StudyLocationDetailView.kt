@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,17 +29,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.SubcomposeAsyncImage
 import com.pietervandewalle.androidapp.R
+import com.pietervandewalle.androidapp.data.sampler.StudyLocationSampler
 import com.pietervandewalle.androidapp.model.StudyLocation
 import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
-import com.pietervandewalle.androidapp.ui.common.components.InformationCard
-import com.pietervandewalle.androidapp.ui.common.components.InformationListItem
+import com.pietervandewalle.androidapp.ui.common.components.informationlist.InformationCard
+import com.pietervandewalle.androidapp.ui.common.components.informationlist.InformationListItem
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
+import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,12 +56,18 @@ fun StudyLocationDetailView(modifier: Modifier = Modifier, onNavigateBack: () ->
             MyTopAppBar(screenTitle = R.string.studylocations, canNavigateBack = true, onNavigateBack = onNavigateBack) {
             }
         },
+        modifier = modifier,
     ) { innerPadding ->
-        when (studyLocationUiState) {
-            is StudyLocationUiState.Loading -> Column(modifier = modifier.padding(innerPadding)) { LoadingIndicator() }
-            is StudyLocationUiState.Error -> Column(modifier = modifier.padding(innerPadding)) { Text(stringResource(id = R.string.loading_failed)) }
-            is StudyLocationUiState.Success ->
-                StudyLocationDetail(modifier = modifier.padding(innerPadding), studyLocation = studyLocationUiState.studyLocation)
+        Box(modifier = Modifier.padding(innerPadding)) {
+            when (studyLocationUiState) {
+                is StudyLocationUiState.Loading -> LoadingIndicator()
+                is StudyLocationUiState.Error ->
+                    Text(
+                        stringResource(id = R.string.loading_failed),
+                    )
+                is StudyLocationUiState.Success ->
+                    StudyLocationDetail(studyLocation = studyLocationUiState.studyLocation)
+            }
         }
     }
 }
@@ -78,7 +86,7 @@ fun StudyLocationDetail(modifier: Modifier = Modifier, studyLocation: StudyLocat
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(250.dp),
+                        .height(dimensionResource(R.dimen.image_container_large)),
                     contentScale = ContentScale.Crop,
                     loading = {
                         Box(
@@ -119,7 +127,7 @@ fun StudyLocationDetail(modifier: Modifier = Modifier, studyLocation: StudyLocat
             }
         },
         bottomContent = {
-            Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))) {
                 OutlinedButton(onClick = {
                     val showInBrowserIntent =
                         Intent(Intent.ACTION_VIEW, Uri.parse(studyLocation.readMoreUrl))
@@ -143,4 +151,12 @@ fun StudyLocationDetail(modifier: Modifier = Modifier, studyLocation: StudyLocat
             }
         },
     )
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun StudyLocationDetailPreview() {
+    AndroidAppTheme {
+        StudyLocationDetail(studyLocation = StudyLocationSampler.getAll().first())
+    }
 }

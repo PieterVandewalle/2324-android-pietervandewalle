@@ -61,7 +61,7 @@ fun PullRefreshContainer(topAppBarState: TopAppBarState, isRefreshing: Boolean, 
         PullRefreshIndicator(
             refreshing = isRefreshing,
             state = pullRefreshState,
-            modifier = Modifier.padding(top = dimensionResource(id = R.dimen.padding_extra_small)).align(Alignment.TopCenter),
+            modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_extra_small)).align(Alignment.TopCenter),
         )
     }
 }

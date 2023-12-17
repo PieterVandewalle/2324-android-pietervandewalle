@@ -2,7 +2,7 @@ package com.pietervandewalle.androidapp.ui.carparks.detail
 
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -30,9 +30,9 @@ import com.pietervandewalle.androidapp.model.CarPark
 import com.pietervandewalle.androidapp.ui.carparks.common.components.CarParkStatusCard
 import com.pietervandewalle.androidapp.ui.carparks.common.helpers.getRelativeTimeSpanString
 import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
-import com.pietervandewalle.androidapp.ui.common.components.InformationCard
-import com.pietervandewalle.androidapp.ui.common.components.InformationListItem
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
+import com.pietervandewalle.androidapp.ui.common.components.informationlist.InformationCard
+import com.pietervandewalle.androidapp.ui.common.components.informationlist.InformationListItem
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
@@ -49,14 +49,20 @@ fun CarParkDetailView(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
             MyTopAppBar(screenTitle = R.string.car_parking, canNavigateBack = true, onNavigateBack = onNavigateBack) {
             }
         },
+        modifier = modifier,
     ) { innerPadding ->
-        when (carParkUiState) {
-            is CarParkUiState.Loading -> Column(modifier = modifier.padding(innerPadding)) { LoadingIndicator() }
-            is CarParkUiState.Error -> Column(modifier = modifier.padding(innerPadding)) {
-                Text(stringResource(id = R.string.loading_failed))
+        Box(modifier = Modifier.padding(innerPadding)) {
+            when (carParkUiState) {
+                is CarParkUiState.Loading -> LoadingIndicator()
+                is CarParkUiState.Error ->
+                    Text(
+                        stringResource(id = R.string.loading_failed),
+                    )
+                is CarParkUiState.Success ->
+                    CarParkDetail(
+                        carPark = carParkUiState.carPark,
+                    )
             }
-            is CarParkUiState.Success ->
-                CarParkDetail(carPark = carParkUiState.carPark, modifier = modifier.padding(innerPadding))
         }
     }
 }
@@ -96,7 +102,7 @@ fun CarParkDetail(carPark: CarPark, modifier: Modifier = Modifier) {
             )
             InformationListItem(
                 Icons.Filled.Payments,
-                "Gratis parkeren",
+                stringResource(R.string.free_parking),
                 if (carPark.isFree) stringResource(R.string.yes) else stringResource(R.string.no),
             )
             carPark.extraInfo?.let {
@@ -121,8 +127,8 @@ fun CarParkDetail(carPark: CarPark, modifier: Modifier = Modifier) {
 
 @Composable
 @Preview(showBackground = true)
-fun CarParkDetailPreview() {
+private fun CarParkDetailPreview() {
     AndroidAppTheme {
-        CarParkDetail(carPark = CarParkSampler.getAll()[1])
+        CarParkDetail(carPark = CarParkSampler.getOneAlmostFull())
     }
 }

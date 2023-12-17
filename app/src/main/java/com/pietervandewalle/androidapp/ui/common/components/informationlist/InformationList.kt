@@ -1,4 +1,4 @@
-package com.pietervandewalle.androidapp.ui.common.components
+package com.pietervandewalle.androidapp.ui.common.components.informationlist
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import com.pietervandewalle.androidapp.R
 
 @Composable
@@ -19,7 +20,7 @@ fun InformationList(modifier: Modifier = Modifier, content: @Composable () -> Un
             .wrapContentHeight(),
     ) {
         Text(
-            text = "Informatie",
+            text = stringResource(R.string.information),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small)),
         )

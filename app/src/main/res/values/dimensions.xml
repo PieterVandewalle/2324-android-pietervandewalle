@@ -5,4 +5,7 @@
     <dimen name="padding_medium">12dp</dimen>
     <dimen name="padding_large">16dp</dimen>
     <dimen name="padding_extra_large">20dp</dimen>
+    <dimen name="image_container_small">60dp</dimen>
+    <dimen name="image_container_medium">150dp</dimen>
+    <dimen name="image_container_large">250dp</dimen>
 </resources>

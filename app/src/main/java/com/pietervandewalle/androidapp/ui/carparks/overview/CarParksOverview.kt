@@ -31,7 +31,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.gms.maps.model.CameraPosition
@@ -148,7 +147,7 @@ fun CarParkMap(modifier: Modifier = Modifier, carParks: List<CarPark>) {
 @Composable
 fun CarParkList(modifier: Modifier = Modifier, carParks: List<CarPark>, onNavigateToDetail: (CarPark) -> Unit) {
     val lazyListState = rememberLazyListState()
-    LazyColumn(state = lazyListState, modifier = modifier.padding(5.dp)) {
+    LazyColumn(state = lazyListState, modifier = modifier.padding(dimensionResource(R.dimen.padding_extra_small))) {
         items(carParks) { carPark ->
             CarParkListItem(
                 carPark = carPark,
@@ -179,8 +178,8 @@ fun CarParkListItem(modifier: Modifier = Modifier, carPark: CarPark) {
 @Composable
 private fun CarParkDetails(carPark: CarPark) {
     Column(
-        modifier = Modifier.padding(top = dimensionResource(id = R.dimen.padding_medium)),
-        verticalArrangement = Arrangement.spacedBy(5.dp),
+        modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_medium)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small)),
     ) {
         Text(carPark.description, style = MaterialTheme.typography.bodyMedium)
         // TODO this should be a use case?
@@ -215,8 +214,8 @@ fun determineLocationIconColor(carPark: CarPark): Color {
 
 @Preview
 @Composable
-fun ArticleListItemPreview() {
+private fun CarParkListItemPreview() {
     AndroidAppTheme {
-        CarParkListItem(carPark = CarParkSampler.getAll().first())
+        CarParkListItem(carPark = CarParkSampler.getOneNotFull())
     }
 }

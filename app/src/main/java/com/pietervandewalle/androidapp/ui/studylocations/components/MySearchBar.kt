@@ -19,19 +19,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
+import com.pietervandewalle.androidapp.R
+import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
 @Composable
-fun MySearchBar(placeholder: String, searchterm: String, onSearchtermChange: (String) -> Unit, onCancel: () -> Unit, onSearch: () -> Unit) {
+fun MySearchBar(placeholder: String, searchTerm: String, onSearchTermChange: (String) -> Unit, onCancel: () -> Unit, onSearch: () -> Unit) {
     val focusRequester = FocusRequester()
     var textFieldLoaded by remember { mutableStateOf(false) }
     TextField(
-        value = searchterm,
-        onValueChange = onSearchtermChange,
-        leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "search") },
+        value = searchTerm,
+        onValueChange = onSearchTermChange,
+        leadingIcon = {
+            Icon(
+                Icons.Filled.Search,
+                contentDescription = stringResource(
+                    R.string.search,
+                ),
+            )
+        },
         trailingIcon = {
             IconButton(onClick = onCancel) {
-                Icon(Icons.Filled.Close, contentDescription = "cancel")
+                Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.cancel))
             }
         },
         placeholder = { Text(placeholder) },
@@ -48,11 +59,21 @@ fun MySearchBar(placeholder: String, searchterm: String, onSearchtermChange: (St
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = {
             focusRequester.freeFocus()
-            if (searchterm.isNotBlank()) {
+            if (searchTerm.isNotBlank()) {
                 onSearch()
             } else {
                 onCancel()
             }
         }),
     )
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun SearchBarPreview() {
+    AndroidAppTheme {
+        MySearchBar(
+            placeholder = "Zoek iets", searchTerm = "", onSearchTermChange = {}, onCancel = { }, onSearch = {},
+        )
+    }
 }

@@ -68,4 +68,19 @@ object CarParkSampler {
     val getAll: () -> MutableList<CarPark> = {
         sampleCarParks
     }
+
+    val getOneNotFull: () -> CarPark = {
+        sampleCarParks[0]
+    }
+
+    val getOneTemporaryClosed: () -> CarPark = {
+        sampleCarParks[1]
+    }
+    val getOneFull: () -> CarPark = {
+        sampleCarParks[2]
+    }
+
+    val getOneAlmostFull: () -> CarPark = {
+        sampleCarParks[3]
+    }
 }

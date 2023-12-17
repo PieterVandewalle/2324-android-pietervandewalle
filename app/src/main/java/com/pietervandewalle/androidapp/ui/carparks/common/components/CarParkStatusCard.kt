@@ -11,14 +11,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pietervandewalle.androidapp.R
+import com.pietervandewalle.androidapp.data.sampler.CarParkSampler
 import com.pietervandewalle.androidapp.model.CarPark
 import com.pietervandewalle.androidapp.model.isAlmostFull
 import com.pietervandewalle.androidapp.model.isFull
+import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 import com.pietervandewalle.androidapp.ui.theme.successContainer
 import com.pietervandewalle.androidapp.ui.theme.warningContainer
 
@@ -27,7 +31,7 @@ fun CarParkStatusCard(carPark: CarPark) {
     Card(colors = CardDefaults.cardColors(containerColor = determineStatusColor(carPark = carPark)), shape = RoundedCornerShape(4.dp)) {
         Column(
             modifier = Modifier
-                .padding(5.dp)
+                .padding(dimensionResource(R.dimen.padding_extra_small))
                 .width(107.dp),
         ) {
             if (carPark.isOpenNow) {
@@ -62,7 +66,11 @@ private fun CarParkOpenStatusText(carPark: CarPark) {
 @Composable
 private fun CarParkClosedStatusText(carPark: CarPark) {
     Text(
-        if (carPark.isTemporaryClosed) "Tijdelijk gesloten" else "Gesloten",
+        if (carPark.isTemporaryClosed) {
+            stringResource(R.string.temporary_closed)
+        } else {
+            stringResource(R.string.closed)
+        },
         style = MaterialTheme.typography.bodyMedium,
     )
 }
@@ -77,4 +85,37 @@ fun determineStatusColor(carPark: CarPark): Color {
         return MaterialTheme.colorScheme.warningContainer
     }
     return MaterialTheme.colorScheme.successContainer
+}
+
+// Previews
+@Preview
+@Composable
+private fun CarParkStatusCardPreviewFree() {
+    AndroidAppTheme {
+        CarParkStatusCard(carPark = CarParkSampler.getOneNotFull())
+    }
+}
+
+@Preview
+@Composable
+private fun CarParkStatusCardPreviewClosed() {
+    AndroidAppTheme {
+        CarParkStatusCard(carPark = CarParkSampler.getOneTemporaryClosed())
+    }
+}
+
+@Preview
+@Composable
+private fun CarParkStatusCardPreviewFull() {
+    AndroidAppTheme {
+        CarParkStatusCard(carPark = CarParkSampler.getOneFull())
+    }
+}
+
+@Preview
+@Composable
+private fun CarParkStatusCardPreviewAlmostFull() {
+    AndroidAppTheme {
+        CarParkStatusCard(carPark = CarParkSampler.getOneAlmostFull())
+    }
 }

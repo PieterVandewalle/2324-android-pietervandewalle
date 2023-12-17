@@ -43,10 +43,12 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.pietervandewalle.androidapp.R
+import com.pietervandewalle.androidapp.data.sampler.StudyLocationSampler
 import com.pietervandewalle.androidapp.model.StudyLocation
 import com.pietervandewalle.androidapp.ui.common.components.DefaultOverviewListItemCard
 import com.pietervandewalle.androidapp.ui.common.components.ErrorLoadingIndicatorWithRetry
@@ -56,6 +58,7 @@ import com.pietervandewalle.androidapp.ui.common.components.PullRefreshContainer
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import com.pietervandewalle.androidapp.ui.studylocations.components.ClickOutOfSearchBox
 import com.pietervandewalle.androidapp.ui.studylocations.components.MySearchBar
+import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,8 +89,8 @@ fun StudyLocationsOverview(modifier: Modifier = Modifier, onNavigateToDetail: (I
             ) {
                 MySearchBar(
                     placeholder = stringResource(id = R.string.search_studylocations),
-                    searchterm = uiState.currentSearchTerm,
-                    onSearchtermChange = studyLocationsOverviewViewModel::updateSearchTerm,
+                    searchTerm = uiState.currentSearchTerm,
+                    onSearchTermChange = studyLocationsOverviewViewModel::updateSearchTerm,
                     onCancel = studyLocationsOverviewViewModel::closeSearch,
                     onSearch = studyLocationsOverviewViewModel::search,
                 )
@@ -106,9 +109,9 @@ fun StudyLocationsOverview(modifier: Modifier = Modifier, onNavigateToDetail: (I
                 is StudyLocationsUiState.Loading -> LoadingIndicator()
                 is StudyLocationsUiState.Error -> ErrorLoadingIndicatorWithRetry(onRetry = studyLocationsOverviewViewModel::refresh)
                 is StudyLocationsUiState.Success ->
-                    Column(modifier = Modifier.padding(5.dp)) {
+                    Column(modifier = Modifier.padding(dimensionResource(R.dimen.padding_extra_small))) {
                         if (uiState.areResultsFiltered) {
-                            SearchResult(hasMatches = studyLocationsUiState.studyLocations.isNotEmpty(), searchterm = uiState.completedSearchTerm, onReset = studyLocationsOverviewViewModel::resetSearch)
+                            SearchResult(hasMatches = studyLocationsUiState.studyLocations.isNotEmpty(), searchTerm = uiState.completedSearchTerm, onReset = studyLocationsOverviewViewModel::resetSearch)
                         }
                         StudyLocations(
                             studyLocations = studyLocationsUiState.studyLocations,
@@ -125,15 +128,25 @@ fun StudyLocationsOverview(modifier: Modifier = Modifier, onNavigateToDetail: (I
 }
 
 @Composable
-fun SearchResult(hasMatches: Boolean, searchterm: String, onReset: () -> Unit) {
+fun SearchResult(hasMatches: Boolean, searchTerm: String, onReset: () -> Unit) {
     Column {
         Text(
-            "${if (!hasMatches) "Geen resultaten" else "Resultaten"} voor zoekopdracht:\n'$searchterm'",
-            modifier = Modifier.padding(horizontal = 10.dp),
+            stringResource(
+                R.string.for_searchTerm_x,
+                if (!hasMatches) {
+                    stringResource(R.string.search_no_results)
+                } else {
+                    stringResource(
+                        R.string.results,
+                    )
+                },
+                searchTerm,
+            ),
+            modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_medium)),
         )
         TextButton(onClick = onReset) {
             Text(
-                "Verwijder zoekopdracht",
+                stringResource(R.string.remove_searchTerm),
             )
         }
     }
@@ -160,7 +173,7 @@ fun StudyLocations(modifier: Modifier = Modifier, studyLocations: List<StudyLoca
                     item {
                         Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))) {
                             StudyLocationListItem(
-                                modifier = modifier.fillMaxWidth(0.5f), studyLocation = studyLocations[index],
+                                modifier = Modifier.fillMaxWidth(0.5f), studyLocation = studyLocations[index],
                                 onViewDetail = { onViewDetail(studyLocations[index]) },
                             )
                             if (index + 1 != studyLocations.size) {
@@ -183,39 +196,59 @@ fun StudyLocationListItem(modifier: Modifier = Modifier, studyLocation: StudyLoc
         modifier = modifier.clickable { onViewDetail() },
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
-                .padding(10.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(R.dimen.padding_medium)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)),
         ) {
-            Box(modifier = Modifier.height(150.dp)) {
+            Box(modifier = Modifier.height(dimensionResource(R.dimen.image_container_medium))) {
                 AsyncImage(
                     model = studyLocation.imageUrl,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize(),
                 )
-                Card(modifier = Modifier.padding(10.dp), shape = RoundedCornerShape(2.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)) {
-                    Text(studyLocation.label, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(5.dp))
+                Card(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium)), shape = RoundedCornerShape(2.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)) {
+                    Text(
+                        studyLocation.label, style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(dimensionResource(R.dimen.padding_extra_small)),
+                    )
                 }
             }
             Text(studyLocation.title, style = MaterialTheme.typography.titleMedium)
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+            Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)), verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Outlined.LocationOn,
-                    contentDescription = "location",
+                    contentDescription = stringResource(R.string.location),
                     tint = MaterialTheme.colorScheme.primary,
                 )
                 Text(studyLocation.address, style = MaterialTheme.typography.bodyMedium)
             }
 
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+            Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)), verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Outlined.Groups,
-                    contentDescription = "capacity",
+                    contentDescription = stringResource(R.string.capacity),
                     tint = MaterialTheme.colorScheme.primary,
                 )
                 Text(studyLocation.totalCapacity.toString(), style = MaterialTheme.typography.bodyMedium)
             }
         }
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun StudyLocationListItemPreview() {
+    AndroidAppTheme {
+        StudyLocationListItem(studyLocation = StudyLocationSampler.getAll().first(), onViewDetail = {})
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun SearchResultNoMatchesPreview() {
+    AndroidAppTheme {
+        SearchResult(hasMatches = false, searchTerm = "Schoonmeersen", onReset = {})
     }
 }

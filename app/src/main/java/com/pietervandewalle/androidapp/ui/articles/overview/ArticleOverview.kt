@@ -36,7 +36,7 @@ import coil.compose.AsyncImage
 import com.pietervandewalle.androidapp.R
 import com.pietervandewalle.androidapp.data.sampler.ArticleSampler
 import com.pietervandewalle.androidapp.model.Article
-import com.pietervandewalle.androidapp.ui.articles.detail.ArticleDetail
+import com.pietervandewalle.androidapp.ui.articles.common.helpers.formatArticleDate
 import com.pietervandewalle.androidapp.ui.common.components.DefaultOverviewListItemCard
 import com.pietervandewalle.androidapp.ui.common.components.ErrorLoadingIndicatorWithRetry
 import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
@@ -126,8 +126,8 @@ fun ArticleListItem(modifier: Modifier = Modifier, article: Article, onViewDetai
             leadingContent = {
                 Box(
                     modifier = Modifier
-                        .width(80.dp)
-                        .height(60.dp),
+                        .width(dimensionResource(R.dimen.image_container_small))
+                        .height(dimensionResource(R.dimen.image_container_small)),
                     contentAlignment = Alignment.CenterStart,
                 ) {
                     if (article.imageUrl != null) {
@@ -141,22 +141,22 @@ fun ArticleListItem(modifier: Modifier = Modifier, article: Article, onViewDetai
                     }
                 }
             },
+            supportingContent = {
+                Text(
+                    formatArticleDate(article.date),
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_extra_small))
+                )
+            }
         )
     }
 }
 
 @Preview
 @Composable
-fun ArticleListPreview() {
+private fun ArticleListPreview() {
     AndroidAppTheme {
         ArticleList(articles = ArticleSampler.getAll(), onViewDetail = {})
     }
 }
 
-@Preview
-@Composable
-fun ArticleDetailPreview() {
-    AndroidAppTheme {
-        ArticleDetail(article = ArticleSampler.getAll().first())
-    }
-}
