@@ -4,6 +4,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("com.google.devtools.ksp")
+    id("org.jetbrains.dokka") version "1.9.10"
 }
 
 android {
@@ -105,4 +106,7 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // Dokka
+    dokkaPlugin("org.jetbrains.dokka:android-documentation-plugin:1.9.10")
 }
