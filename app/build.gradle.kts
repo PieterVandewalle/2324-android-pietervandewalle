@@ -7,6 +7,10 @@ plugins {
     id("org.jetbrains.dokka") version "1.9.10"
 }
 
+tasks.dokkaHtml {
+    outputDirectory.set(file("$rootDir/docs/dokka"))
+}
+
 android {
     namespace = "com.pietervandewalle.androidapp"
     compileSdk = 34
@@ -52,6 +56,7 @@ android {
         }
     }
 }
+
 
 secrets {
     // Optionally specify a different file name containing your secrets.
