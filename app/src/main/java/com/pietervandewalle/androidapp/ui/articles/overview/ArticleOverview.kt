@@ -18,14 +18,11 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -42,6 +39,7 @@ import com.pietervandewalle.androidapp.ui.common.components.ErrorLoadingIndicato
 import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.common.components.PullRefreshContainer
+import com.pietervandewalle.androidapp.ui.common.components.ScrollToTopButton
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
@@ -53,16 +51,14 @@ fun ArticleOverview(modifier: Modifier = Modifier, articleOverviewViewModel: Art
 
     ErrorSnackbar(isError = uiState.isError, onErrorConsumed = articleOverviewViewModel::onErrorConsumed)
 
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     Scaffold(
         topBar = {
-            MyTopAppBar(screenTitle = R.string.home_title, scrollBehavior = scrollBehavior) {
+            MyTopAppBar(screenTitle = R.string.home_title) {
             }
         },
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier,
     ) { innerPadding ->
         PullRefreshContainer(
-            topAppBarState = scrollBehavior.state,
             isRefreshing = uiState.isRefreshing,
             onRefresh = articleOverviewViewModel::refresh,
             modifier = Modifier.padding(innerPadding),
@@ -109,6 +105,7 @@ fun ArticleList(modifier: Modifier = Modifier, articles: List<Article>, onViewDe
                 }
             }
         }
+        ScrollToTopButton(lazyListState = lazyListState)
     }
 }
 
@@ -145,9 +142,9 @@ fun ArticleListItem(modifier: Modifier = Modifier, article: Article, onViewDetai
                 Text(
                     formatArticleDate(article.date),
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_extra_small))
+                    modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_extra_small)),
                 )
-            }
+            },
         )
     }
 }
@@ -159,4 +156,3 @@ private fun ArticleListPreview() {
         ArticleList(articles = ArticleSampler.getAll(), onViewDetail = {})
     }
 }
-

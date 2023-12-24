@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -32,14 +33,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -55,6 +55,7 @@ import com.pietervandewalle.androidapp.ui.common.components.ErrorLoadingIndicato
 import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.common.components.PullRefreshContainer
+import com.pietervandewalle.androidapp.ui.common.components.ScrollToTopButton
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import com.pietervandewalle.androidapp.ui.studylocations.components.ClickOutOfSearchBox
 import com.pietervandewalle.androidapp.ui.studylocations.components.MySearchBar
@@ -67,7 +68,6 @@ fun StudyLocationsOverview(modifier: Modifier = Modifier, onNavigateToDetail: (I
     val studyLocationsUiState = uiState.studyLocations
 
     ErrorSnackbar(isError = uiState.isError, onErrorConsumed = studyLocationsOverviewViewModel::onErrorConsumed)
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     Scaffold(
         topBar = {
             AnimatedVisibility(
@@ -75,7 +75,7 @@ fun StudyLocationsOverview(modifier: Modifier = Modifier, onNavigateToDetail: (I
                 enter = fadeIn(),
                 exit = fadeOut(),
             ) {
-                MyTopAppBar(screenTitle = R.string.studylocations, scrollBehavior = scrollBehavior) {
+                MyTopAppBar(screenTitle = R.string.studylocations) {
                     IconButton(onClick = studyLocationsOverviewViewModel::openSearch) {
                         Icon(Icons.Filled.Search, contentDescription = null)
                     }
@@ -96,10 +96,9 @@ fun StudyLocationsOverview(modifier: Modifier = Modifier, onNavigateToDetail: (I
                 )
             }
         },
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier,
     ) { innerPadding ->
         PullRefreshContainer(
-            topAppBarState = scrollBehavior.state,
             isRefreshing = uiState.isRefreshing,
             onRefresh = studyLocationsOverviewViewModel::refresh,
             modifier = Modifier
@@ -155,7 +154,7 @@ fun SearchResult(hasMatches: Boolean, searchTerm: String, onReset: () -> Unit) {
 @Composable
 fun StudyLocations(modifier: Modifier = Modifier, studyLocations: List<StudyLocation>, onViewDetail: (StudyLocation) -> Unit) {
     val lazyListState = rememberLazyListState()
-
+    val scope = rememberCoroutineScope()
     BoxWithConstraints(modifier = modifier) {
         if (maxWidth < 1200.dp) {
             LazyColumn(state = lazyListState) {
@@ -173,7 +172,8 @@ fun StudyLocations(modifier: Modifier = Modifier, studyLocations: List<StudyLoca
                     item {
                         Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))) {
                             StudyLocationListItem(
-                                modifier = Modifier.fillMaxWidth(0.5f), studyLocation = studyLocations[index],
+                                modifier = Modifier.fillMaxWidth(0.5f),
+                                studyLocation = studyLocations[index],
                                 onViewDetail = { onViewDetail(studyLocations[index]) },
                             )
                             if (index + 1 != studyLocations.size) {
@@ -187,6 +187,7 @@ fun StudyLocations(modifier: Modifier = Modifier, studyLocations: List<StudyLoca
                 }
             }
         }
+        ScrollToTopButton(lazyListState = lazyListState)
     }
 }
 
@@ -210,7 +211,8 @@ fun StudyLocationListItem(modifier: Modifier = Modifier, studyLocation: StudyLoc
                 )
                 Card(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium)), shape = RoundedCornerShape(2.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)) {
                     Text(
-                        studyLocation.label, style = MaterialTheme.typography.bodySmall,
+                        studyLocation.label,
+                        style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(dimensionResource(R.dimen.padding_extra_small)),
                     )
                 }
