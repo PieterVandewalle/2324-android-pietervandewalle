@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -26,7 +25,6 @@ import androidx.compose.material.icons.outlined.Groups
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -36,8 +34,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -61,7 +57,13 @@ import com.pietervandewalle.androidapp.ui.studylocations.components.ClickOutOfSe
 import com.pietervandewalle.androidapp.ui.studylocations.components.MySearchBar
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+/**
+ * Composable function for displaying the Study Locations Overview screen.
+ *
+ * @param modifier The modifier for this composable.
+ * @param onNavigateToDetail Callback to navigate to the detail screen.
+ * @param studyLocationsOverviewViewModel The ViewModel for study locations overview.
+ */
 @Composable
 fun StudyLocationsOverview(modifier: Modifier = Modifier, onNavigateToDetail: (Int) -> Unit, studyLocationsOverviewViewModel: StudyLocationsOverviewViewModel = viewModel(factory = StudyLocationsOverviewViewModel.Factory)) {
     val uiState by studyLocationsOverviewViewModel.uiState.collectAsState()
@@ -126,6 +128,13 @@ fun StudyLocationsOverview(modifier: Modifier = Modifier, onNavigateToDetail: (I
     }
 }
 
+/**
+ * Composable function for displaying the search result.
+ *
+ * @param hasMatches Whether there are matches for the search term.
+ * @param searchTerm The current search term.
+ * @param onReset Callback to reset the search.
+ */
 @Composable
 fun SearchResult(hasMatches: Boolean, searchTerm: String, onReset: () -> Unit) {
     Column {
@@ -151,10 +160,17 @@ fun SearchResult(hasMatches: Boolean, searchTerm: String, onReset: () -> Unit) {
     }
 }
 
+/**
+ * Composable function for displaying the list of study locations.
+ *
+ * @param modifier The modifier for this composable.
+ * @param studyLocations List of study locations to display.
+ * @param onViewDetail Callback to view the detail of a study location.
+ */
 @Composable
 fun StudyLocations(modifier: Modifier = Modifier, studyLocations: List<StudyLocation>, onViewDetail: (StudyLocation) -> Unit) {
     val lazyListState = rememberLazyListState()
-    val scope = rememberCoroutineScope()
+
     BoxWithConstraints(modifier = modifier) {
         if (maxWidth < 1200.dp) {
             LazyColumn(state = lazyListState) {
@@ -191,6 +207,13 @@ fun StudyLocations(modifier: Modifier = Modifier, studyLocations: List<StudyLoca
     }
 }
 
+/**
+ * Composable function for displaying a single study location item.
+ *
+ * @param modifier The modifier for this composable.
+ * @param studyLocation The study location to display.
+ * @param onViewDetail Callback to view the detail of the study location.
+ */
 @Composable
 fun StudyLocationListItem(modifier: Modifier = Modifier, studyLocation: StudyLocation, onViewDetail: () -> Unit) {
     DefaultOverviewListItemCard(

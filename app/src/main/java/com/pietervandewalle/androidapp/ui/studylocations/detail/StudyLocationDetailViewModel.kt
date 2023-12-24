@@ -21,11 +21,20 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel for the Study Location Detail screen.
+ *
+ * @param studyLocationRepository The repository for study location data.
+ * @param savedStateHandle The SavedStateHandle to access saved state data.
+ */
 class StudyLocationDetailViewModel(private val studyLocationRepository: StudyLocationRepository, private val savedStateHandle: SavedStateHandle) : ViewModel() {
     private val studyLocationId: Int = savedStateHandle[DestinationsArgs.STUDYLOCATION_ID_ARG]!!
     private val studyLocation: Flow<Result<StudyLocation>> = studyLocationRepository.getById(studyLocationId).asResult()
     private val isError = MutableStateFlow(false)
 
+    /**
+     * Represents the state flow of the UI state for the Study Location Detail screen.
+     */
     val uiState: StateFlow<StudyLocationDetailState> = combine(
         studyLocation,
         isError,
@@ -49,6 +58,9 @@ class StudyLocationDetailViewModel(private val studyLocationRepository: StudyLoc
         ),
     )
 
+    /**
+     * Function to consume and clear the error state.
+     */
     fun onErrorConsumed() {
         viewModelScope.launch {
             isError.emit(false)
@@ -56,6 +68,9 @@ class StudyLocationDetailViewModel(private val studyLocationRepository: StudyLoc
     }
 
     companion object {
+        /**
+         * Factory for creating instances of [StudyLocationDetailViewModel].
+         */
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as AndroidApplication)
