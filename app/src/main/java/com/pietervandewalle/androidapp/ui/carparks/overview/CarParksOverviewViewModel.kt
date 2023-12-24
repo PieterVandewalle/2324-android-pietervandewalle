@@ -1,5 +1,6 @@
 package com.pietervandewalle.androidapp.ui.carparks.overview
 
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -21,7 +22,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class CarParksOverviewViewModel(private val carParkRepository: CarParkRepository) : ViewModel() {
+class CarParksOverviewViewModel(private val carParkRepository: CarParkRepository) :
+    ViewModel(),
+    DefaultLifecycleObserver {
     private val carParks: Flow<Result<List<CarPark>>> = carParkRepository.getAll().asResult()
     private val isRefreshing = MutableStateFlow(false)
     private val isError = MutableStateFlow(false)
@@ -55,9 +58,9 @@ class CarParksOverviewViewModel(private val carParkRepository: CarParkRepository
             isMapViewVisible = false,
         ),
     )
-
     private val exceptionHandler = CoroutineExceptionHandler { context, exception ->
         viewModelScope.launch {
+            exception.printStackTrace()
             isError.emit(true)
         }
     }
@@ -67,6 +70,7 @@ class CarParksOverviewViewModel(private val carParkRepository: CarParkRepository
             with(carParkRepository) {
                 val refreshCarParksDeferred = async { refresh() }
                 isRefreshing.emit(true)
+
                 try {
                     awaitAll(refreshCarParksDeferred)
                 } finally {

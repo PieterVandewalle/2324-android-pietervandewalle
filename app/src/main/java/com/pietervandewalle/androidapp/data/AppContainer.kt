@@ -60,7 +60,7 @@ class DefaultAppContainer(private val applicationContext: Context) : AppContaine
     }
 
     override val articleRepository: ArticleRepository by lazy {
-        CachingArticleRepository(articleDao = articleDao, ghentApiService = retrofitService)
+        CachingArticleRepository(articleDao = articleDao, ghentApiService = retrofitService, context = applicationContext)
     }
 
     override val studyLocationRepository: StudyLocationRepository by lazy {
