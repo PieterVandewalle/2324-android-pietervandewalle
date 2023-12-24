@@ -43,3 +43,24 @@ fun List<ApiCarPark>.asDomainObjects(): List<CarPark> {
     }
     return domainList
 }
+
+fun List<CarPark>.asApiObjects(): List<ApiCarPark> {
+    return this.map { carPark ->
+        ApiCarPark(
+            name = carPark.name,
+            lastupdate = carPark.lastUpdate.atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE_TIME),
+            totalcapacity = carPark.totalCapacity,
+            availablecapacity = carPark.availableCapacity,
+            type = "",
+            description = carPark.description,
+            openingtimesdescription = "",
+            isopennow = if (carPark.isOpenNow) 1 else 0,
+            temporaryclosed = if (carPark.isTemporaryClosed) 1 else 0,
+            operatorinformation = carPark.operator,
+            freeparking = if (carPark.isFree) 1 else 0,
+            location = carPark.location.asApiObject(),
+            text = carPark.extraInfo,
+            categorie = if (carPark.isInLEZ) "in LEZ" else "not in LEZ",
+        )
+    }
+}

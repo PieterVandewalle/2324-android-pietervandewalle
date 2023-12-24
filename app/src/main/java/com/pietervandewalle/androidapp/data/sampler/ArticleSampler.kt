@@ -6,6 +6,7 @@ import java.time.LocalDate
 object ArticleSampler {
     private val sampleArticles = mutableListOf(
         Article(
+            id = 1,
             title = "Ontwerp klaar voor kinderdagverblijf in Dampoortwijk met 42 plaatsen",
             date = LocalDate.parse("2023-11-21"),
             readMoreUrl = "https://stad.gent/id/news/823525",
@@ -16,7 +17,7 @@ object ArticleSampler {
                 "\n" +
                 "Het gebouw telt twee verdiepingen voor drie leefgroepen. Die krijgen elk een aparte ruimte, een keukenhoekje en een aansluitende buitenruimte. De ruimtes kunnen echter ook verbonden worden met elkaar om er één open plek van te maken. Er komt ook een grote keuken in het gebouw, een wasruimte, een ruimte voor opslag en een lift.",
         ),
-        Article(title = "Buurtsporthal Ledeberg zoekt uitbater voor de verbruiksruimte/cafetaria", date = LocalDate.parse("2023-11-20"), readMoreUrl = "https://stad.gent/id/news/823240"),
+        Article(id = 2, title = "Buurtsporthal Ledeberg zoekt uitbater voor de verbruiksruimte/cafetaria", date = LocalDate.parse("2023-11-20"), readMoreUrl = "https://stad.gent/id/news/823240"),
 
     )
 

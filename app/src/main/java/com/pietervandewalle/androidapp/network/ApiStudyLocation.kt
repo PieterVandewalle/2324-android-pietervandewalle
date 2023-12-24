@@ -36,3 +36,20 @@ fun List<ApiStudyLocation>.asDomainObjects(): List<StudyLocation> {
     }
     return domainList
 }
+fun List<StudyLocation>.asApiObjects(): List<ApiStudyLocation> {
+    return this.map { studyLocation ->
+        ApiStudyLocation(
+            id = studyLocation.id,
+            titel = studyLocation.title,
+            teaser_img_url = studyLocation.imageUrl ?: "",
+            adres = studyLocation.address,
+            totale_capaciteit = studyLocation.totalCapacity,
+            gereserveerde_plaatsen = studyLocation.reservedAmount,
+            lees_meer = studyLocation.readMoreUrl,
+            geo_punt = studyLocation.location.asApiObject(), // Assuming you have a similar function for ApiGPSCoordinates
+            tag_1 = studyLocation.reservationTag,
+            tag_2 = studyLocation.availableTag,
+            label_1 = studyLocation.label,
+        )
+    }
+}
