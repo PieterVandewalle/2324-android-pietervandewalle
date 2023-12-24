@@ -26,7 +26,7 @@ class NavigationActions(private val navController: NavHostController) {
     }
 
     fun navigateToCarParksOverview() {
-        navigateToMenuItem(Screens.CarParking.route)
+        navigateToMenuItem(Screens.CarParks.route)
     }
 
     fun navigateToArticleDetail(articleId: Int) {
