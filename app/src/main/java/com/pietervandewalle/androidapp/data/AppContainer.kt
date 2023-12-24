@@ -3,10 +3,10 @@ package com.pietervandewalle.androidapp.data
 import android.content.Context
 import androidx.room.Room
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.pietervandewalle.androidapp.data.database.ArticleDao
-import com.pietervandewalle.androidapp.data.database.CarParkDao
+import com.pietervandewalle.androidapp.data.database.dao.ArticleDao
+import com.pietervandewalle.androidapp.data.database.dao.CarParkDao
 import com.pietervandewalle.androidapp.data.database.MyRoomDatabase
-import com.pietervandewalle.androidapp.data.database.StudyLocationDao
+import com.pietervandewalle.androidapp.data.database.dao.StudyLocationDao
 import com.pietervandewalle.androidapp.data.repo.ArticleRepository
 import com.pietervandewalle.androidapp.data.repo.CachingArticleRepository
 import com.pietervandewalle.androidapp.data.repo.CachingCarParkRepository
@@ -60,7 +60,7 @@ class DefaultAppContainer(private val applicationContext: Context) : AppContaine
     }
 
     override val articleRepository: ArticleRepository by lazy {
-        CachingArticleRepository(articleDao = articleDao, ghentApiService = retrofitService)
+        CachingArticleRepository(articleDao = articleDao, ghentApiService = retrofitService, context = applicationContext)
     }
 
     override val studyLocationRepository: StudyLocationRepository by lazy {

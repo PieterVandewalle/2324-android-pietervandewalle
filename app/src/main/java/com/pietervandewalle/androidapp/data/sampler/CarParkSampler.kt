@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter
 object CarParkSampler {
     private val sampleCarParks = mutableListOf(
         CarPark(
+            id = 1,
             name = "Vrijdagmarkt",
             lastUpdate = LocalDateTime.parse("2023-11-23T15:11:05+01:00", DateTimeFormatter.ISO_DATE_TIME),
             totalCapacity = 597,
@@ -22,6 +23,7 @@ object CarParkSampler {
             location = GPSCoordinates(3.726071777876147, 51.05713405953412),
         ),
         CarPark(
+            id = 2,
             name = "Dok noord",
             lastUpdate = LocalDateTime.parse("2023-11-23T15:11:22+01:00", DateTimeFormatter.ISO_DATE_TIME),
             totalCapacity = 550,
@@ -36,6 +38,7 @@ object CarParkSampler {
             location = GPSCoordinates(3.7328389913720565, 51.065684935819604),
         ),
         CarPark(
+            id = 3,
             name = "Sint-Pietersplein",
             lastUpdate = LocalDateTime.parse("2023-11-23T15:11:18+01:00", DateTimeFormatter.ISO_DATE_TIME),
             totalCapacity = 683,
@@ -50,6 +53,7 @@ object CarParkSampler {
             location = GPSCoordinates(3.7259818626205483, 51.04202834988112),
         ),
         CarPark(
+            id = 4,
             name = "Reep",
             lastUpdate = LocalDateTime.parse("2023-11-23T15:11:08+01:00", DateTimeFormatter.ISO_DATE_TIME),
             totalCapacity = 449,

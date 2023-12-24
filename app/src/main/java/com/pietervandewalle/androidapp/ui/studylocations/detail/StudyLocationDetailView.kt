@@ -17,7 +17,6 @@ import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -38,13 +37,19 @@ import com.pietervandewalle.androidapp.R
 import com.pietervandewalle.androidapp.data.sampler.StudyLocationSampler
 import com.pietervandewalle.androidapp.model.StudyLocation
 import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
+import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.common.components.informationlist.InformationCard
 import com.pietervandewalle.androidapp.ui.common.components.informationlist.InformationListItem
-import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+/**
+ * Composable function for displaying the Study Location Detail View.
+ *
+ * @param modifier The modifier for this composable.
+ * @param onNavigateBack The callback to navigate back.
+ * @param studyLocationDetailViewModel The ViewModel for study location details.
+ */
 @Composable
 fun StudyLocationDetailView(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, studyLocationDetailViewModel: StudyLocationDetailViewModel = viewModel(factory = StudyLocationDetailViewModel.Factory)) {
     val uiState by studyLocationDetailViewModel.uiState.collectAsState()
@@ -72,6 +77,12 @@ fun StudyLocationDetailView(modifier: Modifier = Modifier, onNavigateBack: () ->
     }
 }
 
+/**
+ * Composable function for displaying the Study Location Detail.
+ *
+ * @param modifier The modifier for this composable.
+ * @param studyLocation The study location to display.
+ */
 @Composable
 fun StudyLocationDetail(modifier: Modifier = Modifier, studyLocation: StudyLocation) {
     val context = LocalContext.current

@@ -25,21 +25,17 @@ import androidx.compose.material.icons.outlined.Groups
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -55,19 +51,25 @@ import com.pietervandewalle.androidapp.ui.common.components.ErrorLoadingIndicato
 import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.common.components.PullRefreshContainer
+import com.pietervandewalle.androidapp.ui.common.components.ScrollToTopButton
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import com.pietervandewalle.androidapp.ui.studylocations.components.ClickOutOfSearchBox
 import com.pietervandewalle.androidapp.ui.studylocations.components.MySearchBar
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+/**
+ * Composable function for displaying the Study Locations Overview screen.
+ *
+ * @param modifier The modifier for this composable.
+ * @param onNavigateToDetail Callback to navigate to the detail screen.
+ * @param studyLocationsOverviewViewModel The ViewModel for study locations overview.
+ */
 @Composable
 fun StudyLocationsOverview(modifier: Modifier = Modifier, onNavigateToDetail: (Int) -> Unit, studyLocationsOverviewViewModel: StudyLocationsOverviewViewModel = viewModel(factory = StudyLocationsOverviewViewModel.Factory)) {
     val uiState by studyLocationsOverviewViewModel.uiState.collectAsState()
     val studyLocationsUiState = uiState.studyLocations
 
     ErrorSnackbar(isError = uiState.isError, onErrorConsumed = studyLocationsOverviewViewModel::onErrorConsumed)
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     Scaffold(
         topBar = {
             AnimatedVisibility(
@@ -75,7 +77,7 @@ fun StudyLocationsOverview(modifier: Modifier = Modifier, onNavigateToDetail: (I
                 enter = fadeIn(),
                 exit = fadeOut(),
             ) {
-                MyTopAppBar(screenTitle = R.string.studylocations, scrollBehavior = scrollBehavior) {
+                MyTopAppBar(screenTitle = R.string.studylocations) {
                     IconButton(onClick = studyLocationsOverviewViewModel::openSearch) {
                         Icon(Icons.Filled.Search, contentDescription = null)
                     }
@@ -96,10 +98,9 @@ fun StudyLocationsOverview(modifier: Modifier = Modifier, onNavigateToDetail: (I
                 )
             }
         },
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier,
     ) { innerPadding ->
         PullRefreshContainer(
-            topAppBarState = scrollBehavior.state,
             isRefreshing = uiState.isRefreshing,
             onRefresh = studyLocationsOverviewViewModel::refresh,
             modifier = Modifier
@@ -127,6 +128,13 @@ fun StudyLocationsOverview(modifier: Modifier = Modifier, onNavigateToDetail: (I
     }
 }
 
+/**
+ * Composable function for displaying the search result.
+ *
+ * @param hasMatches Whether there are matches for the search term.
+ * @param searchTerm The current search term.
+ * @param onReset Callback to reset the search.
+ */
 @Composable
 fun SearchResult(hasMatches: Boolean, searchTerm: String, onReset: () -> Unit) {
     Column {
@@ -152,6 +160,13 @@ fun SearchResult(hasMatches: Boolean, searchTerm: String, onReset: () -> Unit) {
     }
 }
 
+/**
+ * Composable function for displaying the list of study locations.
+ *
+ * @param modifier The modifier for this composable.
+ * @param studyLocations List of study locations to display.
+ * @param onViewDetail Callback to view the detail of a study location.
+ */
 @Composable
 fun StudyLocations(modifier: Modifier = Modifier, studyLocations: List<StudyLocation>, onViewDetail: (StudyLocation) -> Unit) {
     val lazyListState = rememberLazyListState()
@@ -173,7 +188,8 @@ fun StudyLocations(modifier: Modifier = Modifier, studyLocations: List<StudyLoca
                     item {
                         Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))) {
                             StudyLocationListItem(
-                                modifier = Modifier.fillMaxWidth(0.5f), studyLocation = studyLocations[index],
+                                modifier = Modifier.fillMaxWidth(0.5f),
+                                studyLocation = studyLocations[index],
                                 onViewDetail = { onViewDetail(studyLocations[index]) },
                             )
                             if (index + 1 != studyLocations.size) {
@@ -187,9 +203,17 @@ fun StudyLocations(modifier: Modifier = Modifier, studyLocations: List<StudyLoca
                 }
             }
         }
+        ScrollToTopButton(lazyListState = lazyListState)
     }
 }
 
+/**
+ * Composable function for displaying a single study location item.
+ *
+ * @param modifier The modifier for this composable.
+ * @param studyLocation The study location to display.
+ * @param onViewDetail Callback to view the detail of the study location.
+ */
 @Composable
 fun StudyLocationListItem(modifier: Modifier = Modifier, studyLocation: StudyLocation, onViewDetail: () -> Unit) {
     DefaultOverviewListItemCard(
@@ -210,7 +234,8 @@ fun StudyLocationListItem(modifier: Modifier = Modifier, studyLocation: StudyLoc
                 )
                 Card(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium)), shape = RoundedCornerShape(2.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)) {
                     Text(
-                        studyLocation.label, style = MaterialTheme.typography.bodySmall,
+                        studyLocation.label,
+                        style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(dimensionResource(R.dimen.padding_extra_small)),
                     )
                 }

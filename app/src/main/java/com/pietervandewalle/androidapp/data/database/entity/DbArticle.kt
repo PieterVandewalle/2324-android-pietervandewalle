@@ -1,4 +1,4 @@
-package com.pietervandewalle.androidapp.data.database
+package com.pietervandewalle.androidapp.data.database.entity
 
 import androidx.room.Entity
 import androidx.room.Index

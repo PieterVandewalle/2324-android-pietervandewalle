@@ -57,7 +57,6 @@ android {
     }
 }
 
-
 secrets {
     // Optionally specify a different file name containing your secrets.
     // The plugin defaults to "local.properties"
@@ -89,8 +88,9 @@ dependencies {
     implementation("eu.bambooapps:compose-material3-pullrefresh:1.0.0")
 
     implementation("com.google.maps.android:maps-compose:4.1.1")
+    implementation("androidx.test.ext:junit-ktx:1.1.5")
 
-    //room
+    // room
     val room_version = "2.5.0"
     implementation("androidx.room:room-runtime:$room_version")
     // optional - Kotlin Extensions and Coroutines support for Room
@@ -101,7 +101,7 @@ dependencies {
     testImplementation("androidx.room:room-testing:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
 
-    //workers
+    // workers
     implementation("androidx.work:work-runtime-ktx:2.9.0")
 
     testImplementation("junit:junit:4.13.2")
@@ -114,4 +114,16 @@ dependencies {
 
     // Dokka
     dokkaPlugin("org.jetbrains.dokka:android-documentation-plugin:1.9.10")
+
+    //  Mockito framework
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
+
+    // Work testing
+    testImplementation("androidx.work:work-testing:2.9.0")
+
+    // Kotlin coroutines test
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+
+    // Roboelectric
+    testImplementation("org.robolectric:robolectric:+")
 }

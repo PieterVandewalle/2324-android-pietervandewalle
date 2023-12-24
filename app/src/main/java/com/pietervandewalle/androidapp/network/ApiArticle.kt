@@ -4,6 +4,7 @@ import com.fleeksoft.ksoup.Ksoup
 import com.pietervandewalle.androidapp.model.Article
 import kotlinx.serialization.Serializable
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Serializable
 data class ApiArticle(
@@ -14,7 +15,7 @@ data class ApiArticle(
 )
 
 fun List<ApiArticle>.asDomainObjects(): List<Article> {
-    var domainList = this.map {
+    var domainList = map {
         val articleHtmlDoc = Ksoup.parse(it.inhoud)
         Article(
             title = it.titel,
@@ -25,4 +26,27 @@ fun List<ApiArticle>.asDomainObjects(): List<Article> {
         )
     }
     return domainList
+}
+fun List<Article>.asApiObjects(): List<ApiArticle> {
+    return this.map { article ->
+        ApiArticle(
+            nieuwsbericht = article.readMoreUrl,
+            titel = article.title,
+            inhoud = constructHtmlContent(article),
+            publicatiedatum = article.date.format(DateTimeFormatter.ISO_LOCAL_DATE),
+        )
+    }
+}
+
+// Will only be needed for testing
+private fun constructHtmlContent(article: Article): String {
+    // Implement the logic to reconstruct the HTML content.
+    val htmlContent = StringBuilder()
+    htmlContent.append("<p class='paragraph paragraph--type--text paragraph--view-mode--full'>${article.content}</p>")
+
+    article.imageUrl?.let {
+        htmlContent.append("<source srcset=\"$it\"></source>")
+    }
+
+    return htmlContent.toString()
 }

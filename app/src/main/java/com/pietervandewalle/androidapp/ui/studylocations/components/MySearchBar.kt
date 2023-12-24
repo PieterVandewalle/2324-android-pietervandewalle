@@ -25,6 +25,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.pietervandewalle.androidapp.R
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
+/**
+ * Composable function for displaying a search bar.
+ *
+ * @param placeholder The placeholder text for the search bar.
+ * @param searchTerm The current search term.
+ * @param onSearchTermChange Callback to handle changes in the search term.
+ * @param onCancel Callback to cancel the search.
+ * @param onSearch Callback to perform the search.
+ */
 @Composable
 fun MySearchBar(placeholder: String, searchTerm: String, onSearchTermChange: (String) -> Unit, onCancel: () -> Unit, onSearch: () -> Unit) {
     val focusRequester = FocusRequester()
@@ -73,7 +82,11 @@ fun MySearchBar(placeholder: String, searchTerm: String, onSearchTermChange: (St
 private fun SearchBarPreview() {
     AndroidAppTheme {
         MySearchBar(
-            placeholder = "Zoek iets", searchTerm = "", onSearchTermChange = {}, onCancel = { }, onSearch = {},
+            placeholder = "Zoek iets",
+            searchTerm = "",
+            onSearchTermChange = {},
+            onCancel = { },
+            onSearch = {},
         )
     }
 }

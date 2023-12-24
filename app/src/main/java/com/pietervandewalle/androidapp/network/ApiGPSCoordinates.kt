@@ -12,3 +12,7 @@ data class ApiGPSCoordinates(
 fun ApiGPSCoordinates.asDomainObject(): GPSCoordinates {
     return GPSCoordinates(this.lon, this.lat)
 }
+
+fun GPSCoordinates.asApiObject(): ApiGPSCoordinates {
+    return ApiGPSCoordinates(longitude, latitude)
+}

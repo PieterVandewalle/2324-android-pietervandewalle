@@ -17,6 +17,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.pietervandewalle.androidapp.ui.articles.detail.ArticleDetailView
 import com.pietervandewalle.androidapp.ui.articles.overview.ArticleOverview
 import com.pietervandewalle.androidapp.ui.carparks.detail.CarParkDetailView
@@ -27,6 +28,7 @@ import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs.CARPARK_ID
 import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs.STUDYLOCATION_ID_ARG
 import com.pietervandewalle.androidapp.ui.navigation.NavigationActions
 import com.pietervandewalle.androidapp.ui.navigation.Screens
+import com.pietervandewalle.androidapp.ui.navigation.deepLinkUri
 import com.pietervandewalle.androidapp.ui.studylocations.detail.StudyLocationDetailView
 import com.pietervandewalle.androidapp.ui.studylocations.overview.StudyLocationsOverview
 
@@ -69,7 +71,12 @@ fun AndroidApp(
                 ) {
                     ArticleOverview(onNavigateToDetail = navActions::navigateToArticleDetail)
                 }
-                composable(route = Screens.CarParking.route) {
+                composable(
+                    route = Screens.CarParks.route,
+                    deepLinks = listOf(
+                        navDeepLink { uriPattern = "$deepLinkUri/${Screens.CarParks.route}" },
+                    ),
+                ) {
                     CarParksOverview(
                         onNavigateToDetail = navActions::navigateToCarParkDetail,
                     )

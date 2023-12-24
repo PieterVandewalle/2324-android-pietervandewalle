@@ -1,6 +1,5 @@
 package com.pietervandewalle.androidapp.ui.studylocations.overview
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -22,6 +21,11 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel for the Study Locations Overview screen.
+ *
+ * @param studyLocationRepository The repository for study locations data.
+ */
 class StudyLocationsOverviewViewModel(private val studyLocationRepository: StudyLocationRepository) : ViewModel() {
     private val isRefreshing = MutableStateFlow(false)
     private val isError = MutableStateFlow(false)
@@ -35,19 +39,21 @@ class StudyLocationsOverviewViewModel(private val studyLocationRepository: Study
         if (query.isEmpty()) {
             studyLocationRepository.getAll().asResult()
         } else {
-            Log.i("Query: ", query)
             studyLocationRepository.getAllBySearchTerm(query).asResult()
         }
     }
 
+    /**
+     * Represents the state flow of the UI state for the Study Location Overview screen.
+     */
     val uiState: StateFlow<StudyLocationsOverviewState> = combine(
         // Combine UI related states
-        combine(isRefreshing, isError, isSearchOpen, areResultsFiltered, completedSearchTerm) { refreshing, error, searchOpen, resultsFiltered, completedSearch ->
-            UIState(refreshing, error, searchOpen, resultsFiltered, completedSearch)
+        combine(isSearchOpen, areResultsFiltered, currentSearchTerm) { searchOpen, resultsFiltered, currentSearch ->
+            UIState(searchOpen, resultsFiltered, currentSearch)
         },
         // Combine data related states
-        combine(studyLocationsFlow, currentSearchTerm) { studyLocations, currentSearch ->
-            DataState(studyLocations, currentSearch)
+        combine(studyLocationsFlow, completedSearchTerm, isRefreshing, isError) { studyLocations, completedSearch, refreshing, error ->
+            DataState(studyLocations, completedSearch, refreshing, error)
         },
     ) { ui, data ->
         // Map to final UI state
@@ -57,12 +63,12 @@ class StudyLocationsOverviewViewModel(private val studyLocationRepository: Study
                 is Result.Loading -> StudyLocationsUiState.Loading
                 is Result.Error -> StudyLocationsUiState.Error
             },
-            isRefreshing = ui.isRefreshing,
-            isError = ui.isError,
+            isRefreshing = data.isRefreshing,
+            isError = data.isError,
+            completedSearchTerm = data.completedSearchTerm,
             isSearchOpen = ui.isSearchOpen,
-            currentSearchTerm = data.currentSearchTerm,
+            currentSearchTerm = ui.currentSearchTerm,
             areResultsFiltered = ui.areResultsFiltered,
-            completedSearchTerm = ui.completedSearchTerm,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -71,19 +77,23 @@ class StudyLocationsOverviewViewModel(private val studyLocationRepository: Study
             studyLocations = StudyLocationsUiState.Loading,
             isRefreshing = false,
             isError = false,
+            completedSearchTerm = "",
             isSearchOpen = false,
             currentSearchTerm = "",
             areResultsFiltered = false,
-            completedSearchTerm = "",
         ),
     )
 
     private val exceptionHandler = CoroutineExceptionHandler { context, exception ->
         viewModelScope.launch {
             isError.emit(true)
+            exception.printStackTrace()
         }
     }
 
+    /**
+     * Function to trigger a data refresh.
+     */
     fun refresh() {
         viewModelScope.launch(exceptionHandler) {
             with(studyLocationRepository) {
@@ -98,25 +108,41 @@ class StudyLocationsOverviewViewModel(private val studyLocationRepository: Study
         }
     }
 
-    // Should be called after snackbar message is shown
+    /**
+     * Function to be called after the error message is shown to clear the error state.
+     */
     fun onErrorConsumed() {
         viewModelScope.launch {
             isError.emit(false)
         }
     }
 
+    /**
+     * Function to open the search bar.
+     */
     fun openSearch() {
         isSearchOpen.value = true
     }
 
+    /**
+     * Function to close the search bar.
+     */
     fun closeSearch() {
         isSearchOpen.value = false
     }
 
+    /**
+     * Function to update the current search term.
+     *
+     * @param newSearchTerm The new search term to set.
+     */
     fun updateSearchTerm(newSearchTerm: String) {
         currentSearchTerm.value = newSearchTerm
     }
 
+    /**
+     * Function to reset the search and clear filters.
+     */
     fun resetSearch() {
         currentSearchTerm.value = ""
         isSearchOpen.value = false
@@ -124,12 +150,18 @@ class StudyLocationsOverviewViewModel(private val studyLocationRepository: Study
         completedSearchTerm.value = ""
     }
 
+    /**
+     * Function to perform the search operation.
+     */
     fun search() {
         completedSearchTerm.value = currentSearchTerm.value
         areResultsFiltered.value = true
     }
 
     companion object {
+        /**
+         * Factory for creating instances of [StudyLocationsOverviewViewModel].
+         */
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as AndroidApplication)

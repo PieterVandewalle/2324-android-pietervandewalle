@@ -24,9 +24,9 @@ fun BottomNavigationBar(currentRoute: String?, goHome: () -> Unit, goCarParks: (
             onClick = goHome,
         ),
         BottomNavigationItem(
-            label = stringResource(Screens.CarParking.title),
+            label = stringResource(Screens.CarParks.title),
             icon = Icons.Filled.Garage,
-            route = Screens.CarParking.route,
+            route = Screens.CarParks.route,
             onClick = goCarParks,
         ),
         BottomNavigationItem(
