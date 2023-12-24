@@ -1,6 +1,5 @@
 package com.pietervandewalle.androidapp.ui.studylocations.overview
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -35,19 +34,18 @@ class StudyLocationsOverviewViewModel(private val studyLocationRepository: Study
         if (query.isEmpty()) {
             studyLocationRepository.getAll().asResult()
         } else {
-            Log.i("Query: ", query)
             studyLocationRepository.getAllBySearchTerm(query).asResult()
         }
     }
 
     val uiState: StateFlow<StudyLocationsOverviewState> = combine(
         // Combine UI related states
-        combine(isRefreshing, isError, isSearchOpen, areResultsFiltered, completedSearchTerm) { refreshing, error, searchOpen, resultsFiltered, completedSearch ->
-            UIState(refreshing, error, searchOpen, resultsFiltered, completedSearch)
+        combine(isSearchOpen, areResultsFiltered, currentSearchTerm) { searchOpen, resultsFiltered, currentSearch ->
+            UIState(searchOpen, resultsFiltered, currentSearch)
         },
         // Combine data related states
-        combine(studyLocationsFlow, currentSearchTerm) { studyLocations, currentSearch ->
-            DataState(studyLocations, currentSearch)
+        combine(studyLocationsFlow, completedSearchTerm, isRefreshing, isError) { studyLocations, completedSearch, refreshing, error ->
+            DataState(studyLocations, completedSearch, refreshing, error)
         },
     ) { ui, data ->
         // Map to final UI state
@@ -57,12 +55,12 @@ class StudyLocationsOverviewViewModel(private val studyLocationRepository: Study
                 is Result.Loading -> StudyLocationsUiState.Loading
                 is Result.Error -> StudyLocationsUiState.Error
             },
-            isRefreshing = ui.isRefreshing,
-            isError = ui.isError,
+            isRefreshing = data.isRefreshing,
+            isError = data.isError,
+            completedSearchTerm = data.completedSearchTerm,
             isSearchOpen = ui.isSearchOpen,
-            currentSearchTerm = data.currentSearchTerm,
+            currentSearchTerm = ui.currentSearchTerm,
             areResultsFiltered = ui.areResultsFiltered,
-            completedSearchTerm = ui.completedSearchTerm,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -71,16 +69,17 @@ class StudyLocationsOverviewViewModel(private val studyLocationRepository: Study
             studyLocations = StudyLocationsUiState.Loading,
             isRefreshing = false,
             isError = false,
+            completedSearchTerm = "",
             isSearchOpen = false,
             currentSearchTerm = "",
             areResultsFiltered = false,
-            completedSearchTerm = "",
         ),
     )
 
     private val exceptionHandler = CoroutineExceptionHandler { context, exception ->
         viewModelScope.launch {
             isError.emit(true)
+            exception.printStackTrace()
         }
     }
 

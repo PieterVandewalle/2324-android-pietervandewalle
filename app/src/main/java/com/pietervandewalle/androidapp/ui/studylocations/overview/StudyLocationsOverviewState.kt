@@ -7,23 +7,24 @@ data class StudyLocationsOverviewState(
     val studyLocations: StudyLocationsUiState,
     val isRefreshing: Boolean,
     val isError: Boolean,
+    val completedSearchTerm: String = "",
     val isSearchOpen: Boolean = false,
     val currentSearchTerm: String = "",
     val areResultsFiltered: Boolean = false,
-    val completedSearchTerm: String = "",
 )
 
 data class UIState(
-    val isRefreshing: Boolean,
-    val isError: Boolean,
     val isSearchOpen: Boolean,
     val areResultsFiltered: Boolean,
-    val completedSearchTerm: String,
+    val currentSearchTerm: String,
 )
 
 data class DataState(
     val studyLocationsResult: Result<List<StudyLocation>>,
-    val currentSearchTerm: String,
+    val completedSearchTerm: String,
+    val isRefreshing: Boolean,
+    val isError: Boolean,
+
 )
 
 sealed interface StudyLocationsUiState {
