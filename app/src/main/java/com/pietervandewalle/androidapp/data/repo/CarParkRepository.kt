@@ -6,10 +6,10 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.pietervandewalle.androidapp.data.database.CarParkDao
-import com.pietervandewalle.androidapp.data.database.asDbCarPark
-import com.pietervandewalle.androidapp.data.database.asDomainCarPark
-import com.pietervandewalle.androidapp.data.database.asDomainCarParks
+import com.pietervandewalle.androidapp.data.database.dao.CarParkDao
+import com.pietervandewalle.androidapp.data.database.entity.asDbCarPark
+import com.pietervandewalle.androidapp.data.database.entity.asDomainCarPark
+import com.pietervandewalle.androidapp.data.database.entity.asDomainCarParks
 import com.pietervandewalle.androidapp.model.CarPark
 import com.pietervandewalle.androidapp.network.GhentApiService
 import com.pietervandewalle.androidapp.network.asDomainObjects

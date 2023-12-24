@@ -6,10 +6,10 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.pietervandewalle.androidapp.data.database.ArticleDao
-import com.pietervandewalle.androidapp.data.database.asDbArticle
-import com.pietervandewalle.androidapp.data.database.asDomainArticle
-import com.pietervandewalle.androidapp.data.database.asDomainArticles
+import com.pietervandewalle.androidapp.data.database.dao.ArticleDao
+import com.pietervandewalle.androidapp.data.database.entity.asDbArticle
+import com.pietervandewalle.androidapp.data.database.entity.asDomainArticle
+import com.pietervandewalle.androidapp.data.database.entity.asDomainArticles
 import com.pietervandewalle.androidapp.model.Article
 import com.pietervandewalle.androidapp.network.GhentApiService
 import com.pietervandewalle.androidapp.network.asDomainObjects

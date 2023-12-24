@@ -1,15 +1,14 @@
 package com.pietervandewalle.androidapp.data.repo
 
-import com.pietervandewalle.androidapp.data.database.StudyLocationDao
-import com.pietervandewalle.androidapp.data.database.asDbStudyLocation
-import com.pietervandewalle.androidapp.data.database.asDomainStudyLocation
-import com.pietervandewalle.androidapp.data.database.asDomainStudyLocations
+import com.pietervandewalle.androidapp.data.database.dao.StudyLocationDao
+import com.pietervandewalle.androidapp.data.database.entity.asDbStudyLocation
+import com.pietervandewalle.androidapp.data.database.entity.asDomainStudyLocation
+import com.pietervandewalle.androidapp.data.database.entity.asDomainStudyLocations
 import com.pietervandewalle.androidapp.model.StudyLocation
 import com.pietervandewalle.androidapp.network.GhentApiService
 import com.pietervandewalle.androidapp.network.asDomainObjects
 import com.pietervandewalle.androidapp.network.getStudyLocationsAsFlow
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 

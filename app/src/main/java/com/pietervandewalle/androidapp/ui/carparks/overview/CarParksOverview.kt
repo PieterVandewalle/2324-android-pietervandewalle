@@ -1,6 +1,5 @@
 package com.pietervandewalle.androidapp.ui.carparks.overview
 
-import android.text.format.DateUtils
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -41,6 +40,7 @@ import com.pietervandewalle.androidapp.model.CarPark
 import com.pietervandewalle.androidapp.model.isAlmostFull
 import com.pietervandewalle.androidapp.model.isFull
 import com.pietervandewalle.androidapp.ui.carparks.common.components.CarParkStatusCard
+import com.pietervandewalle.androidapp.ui.carparks.common.helpers.getRelativeTimeSpanString
 import com.pietervandewalle.androidapp.ui.common.components.DefaultOverviewListItemCard
 import com.pietervandewalle.androidapp.ui.common.components.ErrorLoadingIndicatorWithRetry
 import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
@@ -51,8 +51,6 @@ import com.pietervandewalle.androidapp.ui.common.helpers.bitmapDescriptorFromVec
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 import com.pietervandewalle.androidapp.ui.theme.success
 import com.pietervandewalle.androidapp.ui.theme.warning
-import java.time.Instant
-import java.time.ZoneOffset
 
 @Composable
 fun CarParksOverview(modifier: Modifier = Modifier, onNavigateToDetail: (Int) -> Unit, carParksOverviewViewModel: CarParksOverviewViewModel = viewModel(factory = CarParksOverviewViewModel.Factory)) {
@@ -177,16 +175,8 @@ private fun CarParkDetails(carPark: CarPark) {
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small)),
     ) {
         Text(carPark.description, style = MaterialTheme.typography.bodyMedium)
-        // TODO this should be a use case?
-        val lastUpdateMillis = carPark.lastUpdate.toInstant(ZoneOffset.UTC).toEpochMilli()
-        val currentMillis = Instant.now().toEpochMilli()
 
-        // Format elapsed time using DateUtils.getRelativeTimeSpanString
-        val elapsedTime = DateUtils.getRelativeTimeSpanString(
-            lastUpdateMillis,
-            currentMillis,
-            DateUtils.MINUTE_IN_MILLIS,
-        ).toString()
+        val elapsedTime = getRelativeTimeSpanString(carPark.lastUpdate)
 
         Text(
             stringResource(id = R.string.last_update, elapsedTime),
