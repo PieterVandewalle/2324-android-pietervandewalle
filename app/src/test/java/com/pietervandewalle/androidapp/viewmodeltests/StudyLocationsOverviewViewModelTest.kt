@@ -29,7 +29,7 @@ import org.mockito.kotlin.whenever
 import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class StudyLocationOverviewViewModelTest {
+class StudyLocationsOverviewViewModelTest {
     @get:Rule
     val testDispatcherRule = TestDispatcherRule()
 

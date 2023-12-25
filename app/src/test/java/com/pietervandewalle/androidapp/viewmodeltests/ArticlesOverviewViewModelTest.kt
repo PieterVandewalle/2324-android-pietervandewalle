@@ -25,7 +25,7 @@ import org.mockito.kotlin.whenever
 import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class ArticleOverviewViewModelTest {
+class ArticlesOverviewViewModelTest {
     @get:Rule
     val testDispatcherRule = TestDispatcherRule()
 

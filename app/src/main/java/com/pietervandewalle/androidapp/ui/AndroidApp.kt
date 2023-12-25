@@ -42,6 +42,7 @@ fun AndroidApp(
     navActions: NavigationActions = remember(navController) {
         NavigationActions(navController)
     },
+    startDestination: String? = null, // Will be used in tests
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -63,11 +64,11 @@ fun AndroidApp(
         ) { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = Screens.Home.route,
+                startDestination = startDestination ?: Screens.Articles.route,
                 modifier = Modifier.padding(innerPadding),
             ) {
                 composable(
-                    route = Screens.Home.route,
+                    route = Screens.Articles.route,
                 ) {
                     ArticleOverview(onNavigateToDetail = navActions::navigateToArticleDetail)
                 }

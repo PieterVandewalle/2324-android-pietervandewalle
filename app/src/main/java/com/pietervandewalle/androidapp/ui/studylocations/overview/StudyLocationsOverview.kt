@@ -37,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -79,7 +80,10 @@ fun StudyLocationsOverview(modifier: Modifier = Modifier, onNavigateToDetail: (I
             ) {
                 MyTopAppBar(screenTitle = R.string.studylocations) {
                     IconButton(onClick = studyLocationsOverviewViewModel::openSearch) {
-                        Icon(Icons.Filled.Search, contentDescription = null)
+                        Icon(
+                            Icons.Filled.Search,
+                            contentDescription = stringResource(R.string.search_icon),
+                        )
                     }
                 }
             }
@@ -93,7 +97,7 @@ fun StudyLocationsOverview(modifier: Modifier = Modifier, onNavigateToDetail: (I
                     placeholder = stringResource(id = R.string.search_studylocations),
                     searchTerm = uiState.currentSearchTerm,
                     onSearchTermChange = studyLocationsOverviewViewModel::updateSearchTerm,
-                    onCancel = studyLocationsOverviewViewModel::closeSearch,
+                    onClose = studyLocationsOverviewViewModel::closeSearch,
                     onSearch = studyLocationsOverviewViewModel::search,
                 )
             }
@@ -150,7 +154,7 @@ fun SearchResult(hasMatches: Boolean, searchTerm: String, onReset: () -> Unit) {
                 },
                 searchTerm,
             ),
-            modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_medium)),
+            modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_medium)).testTag("searchResult"),
         )
         TextButton(onClick = onReset) {
             Text(
@@ -171,7 +175,7 @@ fun SearchResult(hasMatches: Boolean, searchTerm: String, onReset: () -> Unit) {
 fun StudyLocations(modifier: Modifier = Modifier, studyLocations: List<StudyLocation>, onViewDetail: (StudyLocation) -> Unit) {
     val lazyListState = rememberLazyListState()
 
-    BoxWithConstraints(modifier = modifier) {
+    BoxWithConstraints(modifier = modifier.testTag("studyLocationsLazyColumn")) {
         if (maxWidth < 1200.dp) {
             LazyColumn(state = lazyListState) {
                 items(studyLocations) { studyLocation ->
@@ -217,7 +221,7 @@ fun StudyLocations(modifier: Modifier = Modifier, studyLocations: List<StudyLoca
 @Composable
 fun StudyLocationListItem(modifier: Modifier = Modifier, studyLocation: StudyLocation, onViewDetail: () -> Unit) {
     DefaultOverviewListItemCard(
-        modifier = modifier.clickable { onViewDetail() },
+        modifier = modifier.clickable { onViewDetail() }.testTag("studyLocationListItem"),
     ) {
         Column(
             modifier = Modifier
@@ -240,14 +244,14 @@ fun StudyLocationListItem(modifier: Modifier = Modifier, studyLocation: StudyLoc
                     )
                 }
             }
-            Text(studyLocation.title, style = MaterialTheme.typography.titleMedium)
+            Text(studyLocation.title, style = MaterialTheme.typography.titleMedium, modifier = Modifier.testTag("studyLocationListItemTitle"))
             Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)), verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Outlined.LocationOn,
                     contentDescription = stringResource(R.string.location),
                     tint = MaterialTheme.colorScheme.primary,
                 )
-                Text(studyLocation.address, style = MaterialTheme.typography.bodyMedium)
+                Text(studyLocation.address, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.testTag("studyLocationListItemAddress"))
             }
 
             Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)), verticalAlignment = Alignment.CenterVertically) {

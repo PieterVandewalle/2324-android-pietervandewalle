@@ -19,9 +19,9 @@ import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 fun BottomNavigationBar(currentRoute: String?, goHome: () -> Unit, goCarParks: () -> Unit, goStudyLocations: () -> Unit) {
     val navigationItems = listOf(
         BottomNavigationItem(
-            label = stringResource(Screens.Home.title),
+            label = stringResource(Screens.Articles.title),
             icon = Icons.Filled.Home,
-            route = Screens.Home.route,
+            route = Screens.Articles.route,
             onClick = goHome,
         ),
         BottomNavigationItem(
@@ -75,6 +75,6 @@ data class BottomNavigationItem(
 @Preview(showBackground = true)
 private fun BottomNavigationBarPreview() {
     AndroidAppTheme {
-        BottomNavigationBar(currentRoute = Screens.Home.route, goHome = { }, goCarParks = { }, goStudyLocations = {})
+        BottomNavigationBar(currentRoute = Screens.Articles.route, goHome = { }, goCarParks = { }, goStudyLocations = {})
     }
 }

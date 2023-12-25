@@ -58,8 +58,6 @@ android {
 }
 
 secrets {
-    // Optionally specify a different file name containing your secrets.
-    // The plugin defaults to "local.properties"
     propertiesFileName = "secrets.properties"
     defaultPropertiesFileName = "secrets.defaults.properties"
 }
@@ -126,4 +124,7 @@ dependencies {
 
     // Roboelectric
     testImplementation("org.robolectric:robolectric:+")
+
+    // Test navigation
+    androidTestImplementation("androidx.navigation:navigation-testing:2.7.5")
 }

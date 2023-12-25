@@ -19,6 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,13 +33,14 @@ import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
  * @param placeholder The placeholder text for the search bar.
  * @param searchTerm The current search term.
  * @param onSearchTermChange Callback to handle changes in the search term.
- * @param onCancel Callback to cancel the search.
+ * @param onClose Callback to cancel the search.
  * @param onSearch Callback to perform the search.
  */
 @Composable
-fun MySearchBar(placeholder: String, searchTerm: String, onSearchTermChange: (String) -> Unit, onCancel: () -> Unit, onSearch: () -> Unit) {
+fun MySearchBar(placeholder: String, searchTerm: String, onSearchTermChange: (String) -> Unit, onClose: () -> Unit, onSearch: () -> Unit) {
     val focusRequester = FocusRequester()
     var textFieldLoaded by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
     TextField(
         value = searchTerm,
         onValueChange = onSearchTermChange,
@@ -50,7 +53,7 @@ fun MySearchBar(placeholder: String, searchTerm: String, onSearchTermChange: (St
             )
         },
         trailingIcon = {
-            IconButton(onClick = onCancel) {
+            IconButton(onClick = onClose) {
                 Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.cancel))
             }
         },
@@ -64,14 +67,14 @@ fun MySearchBar(placeholder: String, searchTerm: String, onSearchTermChange: (St
                     focusRequester.requestFocus() // IMPORTANT
                     textFieldLoaded = true // stop cyclic recompositions
                 }
-            },
+            }.testTag("searchBar"),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = {
             focusRequester.freeFocus()
+            focusManager.clearFocus()
+            onClose()
             if (searchTerm.isNotBlank()) {
                 onSearch()
-            } else {
-                onCancel()
             }
         }),
     )
@@ -85,7 +88,7 @@ private fun SearchBarPreview() {
             placeholder = "Zoek iets",
             searchTerm = "",
             onSearchTermChange = {},
-            onCancel = { },
+            onClose = { },
             onSearch = {},
         )
     }

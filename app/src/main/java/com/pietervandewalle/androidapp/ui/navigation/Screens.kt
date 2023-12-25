@@ -14,10 +14,10 @@ object DestinationsArgs {
     const val STUDYLOCATION_ID_ARG = "studyLocationId"
 }
 enum class Screens(val route: String, @StringRes val title: Int) {
-    Home("home_screen", R.string.home_title),
+    Articles("articles", R.string.home_title),
     ArticleDetail("articles/{$ARTICLE_ID_ARG}", R.string.home_title),
-    CarParks("car_parking_screen", R.string.car_parking),
+    CarParks("carParks", R.string.car_parking),
     CarParkDetail("carParks/{$CARPARK_ID_ARG}", R.string.car_parking),
-    StudyLocations("studylocations", R.string.studylocations),
-    StudyLocationDetail("studylocations/{$STUDYLOCATION_ID_ARG}", R.string.studylocations),
+    StudyLocations("studyLocations", R.string.studylocations),
+    StudyLocationDetail("studyLocations/{$STUDYLOCATION_ID_ARG}", R.string.studylocations),
 }

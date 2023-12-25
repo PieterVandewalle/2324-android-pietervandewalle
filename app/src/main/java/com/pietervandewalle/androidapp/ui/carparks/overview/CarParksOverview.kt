@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -118,7 +119,7 @@ fun CarParkMap(modifier: Modifier = Modifier, carParks: List<CarPark>) {
     }
     val context = LocalContext.current
     GoogleMap(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize().testTag("carParkMap"),
         cameraPositionState = cameraPositionState,
     ) {
         carParks.forEach { carPark ->
@@ -139,7 +140,7 @@ fun CarParkMap(modifier: Modifier = Modifier, carParks: List<CarPark>) {
 @Composable
 fun CarParkList(modifier: Modifier = Modifier, carParks: List<CarPark>, onNavigateToDetail: (CarPark) -> Unit) {
     val lazyListState = rememberLazyListState()
-    LazyColumn(state = lazyListState, modifier = modifier.padding(dimensionResource(R.dimen.padding_extra_small))) {
+    LazyColumn(state = lazyListState, modifier = modifier.padding(dimensionResource(R.dimen.padding_extra_small)).testTag("carParkList")) {
         items(carParks) { carPark ->
             CarParkListItem(
                 carPark = carPark,
@@ -153,13 +154,14 @@ fun CarParkList(modifier: Modifier = Modifier, carParks: List<CarPark>, onNaviga
 
 @Composable
 fun CarParkListItem(modifier: Modifier = Modifier, carPark: CarPark) {
-    DefaultOverviewListItemCard(modifier = modifier) {
+    DefaultOverviewListItemCard(modifier = modifier.testTag("carParkListItem")) {
         ListItem(
             headlineContent = {
                 Text(
                     carPark.name,
                     style = MaterialTheme.typography.titleMedium,
                     maxLines = 2,
+                    modifier = Modifier.testTag("carParkListItemTitle"),
                 )
             },
             supportingContent = { CarParkDetails(carPark = carPark) },

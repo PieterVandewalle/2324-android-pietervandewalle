@@ -22,6 +22,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -46,7 +47,7 @@ fun CarParkDetailView(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
             MyTopAppBar(screenTitle = R.string.car_parking, canNavigateBack = true, onNavigateBack = onNavigateBack) {
             }
         },
-        modifier = modifier,
+        modifier = modifier.testTag("carParkDetailView"),
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding).verticalScroll(rememberScrollState())) {
             when (carParkUiState) {
