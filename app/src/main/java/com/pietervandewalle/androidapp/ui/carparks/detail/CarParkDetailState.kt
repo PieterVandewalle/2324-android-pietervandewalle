@@ -4,7 +4,6 @@ import com.pietervandewalle.androidapp.model.CarPark
 
 data class CarParkDetailState(
     val carPark: CarParkUiState,
-    val isError: Boolean,
 )
 
 sealed interface CarParkUiState {

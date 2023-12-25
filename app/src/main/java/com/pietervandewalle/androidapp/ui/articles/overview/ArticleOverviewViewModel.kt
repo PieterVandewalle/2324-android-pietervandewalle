@@ -33,10 +33,10 @@ class ArticleOverviewViewModel(private val articleRepository: ArticleRepository)
         isRefreshing,
         isError,
     ) { articlesResult, refreshing, errorOccurred ->
-        val articles: ArticlesOverviewUiState = when (articlesResult) {
-            is Result.Success -> ArticlesOverviewUiState.Success(articlesResult.data)
-            is Result.Loading -> ArticlesOverviewUiState.Loading
-            is Result.Error -> ArticlesOverviewUiState.Error
+        val articles: ArticlesUiState = when (articlesResult) {
+            is Result.Success -> ArticlesUiState.Success(articlesResult.data)
+            is Result.Loading -> ArticlesUiState.Loading
+            is Result.Error -> ArticlesUiState.Error
         }
 
         ArticleOverviewState(
@@ -48,7 +48,7 @@ class ArticleOverviewViewModel(private val articleRepository: ArticleRepository)
         scope = viewModelScope,
         started = WhileUiSubscribed,
         initialValue = ArticleOverviewState(
-            ArticlesOverviewUiState.Loading,
+            ArticlesUiState.Loading,
             isRefreshing = false,
             isError = false,
         ),

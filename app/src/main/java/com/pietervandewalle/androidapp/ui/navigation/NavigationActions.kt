@@ -18,7 +18,7 @@ class NavigationActions(private val navController: NavHostController) {
     }
 
     fun navigateToHome() {
-        navigateToMenuItem(Screens.Home.route)
+        navigateToMenuItem(Screens.Articles.route)
     }
 
     fun navigateToStudyLocations() {

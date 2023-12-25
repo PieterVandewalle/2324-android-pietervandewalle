@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Beenhere
 import androidx.compose.material.icons.filled.BookmarkAdded
@@ -28,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,7 +39,6 @@ import coil.compose.SubcomposeAsyncImage
 import com.pietervandewalle.androidapp.R
 import com.pietervandewalle.androidapp.data.sampler.StudyLocationSampler
 import com.pietervandewalle.androidapp.model.StudyLocation
-import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.common.components.informationlist.InformationCard
 import com.pietervandewalle.androidapp.ui.common.components.informationlist.InformationListItem
@@ -55,15 +57,14 @@ fun StudyLocationDetailView(modifier: Modifier = Modifier, onNavigateBack: () ->
     val uiState by studyLocationDetailViewModel.uiState.collectAsState()
     val studyLocationUiState = uiState.studyLocation
 
-    ErrorSnackbar(isError = uiState.isError, onErrorConsumed = studyLocationDetailViewModel::onErrorConsumed)
     Scaffold(
         topBar = {
             MyTopAppBar(screenTitle = R.string.studylocations, canNavigateBack = true, onNavigateBack = onNavigateBack) {
             }
         },
-        modifier = modifier,
+        modifier = modifier.testTag("studyLocationDetailView"),
     ) { innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)) {
+        Box(modifier = Modifier.padding(innerPadding).verticalScroll(rememberScrollState())) {
             when (studyLocationUiState) {
                 is StudyLocationUiState.Loading -> LoadingIndicator()
                 is StudyLocationUiState.Error ->

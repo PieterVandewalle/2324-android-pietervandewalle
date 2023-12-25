@@ -13,7 +13,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Share
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,12 +36,10 @@ import com.pietervandewalle.androidapp.R
 import com.pietervandewalle.androidapp.data.sampler.ArticleSampler
 import com.pietervandewalle.androidapp.model.Article
 import com.pietervandewalle.androidapp.ui.articles.common.helpers.formatArticleDate
-import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArticleDetailView(modifier: Modifier = Modifier, articleDetailViewModel: ArticleDetailViewModel = viewModel(factory = ArticleDetailViewModel.Factory), onNavigateBack: () -> Unit) {
     val context = LocalContext.current
@@ -50,8 +48,6 @@ fun ArticleDetailView(modifier: Modifier = Modifier, articleDetailViewModel: Art
 
     val shareIntentTitle = stringResource(R.string.share_article)
     val shareIntentExtraTitle = stringResource(R.string.read_this_article_from_city_ghent)
-
-    ErrorSnackbar(isError = uiState.isError, onErrorConsumed = articleDetailViewModel::onErrorConsumed)
 
     Scaffold(
         topBar = {
@@ -79,7 +75,7 @@ fun ArticleDetailView(modifier: Modifier = Modifier, articleDetailViewModel: Art
                 }
             }
         },
-        modifier = modifier,
+        modifier = modifier.testTag("articleDetailView"),
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             when (articleUiState) {

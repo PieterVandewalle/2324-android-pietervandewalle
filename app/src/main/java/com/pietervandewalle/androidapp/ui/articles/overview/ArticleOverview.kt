@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,9 +65,9 @@ fun ArticleOverview(modifier: Modifier = Modifier, articleOverviewViewModel: Art
             modifier = Modifier.padding(innerPadding),
         ) {
             when (articlesUiState) {
-                is ArticlesOverviewUiState.Loading -> LoadingIndicator()
-                is ArticlesOverviewUiState.Error -> ErrorLoadingIndicatorWithRetry(onRetry = articleOverviewViewModel::refresh)
-                is ArticlesOverviewUiState.Success ->
+                is ArticlesUiState.Loading -> LoadingIndicator()
+                is ArticlesUiState.Error -> ErrorLoadingIndicatorWithRetry(onRetry = articleOverviewViewModel::refresh)
+                is ArticlesUiState.Success ->
                     ArticleList(
                         articles = articlesUiState.articles,
                         onViewDetail = { onNavigateToDetail(it.id) },
@@ -114,11 +115,11 @@ fun ArticleListItem(modifier: Modifier = Modifier, article: Article, onViewDetai
     DefaultOverviewListItemCard(
         modifier = modifier.clickable {
             onViewDetail()
-        },
+        }.testTag("articleListItem"),
     ) {
         ListItem(
             headlineContent = {
-                Text(article.title, style = MaterialTheme.typography.titleMedium)
+                Text(article.title, style = MaterialTheme.typography.titleMedium, modifier = Modifier.testTag("articleListItemTitle"))
             },
             leadingContent = {
                 Box(

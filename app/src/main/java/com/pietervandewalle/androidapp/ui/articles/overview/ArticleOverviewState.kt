@@ -4,14 +4,14 @@ import androidx.compose.runtime.Immutable
 import com.pietervandewalle.androidapp.model.Article
 
 data class ArticleOverviewState(
-    val articles: ArticlesOverviewUiState,
+    val articles: ArticlesUiState,
     val isRefreshing: Boolean,
     val isError: Boolean,
 )
 
 @Immutable
-sealed interface ArticlesOverviewUiState {
-    data class Success(val articles: List<Article>) : ArticlesOverviewUiState
-    object Error : ArticlesOverviewUiState
-    object Loading : ArticlesOverviewUiState
+sealed interface ArticlesUiState {
+    data class Success(val articles: List<Article>) : ArticlesUiState
+    object Error : ArticlesUiState
+    object Loading : ArticlesUiState
 }

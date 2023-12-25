@@ -46,6 +46,9 @@
     <string name="cancel">annuleren</string>
     <string name="temporary_closed">Tijdelijk gesloten</string>
     <string name="closed">Gesloten</string>
+    <string name="search_icon">Zoeken icoon</string>
+    <string name="open_map_view">kaart weergave openen</string>
+    <string name="scroll_to_top">scroll naar bovenaan</string>
     <plurals name="numberOfParkingSpotsAvailable">
         <item quantity="one">nog %1$d plaats</item>
         <item quantity="other">nog %1$d plaatsen</item>

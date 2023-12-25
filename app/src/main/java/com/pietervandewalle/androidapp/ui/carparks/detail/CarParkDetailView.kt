@@ -4,6 +4,8 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Co2
@@ -12,7 +14,6 @@ import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material.icons.filled.Timeline
 import androidx.compose.material.icons.filled.Work
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -21,6 +22,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -29,29 +31,25 @@ import com.pietervandewalle.androidapp.data.sampler.CarParkSampler
 import com.pietervandewalle.androidapp.model.CarPark
 import com.pietervandewalle.androidapp.ui.carparks.common.components.CarParkStatusCard
 import com.pietervandewalle.androidapp.ui.carparks.common.helpers.getRelativeTimeSpanString
-import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.common.components.informationlist.InformationCard
 import com.pietervandewalle.androidapp.ui.common.components.informationlist.InformationListItem
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CarParkDetailView(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, carParkDetailViewModel: CarParkDetailViewModel = viewModel(factory = CarParkDetailViewModel.Factory)) {
     val uiState by carParkDetailViewModel.uiState.collectAsState()
     val carParkUiState = uiState.carPark
-
-    ErrorSnackbar(isError = uiState.isError, onErrorConsumed = carParkDetailViewModel::onErrorConsumed)
 
     Scaffold(
         topBar = {
             MyTopAppBar(screenTitle = R.string.car_parking, canNavigateBack = true, onNavigateBack = onNavigateBack) {
             }
         },
-        modifier = modifier,
+        modifier = modifier.testTag("carParkDetailView"),
     ) { innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)) {
+        Box(modifier = Modifier.padding(innerPadding).verticalScroll(rememberScrollState())) {
             when (carParkUiState) {
                 is CarParkUiState.Loading -> LoadingIndicator()
                 is CarParkUiState.Error ->
