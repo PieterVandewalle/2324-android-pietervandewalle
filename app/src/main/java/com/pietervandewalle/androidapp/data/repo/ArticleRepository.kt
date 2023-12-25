@@ -22,17 +22,44 @@ import kotlinx.coroutines.flow.onStart
 import java.util.concurrent.TimeUnit
 
 interface ArticleRepository {
-    suspend fun insert(article: Article)
+    /**
+     * Retrieves all articles from the repository as a Flow of lists.
+     *
+     * @return A Flow emitting a list of articles.
+     */
     fun getAll(): Flow<List<Article>>
+
+    /**
+     * Retrieves an article by its unique identifier from the repository as a Flow.
+     *
+     * @param id The unique identifier of the article to retrieve.
+     * @return A Flow emitting the requested article.
+     */
     fun getById(id: Int): Flow<Article>
+
+    /**
+     * Inserts an article into the repository.
+     *
+     * @param article The article to insert.
+     */
+    suspend fun insert(article: Article)
+
+    /**
+     * Refreshes the repository, typically by fetching updated data from a remote source.
+     */
     suspend fun refresh()
 }
 
+/**
+ * Implementation of [ArticleRepository] that caches articles using a local database
+ * (represented by [articleDao]) and fetches data from a remote source (represented by [ghentApiService]).
+ *
+ * @param articleDao The data access object for the local database.
+ * @param ghentApiService The API service for fetching remote data.
+ * @param context The Android application context.
+ */
 class CachingArticleRepository(private val articleDao: ArticleDao, private val ghentApiService: GhentApiService, context: Context) :
     ArticleRepository {
-    override suspend fun insert(article: Article) {
-        articleDao.insert(article.asDbArticle())
-    }
 
     override fun getAll(): Flow<List<Article>> {
         return articleDao.getAll().map { it.asDomainArticles() }.onStart { startWorkers() }.onEach {
@@ -44,6 +71,10 @@ class CachingArticleRepository(private val articleDao: ArticleDao, private val g
 
     override fun getById(id: Int): Flow<Article> {
         return articleDao.getById(id).map { it.asDomainArticle() }
+    }
+
+    override suspend fun insert(article: Article) {
+        articleDao.insert(article.asDbArticle())
     }
 
     override suspend fun refresh() {

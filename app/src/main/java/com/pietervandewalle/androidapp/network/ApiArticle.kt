@@ -6,6 +6,14 @@ import kotlinx.serialization.Serializable
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+/**
+ * Represents an API article received from the City of Ghent's API.
+ *
+ * @property nieuwsbericht The URL of the article.
+ * @property titel The title of the article.
+ * @property inhoud The content of the article in HTML format.
+ * @property publicatiedatum The publication date of the article in ISO date format.
+ */
 @Serializable
 data class ApiArticle(
     val nieuwsbericht: String,
@@ -14,6 +22,12 @@ data class ApiArticle(
     val publicatiedatum: String,
 )
 
+/**
+ * Converts a list of [ApiArticle] objects to a list of domain [Article] objects.
+ *
+ * @receiver The list of [ApiArticle] objects to convert.
+ * @return A list of domain [Article] objects.
+ */
 fun List<ApiArticle>.asDomainObjects(): List<Article> {
     var domainList = map {
         val articleHtmlDoc = Ksoup.parse(it.inhoud)
@@ -27,6 +41,14 @@ fun List<ApiArticle>.asDomainObjects(): List<Article> {
     }
     return domainList
 }
+
+/**
+ * Converts a list of domain [Article] objects to a list of [ApiArticle] objects.
+ * This function is intended for testing purposes.
+ *
+ * @receiver The list of domain [Article] objects to convert.
+ * @return A list of [ApiArticle] objects.
+ */
 fun List<Article>.asApiObjects(): List<ApiArticle> {
     return this.map { article ->
         ApiArticle(
@@ -38,7 +60,13 @@ fun List<Article>.asApiObjects(): List<ApiArticle> {
     }
 }
 
-// Will only be needed for testing
+/**
+ * Constructs HTML content for an [Article] object.
+ * This function is intended for testing purposes.
+ *
+ * @param article The [Article] object to construct HTML content for.
+ * @return The HTML content as a string.
+ */
 private fun constructHtmlContent(article: Article): String {
     // Implement the logic to reconstruct the HTML content.
     val htmlContent = StringBuilder()

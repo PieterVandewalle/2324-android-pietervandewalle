@@ -5,6 +5,9 @@ import com.pietervandewalle.androidapp.model.GPSCoordinates
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+/**
+ * A singleton object representing a sampler of car parks for testing and demonstration purposes.
+ */
 object CarParkSampler {
     private val sampleCarParks = mutableListOf(
         CarPark(
@@ -69,21 +72,47 @@ object CarParkSampler {
         ),
     )
 
+    /**
+     * Get all sample car parks.
+     *
+     * @return A mutable list of [CarPark] objects representing all sample car parks.
+     */
     val getAll: () -> MutableList<CarPark> = {
         sampleCarParks
     }
 
+    /**
+     * Get a sample car park that is not full.
+     *
+     * @return A [CarPark] object representing a sample car park that is not full.
+     */
     val getOneNotFull: () -> CarPark = {
         sampleCarParks[0]
     }
 
+    /**
+     * Get a sample car park that is temporary closed.
+     *
+     * @return A [CarPark] object representing a sample car park that is temporary closed.
+     */
     val getOneTemporaryClosed: () -> CarPark = {
         sampleCarParks[1]
     }
+
+    /**
+     * Get a sample car park that is full.
+     *
+     * @return A [CarPark] object representing a sample car park that is full.
+     */
     val getOneFull: () -> CarPark = {
         sampleCarParks[2]
     }
 
+    /**
+     * Get a sample car park that is almost full.
+     *
+     * @return A [CarPark] object representing a sample car park that is almost full.
+     */
     val getOneAlmostFull: () -> CarPark = {
         sampleCarParks[3]
     }

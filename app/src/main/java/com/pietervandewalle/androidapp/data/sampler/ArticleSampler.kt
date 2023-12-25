@@ -3,7 +3,13 @@ package com.pietervandewalle.androidapp.data.sampler
 import com.pietervandewalle.androidapp.model.Article
 import java.time.LocalDate
 
+/**
+ * Singleton object responsible for managing sample articles.
+ */
 object ArticleSampler {
+    /**
+     * A list of sample articles used for demonstration purposes.
+     */
     private val sampleArticles = mutableListOf(
         Article(
             id = 1,
@@ -21,6 +27,11 @@ object ArticleSampler {
 
     )
 
+    /**
+     * Get all sample articles.
+     *
+     * @return A [MutableList] of [Article] objects.
+     */
     val getAll: () -> MutableList<Article> = {
         sampleArticles
     }

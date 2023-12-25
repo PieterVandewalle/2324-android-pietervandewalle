@@ -3,6 +3,9 @@ package com.pietervandewalle.androidapp.data.sampler
 import com.pietervandewalle.androidapp.model.GPSCoordinates
 import com.pietervandewalle.androidapp.model.StudyLocation
 
+/**
+ * A singleton object representing a sampler of study locations for testing and demonstration purposes.
+ */
 object StudyLocationSampler {
     private val sampleStudyLocations = mutableListOf(
         StudyLocation(
@@ -52,6 +55,12 @@ object StudyLocationSampler {
             readMoreUrl = "https://bloklocaties.stad.gent/dashboard/19",
         ),
     )
+
+    /**
+     * Get all sample study locations.
+     *
+     * @return A mutable list of [StudyLocation] objects representing all sample study locations.
+     */
     val getAll: () -> MutableList<StudyLocation> = {
         sampleStudyLocations
     }
