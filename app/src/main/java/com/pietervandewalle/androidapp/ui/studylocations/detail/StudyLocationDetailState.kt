@@ -6,11 +6,9 @@ import com.pietervandewalle.androidapp.model.StudyLocation
  * Represents the state for the Study Location Detail screen.
  *
  * @property studyLocation The state of the study location details.
- * @property isError True if there is an error, false otherwise.
  */
 data class StudyLocationDetailState(
     val studyLocation: StudyLocationUiState,
-    val isError: Boolean,
 )
 
 /**

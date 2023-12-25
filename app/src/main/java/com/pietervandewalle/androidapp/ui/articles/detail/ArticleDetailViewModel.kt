@@ -15,21 +15,15 @@ import com.pietervandewalle.androidapp.data.repo.ArticleRepository
 import com.pietervandewalle.androidapp.model.Article
 import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 class ArticleDetailViewModel(private val articleRepository: ArticleRepository, private val savedStateHandle: SavedStateHandle) : ViewModel() {
     private val articleId: Int = savedStateHandle[DestinationsArgs.ARTICLE_ID_ARG]!!
     private val article: Flow<Result<Article>> = articleRepository.getById(articleId).asResult()
-    private val isError = MutableStateFlow(false)
 
-    val uiState: StateFlow<ArticleDetailState> = combine(
-        article,
-        isError,
-    ) { articleResult, errorOccurred ->
+    val uiState: StateFlow<ArticleDetailState> = article.map { articleResult ->
         val article: ArticleDetailUiState = when (articleResult) {
             is Result.Success -> ArticleDetailUiState.Success(articleResult.data)
             is Result.Loading -> ArticleDetailUiState.Loading
@@ -38,22 +32,14 @@ class ArticleDetailViewModel(private val articleRepository: ArticleRepository, p
 
         ArticleDetailState(
             article,
-            errorOccurred,
         )
     }.stateIn(
         scope = viewModelScope,
         started = WhileUiSubscribed,
         initialValue = ArticleDetailState(
             ArticleDetailUiState.Loading,
-            isError = false,
         ),
     )
-
-    fun onErrorConsumed() {
-        viewModelScope.launch {
-            isError.emit(false)
-        }
-    }
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

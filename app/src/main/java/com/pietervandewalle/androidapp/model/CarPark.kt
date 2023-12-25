@@ -1,6 +1,5 @@
 package com.pietervandewalle.androidapp.model
 
-import java.lang.reflect.Array.get
 import java.time.LocalDateTime
 
 data class CarPark(

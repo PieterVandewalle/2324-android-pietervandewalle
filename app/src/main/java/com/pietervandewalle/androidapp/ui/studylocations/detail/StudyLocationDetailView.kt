@@ -38,7 +38,6 @@ import coil.compose.SubcomposeAsyncImage
 import com.pietervandewalle.androidapp.R
 import com.pietervandewalle.androidapp.data.sampler.StudyLocationSampler
 import com.pietervandewalle.androidapp.model.StudyLocation
-import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.common.components.informationlist.InformationCard
 import com.pietervandewalle.androidapp.ui.common.components.informationlist.InformationListItem
@@ -57,7 +56,6 @@ fun StudyLocationDetailView(modifier: Modifier = Modifier, onNavigateBack: () ->
     val uiState by studyLocationDetailViewModel.uiState.collectAsState()
     val studyLocationUiState = uiState.studyLocation
 
-    ErrorSnackbar(isError = uiState.isError, onErrorConsumed = studyLocationDetailViewModel::onErrorConsumed)
     Scaffold(
         topBar = {
             MyTopAppBar(screenTitle = R.string.studylocations, canNavigateBack = true, onNavigateBack = onNavigateBack) {

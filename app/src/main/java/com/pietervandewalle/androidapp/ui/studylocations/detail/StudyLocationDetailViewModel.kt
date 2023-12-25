@@ -17,9 +17,8 @@ import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 /**
  * ViewModel for the Study Location Detail screen.
@@ -35,10 +34,7 @@ class StudyLocationDetailViewModel(private val studyLocationRepository: StudyLoc
     /**
      * Represents the state flow of the UI state for the Study Location Detail screen.
      */
-    val uiState: StateFlow<StudyLocationDetailState> = combine(
-        studyLocation,
-        isError,
-    ) { studyLocationResult, errorOccurred ->
+    val uiState: StateFlow<StudyLocationDetailState> = studyLocation.map { studyLocationResult ->
         val studyLocation: StudyLocationUiState = when (studyLocationResult) {
             is Result.Success -> StudyLocationUiState.Success(studyLocationResult.data)
             is Result.Loading -> StudyLocationUiState.Loading
@@ -47,25 +43,14 @@ class StudyLocationDetailViewModel(private val studyLocationRepository: StudyLoc
 
         StudyLocationDetailState(
             studyLocation,
-            errorOccurred,
         )
     }.stateIn(
         scope = viewModelScope,
         started = WhileUiSubscribed,
         initialValue = StudyLocationDetailState(
             StudyLocationUiState.Loading,
-            isError = false,
         ),
     )
-
-    /**
-     * Function to consume and clear the error state.
-     */
-    fun onErrorConsumed() {
-        viewModelScope.launch {
-            isError.emit(false)
-        }
-    }
 
     companion object {
         /**

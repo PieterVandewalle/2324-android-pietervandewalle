@@ -5,7 +5,6 @@ import com.pietervandewalle.androidapp.model.Article
 
 data class ArticleDetailState(
     val article: ArticleDetailUiState,
-    val isError: Boolean,
 )
 
 @Immutable

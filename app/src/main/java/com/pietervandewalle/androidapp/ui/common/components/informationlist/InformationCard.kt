@@ -45,9 +45,11 @@ fun InformationCard(modifier: Modifier = Modifier, headerTitle: String, headerCo
 private fun InformationCardPreview() {
     AndroidAppTheme {
         InformationCard(
-            headerTitle = "Dit is een information card", headerContent = {
+            headerTitle = "Dit is een information card",
+            headerContent = {
                 Text(text = "Dit is de header content van een information card")
-            }, informationListContent = {
+            },
+            informationListContent = {
                 InformationListItem(icon = Icons.Filled.Cabin, label = "Label1", value = "Value1")
                 InformationListItem(icon = Icons.Filled.Plagiarism, label = "Label2", value = "Value2")
             },

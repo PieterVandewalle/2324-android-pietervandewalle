@@ -9,6 +9,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,7 +37,11 @@ fun BottomNavigationBar(currentRoute: String?, goHome: () -> Unit, goCarParks: (
             onClick = goStudyLocations,
         ),
     )
-    if (navigationItems.any { navItem -> navItem.route == currentRoute }) {
+    val showNavigationBar = remember(currentRoute) {
+        navigationItems.any { it.route == currentRoute }
+    }
+
+    if (showNavigationBar) {
         NavigationBar {
             navigationItems.forEachIndexed { _, navigationItem ->
                 NavigationBarItem(
@@ -70,6 +75,6 @@ data class BottomNavigationItem(
 @Preview(showBackground = true)
 private fun BottomNavigationBarPreview() {
     AndroidAppTheme {
-        BottomNavigationBar(currentRoute = Screens.Home.route, goHome = { /*TODO*/ }, goCarParks = { /*TODO*/ }, goStudyLocations = {})
+        BottomNavigationBar(currentRoute = Screens.Home.route, goHome = { }, goCarParks = { }, goStudyLocations = {})
     }
 }

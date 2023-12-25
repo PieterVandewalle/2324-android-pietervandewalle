@@ -14,7 +14,6 @@ import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material.icons.filled.Timeline
 import androidx.compose.material.icons.filled.Work
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -31,20 +30,16 @@ import com.pietervandewalle.androidapp.data.sampler.CarParkSampler
 import com.pietervandewalle.androidapp.model.CarPark
 import com.pietervandewalle.androidapp.ui.carparks.common.components.CarParkStatusCard
 import com.pietervandewalle.androidapp.ui.carparks.common.helpers.getRelativeTimeSpanString
-import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
 import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.common.components.informationlist.InformationCard
 import com.pietervandewalle.androidapp.ui.common.components.informationlist.InformationListItem
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CarParkDetailView(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, carParkDetailViewModel: CarParkDetailViewModel = viewModel(factory = CarParkDetailViewModel.Factory)) {
     val uiState by carParkDetailViewModel.uiState.collectAsState()
     val carParkUiState = uiState.carPark
-
-    ErrorSnackbar(isError = uiState.isError, onErrorConsumed = carParkDetailViewModel::onErrorConsumed)
 
     Scaffold(
         topBar = {
