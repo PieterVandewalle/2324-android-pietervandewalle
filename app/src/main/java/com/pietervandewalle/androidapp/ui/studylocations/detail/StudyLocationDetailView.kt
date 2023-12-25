@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Beenhere
 import androidx.compose.material.icons.filled.BookmarkAdded
@@ -63,7 +65,7 @@ fun StudyLocationDetailView(modifier: Modifier = Modifier, onNavigateBack: () ->
         },
         modifier = modifier,
     ) { innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)) {
+        Box(modifier = Modifier.padding(innerPadding).verticalScroll(rememberScrollState())) {
             when (studyLocationUiState) {
                 is StudyLocationUiState.Loading -> LoadingIndicator()
                 is StudyLocationUiState.Error ->

@@ -4,6 +4,8 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Co2
@@ -51,7 +53,7 @@ fun CarParkDetailView(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
         },
         modifier = modifier,
     ) { innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)) {
+        Box(modifier = Modifier.padding(innerPadding).verticalScroll(rememberScrollState())) {
             when (carParkUiState) {
                 is CarParkUiState.Loading -> LoadingIndicator()
                 is CarParkUiState.Error ->
