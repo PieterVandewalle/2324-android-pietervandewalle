@@ -20,7 +20,17 @@ import eu.bambooapps.material3.pullrefresh.pullRefresh
 import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
 import kotlinx.coroutines.FlowPreview
 
-@OptIn(ExperimentalMaterial3Api::class, FlowPreview::class)
+
+/**
+ * Composable function that provides a pull-to-refresh container for its content. It displays a
+ * loading indicator when the user pulls down to refresh the content.
+ *
+ * @param isRefreshing A boolean indicating whether the pull-to-refresh loading is in progress.
+ * @param onRefresh A lambda function to execute when the user triggers the pull-to-refresh action.
+ * @param modifier The modifier for this composable.
+ * @param content The composable content to be displayed within the pull-to-refresh container.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PullRefreshContainer(isRefreshing: Boolean, onRefresh: () -> Unit, modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     val pullRefreshState = rememberPullRefreshState(isRefreshing, onRefresh = onRefresh)

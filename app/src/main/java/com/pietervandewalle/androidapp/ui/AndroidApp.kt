@@ -32,17 +32,29 @@ import com.pietervandewalle.androidapp.ui.navigation.deepLinkUri
 import com.pietervandewalle.androidapp.ui.studylocations.detail.StudyLocationDetailView
 import com.pietervandewalle.androidapp.ui.studylocations.overview.StudyLocationsOverview
 
+/**
+ * Composition local for [SnackbarHostState] used to provide the Snackbar host state
+ * to composables within the app.
+ */
 val LocalSnackbarHostState = compositionLocalOf<SnackbarHostState> {
     error("No Snackbar Host State provided")
 }
 
+
+/**
+ * The main entry point for the Android app.
+ *
+ * @param navController The navigation controller for managing app navigation.
+ * @param navActions Navigation actions for handling common navigation tasks.
+ * @param startDestination The starting destination for the navigation (used in tests).
+ */
 @Composable
 fun AndroidApp(
     navController: NavHostController = rememberNavController(),
     navActions: NavigationActions = remember(navController) {
         NavigationActions(navController)
     },
-    startDestination: String? = null, // Will be used in tests
+    startDestination: String? = null,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -55,7 +67,7 @@ fun AndroidApp(
             bottomBar = {
                 BottomNavigationBar(
                     currentRoute = currentDestination?.route,
-                    goHome = navActions::navigateToHome,
+                    goHome = navActions::navigateToArticles,
                     goCarParks = navActions::navigateToCarParksOverview,
                     goStudyLocations = navActions::navigateToStudyLocations,
                 )

@@ -15,6 +15,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
+
+/**
+ * Composable function that displays a bottom navigation bar for navigating between different
+ * screens or sections of the app.
+ *
+ * @param currentRoute The current route of the app, used to highlight the active navigation item.
+ * @param goHome A lambda function to navigate to the home screen.
+ * @param goCarParks A lambda function to navigate to the car parks screen.
+ * @param goStudyLocations A lambda function to navigate to the study locations screen.
+ */
 @Composable
 fun BottomNavigationBar(currentRoute: String?, goHome: () -> Unit, goCarParks: () -> Unit, goStudyLocations: () -> Unit) {
     val navigationItems = listOf(
@@ -64,6 +74,14 @@ fun BottomNavigationBar(currentRoute: String?, goHome: () -> Unit, goCarParks: (
     }
 }
 
+/**
+ * Data class representing an item in the bottom navigation bar.
+ *
+ * @param label The label or title of the navigation item.
+ * @param icon The icon associated with the navigation item.
+ * @param route The route or destination associated with the navigation item.
+ * @param onClick A lambda function to execute when the navigation item is clicked.
+ */
 data class BottomNavigationItem(
     val label: String = "",
     val icon: ImageVector = Icons.Filled.Home,

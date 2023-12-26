@@ -1,6 +1,5 @@
 package com.pietervandewalle.androidapp.ui.carparks.overview
 
-import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -12,6 +11,7 @@ import com.pietervandewalle.androidapp.core.Result
 import com.pietervandewalle.androidapp.core.asResult
 import com.pietervandewalle.androidapp.data.repo.CarParkRepository
 import com.pietervandewalle.androidapp.model.CarPark
+import com.pietervandewalle.androidapp.ui.carparks.detail.CarParkDetailViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -22,9 +22,12 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class CarParksOverviewViewModel(private val carParkRepository: CarParkRepository) :
-    ViewModel(),
-    DefaultLifecycleObserver {
+/**
+ * ViewModel class responsible for managing the state and actions of the car parks overview screen.
+ *
+ * @property carParkRepository The repository responsible for fetching car parks data.
+ */
+class CarParksOverviewViewModel(private val carParkRepository: CarParkRepository) : ViewModel() {
     private val carParks: Flow<Result<List<CarPark>>> = carParkRepository.getAll().asResult()
     private val isRefreshing = MutableStateFlow(false)
     private val isError = MutableStateFlow(false)
@@ -65,6 +68,9 @@ class CarParksOverviewViewModel(private val carParkRepository: CarParkRepository
         }
     }
 
+    /**
+     * Initiates a refresh operation to update car parks data.
+     */
     fun refresh() {
         viewModelScope.launch(exceptionHandler) {
             with(carParkRepository) {
@@ -79,11 +85,16 @@ class CarParksOverviewViewModel(private val carParkRepository: CarParkRepository
             }
         }
     }
-
+    /**
+     * Toggles the visibility of the map view.
+     */
     fun toggleMapView() {
         isMapViewVisible.value = !isMapViewVisible.value
     }
 
+    /**
+     * Clears the error state.
+     */
     fun onErrorConsumed() {
         viewModelScope.launch {
             isError.emit(false)
@@ -91,6 +102,9 @@ class CarParksOverviewViewModel(private val carParkRepository: CarParkRepository
     }
 
     companion object {
+        /**
+         * Factory for creating [CarParksOverviewViewModel] instances.
+         */
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as AndroidApplication)

@@ -15,6 +15,15 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import com.pietervandewalle.androidapp.R
 
+
+/**
+ * A composable that represents an item within the information list of an [InformationCard].
+ *
+ * @param icon The icon to display for the item.
+ * @param label The label for the item.
+ * @param value The value for the item.
+ * @param modifier The modifier to apply to this composable.
+ */
 @Composable
 fun InformationListItem(icon: ImageVector, label: String, value: String, modifier: Modifier = Modifier) {
     Row(
