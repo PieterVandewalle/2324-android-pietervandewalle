@@ -23,7 +23,6 @@ import com.pietervandewalle.androidapp.ui.navigation.Screens
 import com.pietervandewalle.androidapp.ui.navigation.deepLinkUri
 import kotlinx.coroutines.flow.first
 
-
 /**
  * A [CoroutineWorker] responsible for handling car parks notifications in the background.
  *

@@ -1,18 +1,15 @@
 package com.pietervandewalle.androidapp.ui.navigation
 
 import androidx.annotation.StringRes
-import androidx.navigation.NavController
 import com.pietervandewalle.androidapp.R
 import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs.ARTICLE_ID_ARG
 import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs.CARPARK_ID_ARG
 import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs.STUDYLOCATION_ID_ARG
 
-
 /**
  * The deep link URI for the Android app.
  */
 const val deepLinkUri = "https://androidapp.be"
-
 
 /**
  * Object containing argument keys for destination screens.

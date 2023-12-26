@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 
-
 /**
  * Composable function that displays a customized top app bar.
  *
@@ -26,7 +25,7 @@ import androidx.compose.ui.res.stringResource
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBar(screenTitle: Int, canNavigateBack: Boolean = false, onNavigateBack: (() -> Unit)? = null, actions: @Composable() RowScope.() -> Unit) {
+fun MyTopAppBar(screenTitle: Int, canNavigateBack: Boolean = false, onNavigateBack: (() -> Unit)? = null, actions: @Composable RowScope.() -> Unit) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             titleContentColor = MaterialTheme.colorScheme.primary,

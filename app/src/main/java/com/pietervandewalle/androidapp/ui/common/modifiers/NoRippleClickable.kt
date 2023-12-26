@@ -6,7 +6,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 
-
 /**
  * A custom [Modifier] that makes a composable clickable without applying any ripple effect.
  *

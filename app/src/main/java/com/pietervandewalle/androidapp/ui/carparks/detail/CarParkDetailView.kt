@@ -37,7 +37,6 @@ import com.pietervandewalle.androidapp.ui.common.components.informationlist.Info
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
-
 /**
  * Composable function for displaying the detail screen of a car park.
  *

@@ -119,7 +119,7 @@ private val DarkColors = darkColorScheme(
 @Composable
 fun AndroidAppTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable() () -> Unit,
+    content: @Composable () -> Unit,
 ) {
     val colors = if (!useDarkTheme) {
         LightColors

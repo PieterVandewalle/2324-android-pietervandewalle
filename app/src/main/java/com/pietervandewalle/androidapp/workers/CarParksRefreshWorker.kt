@@ -5,7 +5,6 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.pietervandewalle.androidapp.AndroidApplication
 
-
 /**
  * A [CoroutineWorker] that refreshes car parks in the background.
  *
