@@ -28,10 +28,6 @@ class ArticleDaoTest {
 
     private val articles = ArticleSampler.getAll()
 
-    private suspend fun addFirstArticleToDb() {
-        articleDao.insert(articles.first().asDbArticle())
-    }
-
     private suspend fun addAllArticlesToDb() {
         articles.forEach {
             articleDao.insert(it.asDbArticle())
