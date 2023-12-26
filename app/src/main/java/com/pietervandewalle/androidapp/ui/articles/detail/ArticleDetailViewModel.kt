@@ -19,6 +19,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
+/**
+ * ViewModel for managing the details of an article.
+ *
+ * @param articleRepository The repository responsible for fetching article data.
+ * @param savedStateHandle The SavedStateHandle for retrieving and saving the article ID.
+ */
 class ArticleDetailViewModel(private val articleRepository: ArticleRepository, private val savedStateHandle: SavedStateHandle) : ViewModel() {
     private val articleId: Int = savedStateHandle[DestinationsArgs.ARTICLE_ID_ARG]!!
     private val article: Flow<Result<Article>> = articleRepository.getById(articleId).asResult()
@@ -42,6 +48,9 @@ class ArticleDetailViewModel(private val articleRepository: ArticleRepository, p
     )
 
     companion object {
+        /**
+         * Factory for creating instances of ArticleDetailViewModel.
+         */
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application =

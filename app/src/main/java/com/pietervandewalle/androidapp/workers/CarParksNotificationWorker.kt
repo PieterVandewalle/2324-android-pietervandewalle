@@ -23,7 +23,23 @@ import com.pietervandewalle.androidapp.ui.navigation.Screens
 import com.pietervandewalle.androidapp.ui.navigation.deepLinkUri
 import kotlinx.coroutines.flow.first
 
+
+/**
+ * A [CoroutineWorker] responsible for handling car parks notifications in the background.
+ *
+ * This worker is responsible for refreshing car park data, determining if there are
+ * notifications to be sent, and creating and displaying notifications if needed. It is
+ * intended to be used with the WorkManager library for performing background tasks.
+ *
+ */
 class CarParksNotificationWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
+
+    /**
+     * Performs the background work to handle car park notifications.
+     *
+     * @return [Result.success] if the notification handling is successful,
+     *         [Result.retry] if there was an error and the work should be retried.
+     */
     override suspend fun doWork(): Result {
         val application = applicationContext as AndroidApplication
         val carParkRepository = application.container.carParkRepository
@@ -46,6 +62,13 @@ class CarParksNotificationWorker(appContext: Context, workerParams: WorkerParame
     }
 }
 
+/**
+ * Determines the content for the car parks notification message.
+ *
+ * @param carParks The list of car parks to analyze.
+ * @param applicationContext The application context.
+ * @return The notification message content, or null if no notification is needed.
+ */
 private fun determineNotificationMessage(carParks: List<CarPark>, applicationContext: Context): String? {
     val numberOfFullCarParks = carParks.count { it.isFull }
     val numberOfAlmostFullCarParks = carParks.count { it.isAlmostFull }
@@ -65,6 +88,12 @@ private fun determineNotificationMessage(carParks: List<CarPark>, applicationCon
     }
 }
 
+/**
+ * Creates and displays the car parks notification.
+ *
+ * @param notificationContent The content for the notification.
+ * @param context The application context.
+ */
 private fun makeCarParksNotification(notificationContent: String, context: Context) {
     // Make a channel if necessary
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

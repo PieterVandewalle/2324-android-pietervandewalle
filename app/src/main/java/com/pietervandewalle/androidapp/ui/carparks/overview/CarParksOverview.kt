@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -42,6 +43,7 @@ import com.pietervandewalle.androidapp.model.isAlmostFull
 import com.pietervandewalle.androidapp.model.isFull
 import com.pietervandewalle.androidapp.ui.carparks.common.components.CarParkStatusCard
 import com.pietervandewalle.androidapp.ui.carparks.common.helpers.getRelativeTimeSpanString
+import com.pietervandewalle.androidapp.ui.carparks.overview.components.CarParksTopAppBar
 import com.pietervandewalle.androidapp.ui.common.components.DefaultOverviewListItemCard
 import com.pietervandewalle.androidapp.ui.common.components.ErrorLoadingIndicatorWithRetry
 import com.pietervandewalle.androidapp.ui.common.components.ErrorSnackbar
@@ -53,6 +55,13 @@ import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 import com.pietervandewalle.androidapp.ui.theme.success
 import com.pietervandewalle.androidapp.ui.theme.warning
 
+/**
+ * Composable function for displaying a car parks overview.
+ *
+ * @param modifier The [Modifier] to apply to this composable.
+ * @param onNavigateToDetail A callback that will be invoked when a car park item is clicked.
+ * @param carParksOverviewViewModel The ViewModel responsible for managing car parks data.
+ */
 @Composable
 fun CarParksOverview(modifier: Modifier = Modifier, onNavigateToDetail: (Int) -> Unit, carParksOverviewViewModel: CarParksOverviewViewModel = viewModel(factory = CarParksOverviewViewModel.Factory)) {
     val uiState by carParksOverviewViewModel.uiState.collectAsState()
@@ -93,6 +102,14 @@ fun CarParksOverview(modifier: Modifier = Modifier, onNavigateToDetail: (Int) ->
     }
 }
 
+
+/**
+ * Composable function for handling animated tab visibility.
+ *
+ * @param isVisible A boolean value indicating whether the content should be visible.
+ * @param isLeftTab A boolean value indicating whether it's the left tab.
+ * @param content The content to be displayed within the animated visibility.
+ */
 @Composable
 fun AnimatedTabVisibility(isVisible: Boolean, isLeftTab: Boolean, content: @Composable () -> Unit) {
     val animationDurationMillis = 500
@@ -111,6 +128,12 @@ fun AnimatedTabVisibility(isVisible: Boolean, isLeftTab: Boolean, content: @Comp
     }
 }
 
+/**
+ * Composable function for displaying a map of car parks.
+ *
+ * @param modifier The [Modifier] to apply to this composable.
+ * @param carParks A list of car parks to display on the map.
+ */
 @Composable
 fun CarParkMap(modifier: Modifier = Modifier, carParks: List<CarPark>) {
     val ghentCoordinates = LatLng(51.0500, 3.733333)
@@ -136,7 +159,13 @@ fun CarParkMap(modifier: Modifier = Modifier, carParks: List<CarPark>) {
         }
     }
 }
-
+/**
+ * Composable function for displaying a list of car parks.
+ *
+ * @param modifier The [Modifier] to apply to this composable.
+ * @param carParks A list of car parks to display in the list.
+ * @param onNavigateToDetail A lambda that will be invoked when a car park item is clicked.
+ */
 @Composable
 fun CarParkList(modifier: Modifier = Modifier, carParks: List<CarPark>, onNavigateToDetail: (CarPark) -> Unit) {
     val lazyListState = rememberLazyListState()
@@ -152,6 +181,12 @@ fun CarParkList(modifier: Modifier = Modifier, carParks: List<CarPark>, onNaviga
     ScrollToTopButton(lazyListState = lazyListState)
 }
 
+/**
+ * Composable function for displaying a single car park item in the list.
+ *
+ * @param modifier The [Modifier] to apply to this composable.
+ * @param carPark The car park to display.
+ */
 @Composable
 fun CarParkListItem(modifier: Modifier = Modifier, carPark: CarPark) {
     DefaultOverviewListItemCard(modifier = modifier.testTag("carParkListItem")) {
@@ -170,6 +205,11 @@ fun CarParkListItem(modifier: Modifier = Modifier, carPark: CarPark) {
     }
 }
 
+/**
+ * Composable function for displaying car park details.
+ *
+ * @param carPark The car park to display details for.
+ */
 @Composable
 private fun CarParkDetails(carPark: CarPark) {
     Column(
@@ -178,7 +218,7 @@ private fun CarParkDetails(carPark: CarPark) {
     ) {
         Text(carPark.description, style = MaterialTheme.typography.bodyMedium)
 
-        val elapsedTime = getRelativeTimeSpanString(carPark.lastUpdate)
+        val elapsedTime = remember { getRelativeTimeSpanString(carPark.lastUpdate) }
 
         Text(
             stringResource(id = R.string.last_update, elapsedTime),
@@ -187,6 +227,12 @@ private fun CarParkDetails(carPark: CarPark) {
     }
 }
 
+/**
+ * Determines the color for the location icon based on the car park's status.
+ *
+ * @param carPark The car park for which to determine the icon color.
+ * @return The color for the location icon.
+ */
 @Composable
 fun determineLocationIconColor(carPark: CarPark): Color {
     if (!carPark.isOpenNow || carPark.isFull) {

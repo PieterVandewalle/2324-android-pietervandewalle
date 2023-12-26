@@ -10,6 +10,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.pietervandewalle.androidapp.R
 
+
+/**
+ * A composable that represents the header section of an [InformationCard].
+ *
+ * @param modifier The modifier to apply to this composable.
+ * @param title The title of the header.
+ * @param content The composable lambda for the header content.
+ */
 @Composable
 fun InformationHeader(modifier: Modifier = Modifier, title: String, content: @Composable () -> Unit) {
     Column(

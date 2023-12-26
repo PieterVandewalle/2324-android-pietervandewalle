@@ -29,7 +29,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.pietervandewalle.androidapp.R
@@ -40,6 +39,13 @@ import com.pietervandewalle.androidapp.ui.common.components.LoadingIndicator
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
+/**
+ * Composable function for displaying the detail screen of an article.
+ *
+ * @param modifier The modifier for this composable.
+ * @param articleDetailViewModel The view model for managing the article detail data.
+ * @param onNavigateBack Callback function to navigate back to the previous screen.
+ */
 @Composable
 fun ArticleDetailView(modifier: Modifier = Modifier, articleDetailViewModel: ArticleDetailViewModel = viewModel(factory = ArticleDetailViewModel.Factory), onNavigateBack: () -> Unit) {
     val context = LocalContext.current
@@ -93,6 +99,12 @@ fun ArticleDetailView(modifier: Modifier = Modifier, articleDetailViewModel: Art
     }
 }
 
+/**
+ * Composable function for displaying the detailed view of an article.
+ *
+ * @param modifier The modifier for this composable.
+ * @param article The article to be displayed.
+ */
 @Composable
 fun ArticleDetail(modifier: Modifier = Modifier, article: Article) {
     val scrollState = rememberScrollState()
@@ -100,7 +112,7 @@ fun ArticleDetail(modifier: Modifier = Modifier, article: Article) {
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(scrollState),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small)),
     ) {
         if (article.imageUrl != null) {
             Row(
@@ -131,7 +143,7 @@ fun ArticleDetail(modifier: Modifier = Modifier, article: Article) {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun ArticleDetailPreview() {
     AndroidAppTheme {

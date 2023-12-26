@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -44,7 +43,13 @@ import com.pietervandewalle.androidapp.ui.common.components.ScrollToTopButton
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+/**
+ * Composable function for displaying an overview of articles.
+ *
+ * @param modifier The modifier for this composable.
+ * @param articleOverviewViewModel The view model for managing the article overview data.
+ * @param onNavigateToDetail Callback function to navigate to the detail screen of an article.
+ */
 @Composable
 fun ArticleOverview(modifier: Modifier = Modifier, articleOverviewViewModel: ArticleOverviewViewModel = viewModel(factory = ArticleOverviewViewModel.Factory), onNavigateToDetail: (articleId: Int) -> Unit) {
     val uiState by articleOverviewViewModel.uiState.collectAsState()
@@ -77,6 +82,13 @@ fun ArticleOverview(modifier: Modifier = Modifier, articleOverviewViewModel: Art
     }
 }
 
+/**
+ * Composable function for displaying a list of articles.
+ *
+ * @param modifier The modifier for this composable.
+ * @param articles The list of articles to display.
+ * @param onViewDetail Callback function to view the detail of a selected article.
+ */
 @Composable
 fun ArticleList(modifier: Modifier = Modifier, articles: List<Article>, onViewDetail: (Article) -> Unit) {
     val lazyListState = rememberLazyListState()
@@ -110,6 +122,13 @@ fun ArticleList(modifier: Modifier = Modifier, articles: List<Article>, onViewDe
     }
 }
 
+/**
+ * Composable function for displaying an individual article item.
+ *
+ * @param modifier The modifier for this composable.
+ * @param article The article to display.
+ * @param onViewDetail Callback function to view the detail of the article.
+ */
 @Composable
 fun ArticleListItem(modifier: Modifier = Modifier, article: Article, onViewDetail: () -> Unit) {
     DefaultOverviewListItemCard(

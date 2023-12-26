@@ -13,6 +13,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.pietervandewalle.androidapp.R
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
+
+/**
+ * A composable that displays an error message with a retry button for handling loading failures.
+ *
+ * @param modifier The modifier to apply to this composable.
+ * @param onRetry The callback function to execute when the retry button is clicked.
+ */
 @Composable
 fun ErrorLoadingIndicatorWithRetry(modifier: Modifier = Modifier, onRetry: () -> Unit) {
     Column(

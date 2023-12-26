@@ -15,6 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 
+
+/**
+ * Composable function that displays a customized top app bar.
+ *
+ * @param screenTitle The resource ID of the title to display in the app bar.
+ * @param canNavigateBack A boolean indicating whether a navigation back button should be displayed.
+ * @param onNavigateBack A lambda function to execute when the navigation back button is clicked.
+ * @param actions A composable lambda to define additional actions or content for the app bar.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTopAppBar(screenTitle: Int, canNavigateBack: Boolean = false, onNavigateBack: (() -> Unit)? = null, actions: @Composable() RowScope.() -> Unit) {

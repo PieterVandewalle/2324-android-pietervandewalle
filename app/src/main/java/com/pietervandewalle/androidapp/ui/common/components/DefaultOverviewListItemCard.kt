@@ -11,6 +11,13 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.pietervandewalle.androidapp.R
 
+
+/**
+ * A composable that represents a default overview list item card with elevated styling.
+ *
+ * @param modifier The modifier to apply to this composable.
+ * @param content The composable lambda for the content of the card.
+ */
 @Composable
 fun DefaultOverviewListItemCard(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     ElevatedCard(

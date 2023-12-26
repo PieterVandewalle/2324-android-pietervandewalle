@@ -10,6 +10,11 @@ import androidx.compose.ui.Modifier
 import com.pietervandewalle.androidapp.ui.AndroidApp
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
+
+/**
+ * This is the main activity for the application.
+ * It extends [ComponentActivity] and is responsible for initializing the user interface.
+ */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

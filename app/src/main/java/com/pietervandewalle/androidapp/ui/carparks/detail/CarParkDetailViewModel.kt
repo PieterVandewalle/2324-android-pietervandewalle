@@ -19,6 +19,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
+/**
+ * ViewModel for displaying details of a car park.
+ *
+ * @param carParkRepository The repository responsible for fetching car park data.
+ * @param savedStateHandle The saved state handle to access and store UI-related data.
+ */
 class CarParkDetailViewModel(private val carParkRepository: CarParkRepository, private val savedStateHandle: SavedStateHandle) : ViewModel() {
     private val carParkId: Int = savedStateHandle[DestinationsArgs.CARPARK_ID_ARG]!!
     private val carPark: Flow<Result<CarPark>> = carParkRepository.getById(carParkId).asResult()
@@ -42,6 +48,9 @@ class CarParkDetailViewModel(private val carParkRepository: CarParkRepository, p
     )
 
     companion object {
+        /**
+         * Factory for creating [CarParkDetailViewModel] instances.
+         */
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as AndroidApplication)

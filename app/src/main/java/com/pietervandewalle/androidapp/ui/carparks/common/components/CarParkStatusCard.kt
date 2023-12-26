@@ -26,6 +26,11 @@ import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 import com.pietervandewalle.androidapp.ui.theme.successContainer
 import com.pietervandewalle.androidapp.ui.theme.warningContainer
 
+/**
+ * Composable function for displaying the status of a car park in a card.
+ *
+ * @param carPark The car park for which the status is to be displayed.
+ */
 @Composable
 fun CarParkStatusCard(carPark: CarPark) {
     Card(colors = CardDefaults.cardColors(containerColor = determineStatusColor(carPark = carPark)), shape = RoundedCornerShape(4.dp)) {
@@ -43,6 +48,11 @@ fun CarParkStatusCard(carPark: CarPark) {
     }
 }
 
+/**
+ * Composable function for displaying the open status of a car park.
+ *
+ * @param carPark The car park for which the open status is to be displayed.
+ */
 @Composable
 private fun CarParkOpenStatusText(carPark: CarPark) {
     Text(
@@ -63,6 +73,11 @@ private fun CarParkOpenStatusText(carPark: CarPark) {
     }
 }
 
+/**
+ * Composable function for displaying the closed status text of a car park.
+ *
+ * @param carPark The car park for which the closed status is to be displayed.
+ */
 @Composable
 private fun CarParkClosedStatusText(carPark: CarPark) {
     Text(
@@ -75,6 +90,12 @@ private fun CarParkClosedStatusText(carPark: CarPark) {
     )
 }
 
+/**
+ * Determines the color for the car park status based on its open and capacity status.
+ *
+ * @param carPark The car park for which the status color is determined.
+ * @return The color for the car park status.
+ */
 @Composable
 fun determineStatusColor(carPark: CarPark): Color {
     if (!carPark.isOpenNow || carPark.isFull) {

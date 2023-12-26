@@ -37,6 +37,14 @@ import com.pietervandewalle.androidapp.ui.common.components.informationlist.Info
 import com.pietervandewalle.androidapp.ui.navigation.MyTopAppBar
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
+
+/**
+ * Composable function for displaying the detail screen of a car park.
+ *
+ * @param modifier The modifier for this composable.
+ * @param onNavigateBack Callback function to navigate back to the previous screen.
+ * @param carParkDetailViewModel The view model for managing the car park detail data.
+ */
 @Composable
 fun CarParkDetailView(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, carParkDetailViewModel: CarParkDetailViewModel = viewModel(factory = CarParkDetailViewModel.Factory)) {
     val uiState by carParkDetailViewModel.uiState.collectAsState()
@@ -44,8 +52,7 @@ fun CarParkDetailView(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
 
     Scaffold(
         topBar = {
-            MyTopAppBar(screenTitle = R.string.car_parking, canNavigateBack = true, onNavigateBack = onNavigateBack) {
-            }
+            MyTopAppBar(screenTitle = R.string.car_parking, canNavigateBack = true, onNavigateBack = onNavigateBack, actions = {})
         },
         modifier = modifier.testTag("carParkDetailView"),
     ) { innerPadding ->
@@ -65,6 +72,12 @@ fun CarParkDetailView(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
     }
 }
 
+/**
+ * Composable function for displaying the details of a car park.
+ *
+ * @param carPark The car park data to display.
+ * @param modifier The modifier for this composable.
+ */
 @Composable
 fun CarParkDetail(carPark: CarPark, modifier: Modifier = Modifier) {
     val context = LocalContext.current

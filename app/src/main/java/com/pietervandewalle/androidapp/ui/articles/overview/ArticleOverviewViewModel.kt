@@ -22,6 +22,12 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 // Based on https://github.com/jshvarts/UiStatePlayground/blob/master/app/src/main/java/com/example/uistateplayground/ui/HomeViewModel.kt
+
+/**
+ * ViewModel for managing the article overview screen.
+ *
+ * @param articleRepository The repository responsible for fetching article data.
+ */
 class ArticleOverviewViewModel(private val articleRepository: ArticleRepository) : ViewModel() {
     private val articles: Flow<Result<List<Article>>> = articleRepository.getAll().asResult()
     private val isRefreshing = MutableStateFlow(false)
@@ -60,6 +66,9 @@ class ArticleOverviewViewModel(private val articleRepository: ArticleRepository)
         }
     }
 
+    /**
+     * Refreshes the list of articles.
+     */
     fun refresh() {
         viewModelScope.launch(exceptionHandler) {
             with(articleRepository) {
@@ -74,7 +83,9 @@ class ArticleOverviewViewModel(private val articleRepository: ArticleRepository)
         }
     }
 
-    // Should be called after snackbar message is shown
+    /**
+     * Should be called after the error message is shown to reset the error state.
+     */
     fun onErrorConsumed() {
         viewModelScope.launch {
             isError.emit(false)
@@ -82,6 +93,9 @@ class ArticleOverviewViewModel(private val articleRepository: ArticleRepository)
     }
 
     companion object {
+        /**
+         * Factory for creating instances of ArticleOverviewViewModel.
+         */
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as AndroidApplication)

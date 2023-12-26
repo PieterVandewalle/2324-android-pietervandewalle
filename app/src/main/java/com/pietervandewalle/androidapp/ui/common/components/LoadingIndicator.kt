@@ -16,6 +16,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.pietervandewalle.androidapp.R
 
+
+/**
+ * Composable function to display a loading indicator consisting of a circular progress bar and
+ * loading text.
+ */
 @Composable
 fun LoadingIndicator() {
     Row(

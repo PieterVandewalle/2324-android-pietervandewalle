@@ -12,6 +12,13 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.pietervandewalle.androidapp.R
 
+
+/**
+ * A composable that represents the information list section of an [InformationCard].
+ *
+ * @param modifier The modifier to apply to this composable.
+ * @param content The composable lambda for the information list content.
+ */
 @Composable
 fun InformationList(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     Column(

@@ -12,10 +12,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 
-var successColorSchemeColor by mutableStateOf(light_success)
-var successContainerColorSchemeColor by mutableStateOf(light_successContainer)
-var warningColorSchemeColor by mutableStateOf(light_warning)
-var warningContainerColorSchemeColor by mutableStateOf(light_warningContainer)
+private var successColorSchemeColor by mutableStateOf(light_success)
+private var successContainerColorSchemeColor by mutableStateOf(light_successContainer)
+
+private var warningColorSchemeColor by mutableStateOf(light_warning)
+private var warningContainerColorSchemeColor by mutableStateOf(light_warningContainer)
 
 @Suppress("unused")
 var ColorScheme.success: Color
@@ -109,6 +110,12 @@ private val DarkColors = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
+/**
+ * Composable function to apply the Android app theme.
+ *
+ * @param useDarkTheme Whether to use the dark theme or not.
+ * @param content The composable content of the app.
+ */
 @Composable
 fun AndroidAppTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
