@@ -3,7 +3,6 @@ package com.pietervandewalle.androidapp.viewmodeltests
 import com.pietervandewalle.androidapp.TestDispatcherRule
 import com.pietervandewalle.androidapp.data.repo.CachingArticleRepository
 import com.pietervandewalle.androidapp.data.sampler.ArticleSampler
-import com.pietervandewalle.androidapp.model.Article
 import com.pietervandewalle.androidapp.ui.articles.overview.ArticleOverviewViewModel
 import com.pietervandewalle.androidapp.ui.articles.overview.ArticlesUiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -160,7 +159,7 @@ class ArticlesOverviewViewModelTest {
 
     @Test
     fun `refresh updates articles in uiState`() = runTest {
-        val articlesFlow = MutableStateFlow<List<Article>>(listOf(ArticleSampler.getAll().first()))
+        val articlesFlow = MutableStateFlow(listOf(ArticleSampler.getAll().first()))
 
         whenever(repoMock.getAll()).thenReturn(
             articlesFlow,
@@ -171,7 +170,6 @@ class ArticlesOverviewViewModelTest {
             runBlocking {
                 articlesFlow.emit(ArticleSampler.getAll())
             }
-            Unit
         }
 
         viewModel = ArticleOverviewViewModel(articleRepository = repoMock)

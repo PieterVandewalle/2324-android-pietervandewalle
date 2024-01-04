@@ -15,7 +15,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.pietervandewalle.androidapp.ui.theme.AndroidAppTheme
 
-
 /**
  * Composable function that displays a bottom navigation bar for navigating between different
  * screens or sections of the app.

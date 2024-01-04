@@ -1,4 +1,4 @@
-package com.pietervandewalle.androidapp.ui.common.helpers
+package com.pietervandewalle.androidapp.ui.common.helpers // ktlint-disable filename
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -8,7 +8,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
-
 
 /**
  * Converts a vector drawable resource into a [BitmapDescriptor] with the specified color tint.

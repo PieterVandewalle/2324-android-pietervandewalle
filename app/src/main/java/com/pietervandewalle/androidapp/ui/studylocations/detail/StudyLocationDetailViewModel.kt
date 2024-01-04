@@ -15,7 +15,6 @@ import com.pietervandewalle.androidapp.data.repo.StudyLocationRepository
 import com.pietervandewalle.androidapp.model.StudyLocation
 import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -29,7 +28,6 @@ import kotlinx.coroutines.flow.stateIn
 class StudyLocationDetailViewModel(private val studyLocationRepository: StudyLocationRepository, private val savedStateHandle: SavedStateHandle) : ViewModel() {
     private val studyLocationId: Int = savedStateHandle[DestinationsArgs.STUDYLOCATION_ID_ARG]!!
     private val studyLocation: Flow<Result<StudyLocation>> = studyLocationRepository.getById(studyLocationId).asResult()
-    private val isError = MutableStateFlow(false)
 
     /**
      * Represents the state flow of the UI state for the Study Location Detail screen.

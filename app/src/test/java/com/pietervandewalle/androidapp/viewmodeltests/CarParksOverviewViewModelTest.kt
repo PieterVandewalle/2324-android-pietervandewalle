@@ -3,7 +3,6 @@ package com.pietervandewalle.androidapp.viewmodeltests
 import com.pietervandewalle.androidapp.TestDispatcherRule
 import com.pietervandewalle.androidapp.data.repo.CachingCarParkRepository
 import com.pietervandewalle.androidapp.data.sampler.CarParkSampler
-import com.pietervandewalle.androidapp.model.CarPark
 import com.pietervandewalle.androidapp.ui.carparks.overview.CarParksOverviewViewModel
 import com.pietervandewalle.androidapp.ui.carparks.overview.CarParksUiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -186,7 +185,7 @@ class CarParksOverviewViewModelTest {
 
     @Test
     fun `refresh updates carParks in uiState`() = runTest {
-        val carParksFlow = MutableStateFlow<List<CarPark>>(listOf(CarParkSampler.getOneNotFull()))
+        val carParksFlow = MutableStateFlow(listOf(CarParkSampler.getOneNotFull()))
 
         whenever(repoMock.getAll()).thenReturn(
             carParksFlow,
@@ -197,7 +196,6 @@ class CarParksOverviewViewModelTest {
             runBlocking {
                 carParksFlow.emit(CarParkSampler.getAll())
             }
-            Unit
         }
 
         viewModel = CarParksOverviewViewModel(carParkRepository = repoMock)

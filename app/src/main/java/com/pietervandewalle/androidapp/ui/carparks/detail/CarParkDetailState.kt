@@ -2,7 +2,6 @@ package com.pietervandewalle.androidapp.ui.carparks.detail
 
 import com.pietervandewalle.androidapp.model.CarPark
 
-
 /**
  * Represents the state of a car park detail screen.
  *
@@ -22,7 +21,6 @@ sealed interface CarParkUiState {
      * @param carPark The car park data to display.
      */
     data class Success(val carPark: CarPark) : CarParkUiState
-
 
     /**
      * Represents an error state where an error occurred while fetching car park data.

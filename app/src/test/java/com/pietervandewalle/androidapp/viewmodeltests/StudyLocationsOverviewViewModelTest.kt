@@ -3,7 +3,6 @@ package com.pietervandewalle.androidapp.viewmodeltests
 import com.pietervandewalle.androidapp.TestDispatcherRule
 import com.pietervandewalle.androidapp.data.repo.CachingStudyLocationRepository
 import com.pietervandewalle.androidapp.data.sampler.StudyLocationSampler
-import com.pietervandewalle.androidapp.model.StudyLocation
 import com.pietervandewalle.androidapp.ui.studylocations.overview.StudyLocationsOverviewViewModel
 import com.pietervandewalle.androidapp.ui.studylocations.overview.StudyLocationsUiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -175,7 +174,6 @@ class StudyLocationsOverviewViewModelTest {
             runBlocking {
                 studyLocationsFlow.emit(StudyLocationSampler.getAll())
             }
-            Unit
         }
 
         viewModel = StudyLocationsOverviewViewModel(studyLocationRepository = repoMock)
@@ -268,7 +266,7 @@ class StudyLocationsOverviewViewModelTest {
 
     @Test
     fun `currentSearchTerm updates correctly on new search term`() = runTest {
-        whenever(repoMock.getAll()).thenReturn(flow { emit(emptyList<StudyLocation>()) })
+        whenever(repoMock.getAll()).thenReturn(flow { emit(emptyList()) })
 
         viewModel = StudyLocationsOverviewViewModel(studyLocationRepository = repoMock)
         backgroundScope.launch(UnconfinedTestDispatcher()) {
@@ -282,7 +280,7 @@ class StudyLocationsOverviewViewModelTest {
 
     @Test
     fun `isSearchOpen reflects correct state when search is opened and closed`() = runTest {
-        whenever(repoMock.getAll()).thenReturn(flow { emit(emptyList<StudyLocation>()) })
+        whenever(repoMock.getAll()).thenReturn(flow { emit(emptyList()) })
         viewModel = StudyLocationsOverviewViewModel(studyLocationRepository = repoMock)
         backgroundScope.launch(UnconfinedTestDispatcher()) {
             viewModel.uiState.collect()

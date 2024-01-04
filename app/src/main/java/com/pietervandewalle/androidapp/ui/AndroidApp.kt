@@ -40,7 +40,6 @@ val LocalSnackbarHostState = compositionLocalOf<SnackbarHostState> {
     error("No Snackbar Host State provided")
 }
 
-
 /**
  * The main entry point for the Android app.
  *

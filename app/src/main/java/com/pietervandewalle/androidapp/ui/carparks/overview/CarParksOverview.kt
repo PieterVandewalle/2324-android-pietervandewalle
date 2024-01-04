@@ -102,7 +102,6 @@ fun CarParksOverview(modifier: Modifier = Modifier, onNavigateToDetail: (Int) ->
     }
 }
 
-
 /**
  * Composable function for handling animated tab visibility.
  *
@@ -159,6 +158,7 @@ fun CarParkMap(modifier: Modifier = Modifier, carParks: List<CarPark>) {
         }
     }
 }
+
 /**
  * Composable function for displaying a list of car parks.
  *

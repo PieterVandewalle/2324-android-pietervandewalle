@@ -11,7 +11,6 @@ import com.pietervandewalle.androidapp.core.Result
 import com.pietervandewalle.androidapp.core.asResult
 import com.pietervandewalle.androidapp.data.repo.CarParkRepository
 import com.pietervandewalle.androidapp.model.CarPark
-import com.pietervandewalle.androidapp.ui.carparks.detail.CarParkDetailViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -85,6 +84,7 @@ class CarParksOverviewViewModel(private val carParkRepository: CarParkRepository
             }
         }
     }
+
     /**
      * Toggles the visibility of the map view.
      */

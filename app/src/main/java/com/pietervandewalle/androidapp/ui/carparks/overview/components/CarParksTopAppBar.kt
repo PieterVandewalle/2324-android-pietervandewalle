@@ -34,7 +34,6 @@ fun CarParksTopAppBar(isMapVisible: Boolean, onToggleMap: () -> Unit) {
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 private fun CarParksTopAppBarPreview() {

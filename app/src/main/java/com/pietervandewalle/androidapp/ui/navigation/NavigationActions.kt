@@ -6,7 +6,6 @@ import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs.ARTICLE_ID
 import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs.CARPARK_ID_ARG
 import com.pietervandewalle.androidapp.ui.navigation.DestinationsArgs.STUDYLOCATION_ID_ARG
 
-
 /**
  * A helper class for managing navigation actions within the app.
  *
