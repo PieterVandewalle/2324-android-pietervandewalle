@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import com.pietervandewalle.androidapp.R
 
 /**
  * Composable function that displays a customized top app bar.
@@ -38,7 +39,7 @@ fun MyTopAppBar(screenTitle: Int, canNavigateBack: Boolean = false, onNavigateBa
                 IconButton(onClick = onNavigateBack!!) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "navigate back",
+                        contentDescription = stringResource(R.string.navigate_back),
                     )
                 }
             }

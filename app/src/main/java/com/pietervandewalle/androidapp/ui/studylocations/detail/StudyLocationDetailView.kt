@@ -59,8 +59,7 @@ fun StudyLocationDetailView(modifier: Modifier = Modifier, onNavigateBack: () ->
 
     Scaffold(
         topBar = {
-            MyTopAppBar(screenTitle = R.string.studylocations, canNavigateBack = true, onNavigateBack = onNavigateBack) {
-            }
+            MyTopAppBar(screenTitle = R.string.studylocations, canNavigateBack = true, onNavigateBack = onNavigateBack, actions = {})
         },
         modifier = modifier.testTag("studyLocationDetailView"),
     ) { innerPadding ->
